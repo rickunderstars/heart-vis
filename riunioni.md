@@ -14,4 +14,4 @@
 		- geometria, connettività, normale dei vertici (e dei triangoli, calcolata)
 		- per vertice: misurazione unipolare, bipolare, LAT
 	- preprocessato
- 
+
