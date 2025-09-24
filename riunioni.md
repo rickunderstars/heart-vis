@@ -15,3 +15,8 @@
 		- per vertice: misurazione unipolare, bipolare, LAT
 	- preprocessato
 
+# 2025-09-24
+
+- core in c++, frontend javascript
+- traduzione da c++ a javascript in emscripten
+- primo task: da .mesh a .obj con c++: classe mesh con metodi import() e export() che prende come input i dati grezzi ed esporta in obj (o ply); altre classi con 
