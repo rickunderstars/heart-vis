@@ -1,4 +1,4 @@
-// #include <fstream>
+#include <fstream>
 #include <iostream>
 
 using namespace std;
@@ -10,7 +10,19 @@ class Mesh {
 	Mesh(string text) { content = text; }
 
   public:
-	static Mesh importMesh(string path) { return Mesh(path); }
+	static Mesh importMesh(string filepath) {
+		ifstream file(filepath);
+		if (!file.is_open()) {
+			cerr << "error: could not open file '" << filepath << "'" << endl;
+			exit(1);
+		}
+		string line = "";
+		string data = "";
+		while (getline(file, line)) {
+			data += line;
+		}
+		return Mesh(data);
+	}
 
 	string toString() { return content; }
 };
