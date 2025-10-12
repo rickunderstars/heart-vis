@@ -3,6 +3,17 @@
 
 using namespace std;
 
+const string VERTICES_START = "[VerticesSection]";
+const string FACES_START = "[TrianglesSection]";
+const string ATTRIBUTES_START = "[VerticesColorsSection]";
+const string GENERAL_ATTRIBUTES = "[GeneralAttributes]";
+
+struct vector3 {
+	float x;
+	float y;
+	float z;
+};
+
 class Mesh {
   private:
 	string content = "";
