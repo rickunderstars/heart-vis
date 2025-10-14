@@ -53,6 +53,21 @@ class vector3 {
 		oss << "(" << x << ", " << y << ", " << z << ")";
 		return oss.str();
 	}
+	string getX() {
+		ostringstream oss;
+		oss << x;
+		return oss.str();
+	}
+	string getY() {
+		ostringstream oss;
+		oss << y;
+		return oss.str();
+	}
+	string getZ() {
+		ostringstream oss;
+		oss << z;
+		return oss.str();
+	}
 };
 
 class vertex {
@@ -72,6 +87,19 @@ class vertex {
 		ostringstream oss;
 		oss << "{ pos: " << pos.toString() << " | normal: " << normal.toString()
 			<< " | groupID: " << groupID << " }";
+		return oss.str();
+	}
+
+	string posToObj() {
+		ostringstream oss;
+		oss << "v  " << pos.getX() << " " << pos.getY() << " " << pos.getZ();
+		return oss.str();
+	}
+
+	string normalToObj() {
+		ostringstream oss;
+		oss << "v  " << normal.getX() << " " << normal.getY() << " "
+			<< normal.getZ();
 		return oss.str();
 	}
 };
