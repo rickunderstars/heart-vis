@@ -3,6 +3,7 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include <string>
 #include <vector>
 
 using namespace std;
@@ -100,13 +101,14 @@ class triangle {
 class Mesh {
   private:
 	string meshID = "";
-	vector<vertex> vertices; // vertices(size, 0);
+	vector<vertex> vertices;
 	vector<triangle> triangles;
 
 	Mesh(vector<vertex> &vertices, vector<triangle> &triangles, string meshID) {
+		this->meshID = meshID;
+		this->vertices = vertices;
+		this->triangles = triangles;
 	}
-
-	Mesh() {} // dummy constructor
 
 	static Mesh sectionsHandler(ifstream &file) {
 		// general attributes
@@ -140,7 +142,7 @@ class Mesh {
 				 << endl;
 			exit(1);
 		}
-		while (getCleanLine(file, line)) {
+		while (getCleanLine(file, line) && !isWhitespace(line)) {
 			vector<string> words;
 			boost::split(words, line, boost::is_any_of(" "),
 						 boost::token_compress_on);
@@ -152,9 +154,6 @@ class Mesh {
 				} else if (words[0] == GA_NUM_TRIANGLES) {
 					triNum = stoi(words[2]);
 				}
-			}
-			if (isWhitespace(line)) {
-				break;
 			}
 		}
 	}
@@ -168,13 +167,26 @@ class Mesh {
 				break;
 			}
 		}
+		if (!found) {
+			cerr << "Could not find section '" << VERTICES_SECTION << "'."
+				 << endl;
+			exit(1);
+		}
 		getCleanLine(file, line);
 		getCleanLine(file, line);
-		while (getCleanLine(file, line)) {
+		int index = 0;
+		while (getCleanLine(file, line) && !isWhitespace(line)) {
 			vector<string> words;
 			boost::split(words, line, boost::is_any_of(" ="),
 						 boost::token_compress_on);
-			/*TODO*/
+			if (index != stoi(words[0])) {
+				cerr << "Vertex " << index << " not found.";
+				exit(1);
+			}
+			vector3 pos(stof(words[1]), stof(words[2]), stof(words[3]));
+			vector3 normal(stof(words[4]), stof(words[5]), stof(words[6]));
+			vertices[index] = vertex(pos, normal, stoi(words[7]));
+			index++;
 		}
 	}
 
@@ -199,10 +211,28 @@ class Mesh {
 
 	int getTriangleNum() { return triangles.size(); }
 
-	string toString() { return "TODO"; }
+	string verticesString() {
+		ostringstream oss;
+		oss << "Vertices:" << endl << "---------" << endl;
+		for (int i = 0; i < vertices.size(); i++) {
+			oss << i << ": " << vertices[i].toString() << endl;
+		}
+		return oss.str();
+	}
+
+	string toString() {
+
+		// string meshID
+		// vector<vertex> vertices;
+		// vector<triangle> triangles;
+		ostringstream oss;
+		oss << "TODO";
+		return oss.str();
+	}
 };
 
 int main() {
 	Mesh msh = Mesh::importMesh("../assets/mesh/2-LA-FA.mesh");
+	cout << msh.verticesString();
 	return 0;
 }
