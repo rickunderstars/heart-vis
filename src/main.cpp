@@ -30,6 +30,7 @@ void printVector(vector<string> v) {
 istream &getCleanLine(std::ifstream &file, std::string &line) {
 	std::getline(file, line);
 	line.erase(std::remove(line.begin(), line.end(), '\r'), line.end());
+	boost::trim(line);
 	return file;
 }
 
@@ -104,8 +105,6 @@ class Mesh {
 	Mesh() {} // dummy constructor
 
 	static Mesh sectionsHandler(ifstream &file) {
-		int sections = 0;
-
 		// general attributes
 		int vertNum = 0;
 		int triNum = 0;
@@ -114,33 +113,29 @@ class Mesh {
 		// vertices
 		vector<vertex> verts;
 
-		string line = "";
-		while (getCleanLine(file, line)) {
-			boost::trim(line);
-			if (line == VERTICES_START) {
-				sections++;
-			} else if (line == TRIANGLES_START) {
-				sections++;
-			} else if (line == ATTRIBUTES_START) {
-				sections++;
-			} else if (line == GENERAL_ATTRIBUTES) {
-				sections++;
-				generalAttributesSection(file, vertNum, triNum, id);
-			}
-		}
-		if (sections < SECTIONS_NUM) {
-			cerr << "Could not find all sections in mesh file\nExpected "
-					"sections:\n- "
-				 << ATTRIBUTES_START << "\n- " << VERTICES_START << "\n- "
-				 << TRIANGLES_START << "\n- " << ATTRIBUTES_START << endl;
-			exit(1);
-		}
+		// triangles
+		vector<triangle> tris;
+
+		generalAttributesSection(file, vertNum, triNum, id);
+
 		return Mesh();
 	}
 
 	static void generalAttributesSection(ifstream &file, int &vertNum,
 										 int &triNum, string &id) {
 		string line = "";
+		bool found = false;
+		while (getCleanLine(file, line)) {
+			if (line == GENERAL_ATTRIBUTES) {
+				found = true;
+				break;
+			}
+		}
+		if (!found) {
+			cerr << "Could not find section '" << ATTRIBUTES_START << "'."
+				 << endl;
+			exit(1);
+		}
 		while (getCleanLine(file, line)) {
 			vector<string> words;
 			boost::split(words, line, boost::is_any_of(" "),
