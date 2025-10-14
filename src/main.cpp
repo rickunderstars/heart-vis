@@ -53,6 +53,21 @@ class vector3 {
 		oss << "(" << x << ", " << y << ", " << z << ")";
 		return oss.str();
 	}
+	string getX() {
+		ostringstream oss;
+		oss << x;
+		return oss.str();
+	}
+	string getY() {
+		ostringstream oss;
+		oss << y;
+		return oss.str();
+	}
+	string getZ() {
+		ostringstream oss;
+		oss << z;
+		return oss.str();
+	}
 };
 
 class vertex {
@@ -72,6 +87,19 @@ class vertex {
 		ostringstream oss;
 		oss << "{ pos: " << pos.toString() << " | normal: " << normal.toString()
 			<< " | groupID: " << groupID << " }";
+		return oss.str();
+	}
+
+	string posToObj() {
+		ostringstream oss;
+		oss << "v  " << pos.getX() << " " << pos.getY() << " " << pos.getZ();
+		return oss.str();
+	}
+
+	string normalToObj() {
+		ostringstream oss;
+		oss << "vn " << normal.getX() << " " << normal.getY() << " "
+			<< normal.getZ();
 		return oss.str();
 	}
 };
@@ -94,6 +122,13 @@ class triangle {
 		ostringstream oss;
 		oss << "{ triangle: [" << vertices[0] << ", " << vertices[1] << ", "
 			<< vertices[2] << "] | groupID: " << groupID << " }";
+		return oss.str();
+	}
+
+	string toObj() {
+		ostringstream oss;
+		oss << "f  " << vertices[0] << "//" << vertices[0] << " " << vertices[1]
+			<< "//" << vertices[1] << " " << vertices[2] << "//" << vertices[2];
 		return oss.str();
 	}
 };
@@ -260,8 +295,33 @@ class Mesh {
 		return oss.str();
 	}
 
-	string toString() {
+	bool toObj(string filename) {
+		filename = filename + ".obj";
+		ofstream fileOut(filename);
+		if (fileOut.is_open()) {
+			fileOut << "# Obj file converted from Mesh proprietary file";
+			fileOut << "\n\n\n############\n# vertices #\n############\n\n";
+			for (int i = 0; i < vertices.size(); i++) {
+				fileOut << vertices[i].posToObj() << "\n";
+			}
+			fileOut
+				<< "\n\n\n############\n# vertices normals #\n############\n\n";
+			for (int i = 0; i < vertices.size(); i++) {
+				fileOut << vertices[i].normalToObj() << "\n";
+			}
+			fileOut << "\n\n\n############\n# vertices #\n############\n\n";
+			for (int i = 0; i < triangles.size(); i++) {
+				fileOut << triangles[i].toObj() << "\n";
+			}
+		} else {
+			cerr << "Could not create obj file." << endl;
+			return false;
+		}
+		fileOut.close();
+		return true;
+	}
 
+	string toString() {
 		ostringstream oss;
 		oss << "MeshID: " << meshID
 			<< "\n\n---------------------------------------------------------"
@@ -278,7 +338,7 @@ class Mesh {
 };
 
 int main() {
-	Mesh msh = Mesh::importMesh("../assets/mesh/2-LA-FA.mesh");
-	cout << msh.toString();
+	Mesh msh = Mesh::importMesh("../assets/mesh/2-LA.mesh");
+	msh.toObj("cuore");
 	return 0;
 }
