@@ -102,6 +102,13 @@ class vertex {
 			<< normal.getZ();
 		return oss.str();
 	}
+
+	string ToPly() {
+		ostringstream oss;
+		oss << pos.getX() << " " << pos.getY() << " " << pos.getZ() << " "
+			<< normal.getX() << " " << normal.getY() << " " << normal.getZ();
+		return oss.str();
+	}
 };
 
 class triangle {
@@ -129,6 +136,13 @@ class triangle {
 		ostringstream oss;
 		oss << "f  " << vertices[0] << "//" << vertices[0] << " " << vertices[1]
 			<< "//" << vertices[1] << " " << vertices[2] << "//" << vertices[2];
+		return oss.str();
+	}
+
+	string toPly() {
+		ostringstream oss;
+		oss << 3 << " " << vertices[0] << " " << vertices[1] << " "
+			<< vertices[2];
 		return oss.str();
 	}
 };
@@ -299,7 +313,7 @@ class Mesh {
 		filename = filename + ".obj";
 		ofstream fileOut(filename);
 		if (fileOut.is_open()) {
-			fileOut << "# Obj file converted from Mesh proprietary file";
+			fileOut << "# Obj file converted from proprietary mesh format";
 			fileOut << "\n\n\n############\n# vertices #\n############\n\n";
 			for (int i = 0; i < vertices.size(); i++) {
 				fileOut << vertices[i].posToObj() << "\n";
@@ -309,12 +323,43 @@ class Mesh {
 			for (int i = 0; i < vertices.size(); i++) {
 				fileOut << vertices[i].normalToObj() << "\n";
 			}
-			fileOut << "\n\n\n############\n# vertices #\n############\n\n";
+			fileOut << "\n\n\n############\n# triangles #\n############\n\n";
 			for (int i = 0; i < triangles.size(); i++) {
 				fileOut << triangles[i].toObj() << "\n";
 			}
 		} else {
 			cerr << "Could not create obj file." << endl;
+			return false;
+		}
+		fileOut.close();
+		return true;
+	}
+
+	bool toPly(string filename) {
+		filename = filename + ".ply";
+		ofstream fileOut(filename);
+		if (fileOut.is_open()) {
+
+			fileOut << "ply\nformat ascii 1.0\n";
+			fileOut
+				<< "comment Ply file converted from proprietary mesh format\n";
+			fileOut << "element vertex " << vertices.size() << "\n";
+			fileOut << "property float x\nproperty float y\nproperty float "
+					   "z\nproperty float nx\nproperty float ny\nproperty "
+					   "float nz\n";
+			fileOut << "element face " << triangles.size() << "\n";
+			fileOut << "property list uchar int vertex_indices\n";
+			fileOut << "end_header\n";
+
+			for (int i = 0; i < vertices.size(); i++) {
+				fileOut << vertices[i].ToPly() << "\n";
+			}
+			for (int i = 0; i < triangles.size(); i++) {
+				fileOut << triangles[i].toPly() << "\n";
+			}
+			fileOut << "\n\n";
+		} else {
+			cerr << "Could not create ply file." << endl;
 			return false;
 		}
 		fileOut.close();
@@ -340,5 +385,6 @@ class Mesh {
 int main() {
 	Mesh msh = Mesh::importMesh("../assets/mesh/2-LA.mesh");
 	msh.toObj("cuore");
+	msh.toPly("cuore");
 	return 0;
 }

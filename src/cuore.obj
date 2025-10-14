@@ -1,4 +1,4 @@
-# Obj file converted from Mesh proprietary file
+# Obj file converted from proprietary mesh format
 
 
 ############
@@ -27228,7 +27228,7 @@ vn 0.06656 -0.01311 -0.9977
 
 
 ############
-# vertices #
+# triangles #
 ############
 
 f  7//7 0//0 2//2
