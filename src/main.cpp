@@ -310,7 +310,11 @@ class Mesh {
 	}
 
 	bool toObj(string filename) {
-		filename = filename + ".obj";
+		string ext = ".obj";
+		if (!(filename.length() >= ext.length() &&
+			  filename.substr(filename.length() - ext.length()) == ext)) {
+			filename = filename + ext;
+		}
 		ofstream fileOut(filename);
 		if (fileOut.is_open()) {
 			fileOut << "# Obj file converted from proprietary mesh format";
@@ -336,7 +340,11 @@ class Mesh {
 	}
 
 	bool toPly(string filename) {
-		filename = filename + ".ply";
+		string ext = ".ply";
+		if (!(filename.length() >= ext.length() &&
+			  filename.substr(filename.length() - ext.length()) == ext)) {
+			filename = filename + ext;
+		}
 		ofstream fileOut(filename);
 		if (fileOut.is_open()) {
 
@@ -385,6 +393,6 @@ class Mesh {
 int main() {
 	Mesh msh = Mesh::importMesh("../assets/mesh/2-LA.mesh");
 	msh.toObj("cuore");
-	msh.toPly("cuore");
+	msh.toPly("cuore.ply");
 	return 0;
 }
