@@ -123,6 +123,7 @@ class Mesh {
 
 		// triangles
 		vector<triangle> tris(triNum);
+		trianglesSection(file, tris);
 
 		return Mesh(verts, tris, id);
 	}
@@ -190,7 +191,37 @@ class Mesh {
 		}
 	}
 
-	static void trianglesSection(ifstream &file) { /*TODO*/ }
+	static void trianglesSection(ifstream &file, vector<triangle> &triangles) {
+		string line = "";
+		bool found = false;
+		while (getCleanLine(file, line)) {
+			if (line == TRIANGLES_SECTION) {
+				found = true;
+				break;
+			}
+		}
+		if (!found) {
+			cerr << "Could not find section '" << TRIANGLES_SECTION << "'."
+				 << endl;
+			exit(1);
+		}
+		getCleanLine(file, line);
+		getCleanLine(file, line);
+		int index = 0;
+		while (getCleanLine(file, line) && !isWhitespace(line)) {
+			vector<string> words;
+			boost::split(words, line, boost::is_any_of(" ="),
+						 boost::token_compress_on);
+			if (index != stoi(words[0])) {
+				cerr << "Triangle " << index << " not found.";
+				exit(1);
+			}
+			int tri[3] = {stoi(words[1]), stoi(words[2]), stoi(words[3])};
+			triangles[index] = triangle(tri, stoi(words[7]));
+			index++;
+		}
+	}
+
 	static void verticesAttributesSection(ifstream &file) { /*TODO*/ }
 
   public:
@@ -220,19 +251,34 @@ class Mesh {
 		return oss.str();
 	}
 
+	string trianglesString() {
+		ostringstream oss;
+		oss << "Triangles:" << endl << "----------" << endl;
+		for (int i = 0; i < vertices.size(); i++) {
+			oss << i << ": " << triangles[i].toString() << endl;
+		}
+		return oss.str();
+	}
+
 	string toString() {
 
-		// string meshID
-		// vector<vertex> vertices;
-		// vector<triangle> triangles;
 		ostringstream oss;
-		oss << "TODO";
+		oss << "MeshID: " << meshID
+			<< "\n\n---------------------------------------------------------"
+			   "\n\n"
+			<< verticesString()
+			<< "\n\n---------------------------------------------------------"
+			   "\n\n"
+			<< trianglesString()
+			<< "\n\n---------------------------------------------------------"
+			   "\n\n"
+			<< "MeshID: " << meshID << endl;
 		return oss.str();
 	}
 };
 
 int main() {
 	Mesh msh = Mesh::importMesh("../assets/mesh/2-LA-FA.mesh");
-	cout << msh.verticesString();
+	cout << msh.toString();
 	return 0;
 }
