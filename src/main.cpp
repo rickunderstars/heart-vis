@@ -14,7 +14,8 @@ const string GA_NUM_TRIANGLES = "NumTriangle";
 const string GA_MESH_ID = "MeshID";
 const string VERTICES_SECTION = "[VerticesSection]";
 const string TRIANGLES_SECTION = "[TrianglesSection]";
-const string ATTRIBUTES_SECTION = "[VerticesColorsSection]";
+const string VERTICES_COLORS_SECTION = "[VerticesColorsSection]";
+const string VERTICES_ATTRIBUTES_SECTION = "[VerticesAttributesSection]";
 const int SECTIONS_NUM = 4;
 
 bool isWhitespace(const string &str) {
@@ -188,8 +189,8 @@ class Mesh {
 			}
 		}
 		if (!found) {
-			cerr << "Could not find section '" << ATTRIBUTES_SECTION << "'."
-				 << endl;
+			cerr << "Could not find section '" << VERTICES_COLORS_SECTION
+				 << "'." << endl;
 			exit(1);
 		}
 		while (getCleanLine(file, line) && !isWhitespace(line)) {
@@ -271,8 +272,6 @@ class Mesh {
 		}
 	}
 
-	static void verticesAttributesSection(ifstream &file) { /*TODO*/ }
-
   public:
 	static Mesh importMesh(string filepath) {
 		ifstream file(filepath);
@@ -318,7 +317,7 @@ class Mesh {
 		ofstream fileOut(filename);
 		if (fileOut.is_open()) {
 			fileOut << "# Obj file converted from proprietary mesh format";
-			fileOut << "\n\n\n############\n# vertices #\n############\n\n";
+			fileOut << "\n\n############\n# vertices #\n############\n\n";
 			for (int i = 0; i < vertices.size(); i++) {
 				fileOut << vertices[i].posToObj() << "\n";
 			}
@@ -391,8 +390,16 @@ class Mesh {
 };
 
 int main() {
-	Mesh msh = Mesh::importMesh("../assets/mesh/2-LA.mesh");
-	msh.toObj("cuore");
-	msh.toPly("cuore.ply");
+
+	string file1 = "../assets/mesh/2-LA.mesh";
+	Mesh msh1 = Mesh::importMesh(file1);
+	msh1.toObj(file1);
+	msh1.toPly(file1);
+
+	string file2 = "../assets/mesh/2-LA-FA.mesh";
+	Mesh msh2 = Mesh::importMesh(file1);
+	msh2.toObj(file2);
+	msh2.toPly(file2);
+
 	return 0;
 }
