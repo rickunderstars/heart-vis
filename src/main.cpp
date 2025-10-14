@@ -11,9 +11,9 @@ const string GENERAL_ATTRIBUTES = "[GeneralAttributes]";
 const string GA_NUM_VERTEX = "NumVertex";
 const string GA_NUM_TRIANGLES = "NumTriangle";
 const string GA_MESH_ID = "MeshID";
-const string VERTICES_START = "[VerticesSection]";
-const string TRIANGLES_START = "[TrianglesSection]";
-const string ATTRIBUTES_START = "[VerticesColorsSection]";
+const string VERTICES_SECTION = "[VerticesSection]";
+const string TRIANGLES_SECTION = "[TrianglesSection]";
+const string ATTRIBUTES_SECTION = "[VerticesColorsSection]";
 const int SECTIONS_NUM = 4;
 
 bool isWhitespace(const string &str) {
@@ -41,6 +41,7 @@ class vector3 {
 	float z;
 
   public:
+	vector3() : x(0), y(0), z(0) {}
 	vector3(float x, float y, float z) {
 		this->x = x;
 		this->y = y;
@@ -48,19 +49,20 @@ class vector3 {
 	}
 	string toString() {
 		ostringstream oss;
-		oss << "[" << x << ", " << y << ", " << z << "]";
+		oss << "(" << x << ", " << y << ", " << z << ")";
 		return oss.str();
 	}
 };
 
 class vertex {
   private:
-	vector3 pos = vector3(0, 0, 0);
-	vector3 normal = vector3(0, 0, 0);
+	vector3 pos;
+	vector3 normal;
 	int groupID;
 
   public:
-	vertex(vector3 pos, vector3 normal, int id) {
+	vertex() : pos(vector3(0, 0, 0)), normal(vector3(0, 0, 0)), groupID(-1) {}
+	vertex(vector3 &pos, vector3 &normal, int id) {
 		this->pos = pos;
 		this->normal = normal;
 		this->groupID = id;
@@ -79,6 +81,7 @@ class triangle {
 	int groupID;
 
   public:
+	triangle() : vertices{0, 0, 0}, groupID(-1) {}
 	triangle(int vertices[3], int groupID) {
 		for (int i = 0; i < 3; i++) {
 			this->vertices[i] = vertices[i];
@@ -100,7 +103,8 @@ class Mesh {
 	vector<vertex> vertices; // vertices(size, 0);
 	vector<triangle> triangles;
 
-	Mesh(vector<vertex> vertices, vector<triangle> triangles, string meshID) {}
+	Mesh(vector<vertex> &vertices, vector<triangle> &triangles, string meshID) {
+	}
 
 	Mesh() {} // dummy constructor
 
@@ -109,16 +113,16 @@ class Mesh {
 		int vertNum = 0;
 		int triNum = 0;
 		string id = "";
-
-		// vertices
-		vector<vertex> verts;
-
-		// triangles
-		vector<triangle> tris;
-
 		generalAttributesSection(file, vertNum, triNum, id);
 
-		return Mesh();
+		// vertices
+		vector<vertex> verts(vertNum);
+		verticesSection(file, verts);
+
+		// triangles
+		vector<triangle> tris(triNum);
+
+		return Mesh(verts, tris, id);
 	}
 
 	static void generalAttributesSection(ifstream &file, int &vertNum,
@@ -132,7 +136,7 @@ class Mesh {
 			}
 		}
 		if (!found) {
-			cerr << "Could not find section '" << ATTRIBUTES_START << "'."
+			cerr << "Could not find section '" << ATTRIBUTES_SECTION << "'."
 				 << endl;
 			exit(1);
 		}
@@ -154,7 +158,26 @@ class Mesh {
 			}
 		}
 	}
-	static void verticesSection(ifstream &file) { /*TODO*/ }
+
+	static void verticesSection(ifstream &file, vector<vertex> &vertices) {
+		string line = "";
+		bool found = false;
+		while (getCleanLine(file, line)) {
+			if (line == VERTICES_SECTION) {
+				found = true;
+				break;
+			}
+		}
+		getCleanLine(file, line);
+		getCleanLine(file, line);
+		while (getCleanLine(file, line)) {
+			vector<string> words;
+			boost::split(words, line, boost::is_any_of(" ="),
+						 boost::token_compress_on);
+			/*TODO*/
+		}
+	}
+
 	static void trianglesSection(ifstream &file) { /*TODO*/ }
 	static void verticesAttributesSection(ifstream &file) { /*TODO*/ }
 
