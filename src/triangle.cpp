@@ -19,8 +19,9 @@ string triangle::toString() {
 
 string triangle::toObj() {
 	ostringstream oss;
-	oss << "f  " << vertices[0] << "//" << vertices[0] << " " << vertices[1]
-		<< "//" << vertices[1] << " " << vertices[2] << "//" << vertices[2];
+	oss << "f  " << vertices[0] + 1 << "//" << vertices[0] + 1 << " "
+		<< vertices[1] + 1 << "//" << vertices[1] + 1 << " " << vertices[2] + 1
+		<< "//" << vertices[2] + 1;
 	return oss.str();
 }
 
