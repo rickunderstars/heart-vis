@@ -2,8 +2,6 @@
 
 #include <boost/algorithm/string.hpp>
 #include <fstream>
-#include <string>
-#include <vector>
 
 bool isWhitespace(const std::string &str) {
 	return all_of(str.begin(), str.end(),

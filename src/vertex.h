@@ -2,15 +2,15 @@
 
 #include "vector3.h"
 
-class vertex {
+class Vertex {
   private:
-	vector3 pos;
-	vector3 normal;
+	Vector3 pos;
+	Vector3 normal;
 	int groupID;
 
   public:
-	vertex();
-	vertex(vector3 &pos, vector3 &normal, int id);
+	Vertex();
+	Vertex(Vector3 &pos, Vector3 &normal, int id);
 	std::string toString();
 
 	std::string posToObj();

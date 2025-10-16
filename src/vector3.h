@@ -1,16 +1,16 @@
 #pragma once
 
-#include <iostream>
+#include <string>
 
-class vector3 {
+class Vector3 {
   private:
 	float x;
 	float y;
 	float z;
 
   public:
-	vector3();
-	vector3(float x, float y, float z);
+	Vector3();
+	Vector3(float x, float y, float z);
 	std::string toString();
 
 	std::string getX();

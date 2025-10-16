@@ -1,4 +1,4 @@
-#include "Mesh.h"
+#include "mesh.h"
 
 int main() {
 	std::string file1 = "../assets/mesh/2-LA.mesh";

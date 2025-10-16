@@ -1,4 +1,4 @@
-#include "Mesh.h"
+#include "mesh.h"
 
 #include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/constants.hpp>
@@ -15,7 +15,7 @@ const std::string VERTICES_COLORS_SECTION = "[VerticesColorsSection]";
 const std::string VERTICES_ATTRIBUTES_SECTION = "[VerticesAttributesSection]";
 const int SECTIONS_NUM = 4;
 
-Mesh::Mesh(std::vector<vertex> &vertices, std::vector<triangle> &triangles,
+Mesh::Mesh(std::vector<Vertex> &vertices, std::vector<Triangle> &triangles,
 		   std::string meshID) {
 	this->meshID = meshID;
 	this->vertices = vertices;
@@ -30,11 +30,11 @@ Mesh Mesh::sectionsHandler(std::ifstream &file) {
 	generalAttributesSection(file, vertNum, triNum, id);
 
 	// vertices
-	std::vector<vertex> verts(vertNum);
+	std::vector<Vertex> verts(vertNum);
 	verticesSection(file, verts);
 
 	// triangles
-	std::vector<triangle> tris(triNum);
+	std::vector<Triangle> tris(triNum);
 	trianglesSection(file, tris);
 
 	return Mesh(verts, tris, id);
@@ -71,7 +71,7 @@ void Mesh::generalAttributesSection(std::ifstream &file, int &vertNum,
 	}
 }
 
-void Mesh::verticesSection(std::ifstream &file, std::vector<vertex> &vertices) {
+void Mesh::verticesSection(std::ifstream &file, std::vector<Vertex> &vertices) {
 	std::string line = "";
 	bool found = false;
 	while (getCleanLine(file, line)) {
@@ -96,15 +96,15 @@ void Mesh::verticesSection(std::ifstream &file, std::vector<vertex> &vertices) {
 			std::cerr << "Vertex " << index << " not found." << std::endl;
 			exit(1);
 		}
-		vector3 pos(stof(words[1]), stof(words[2]), stof(words[3]));
-		vector3 normal(stof(words[4]), stof(words[5]), stof(words[6]));
-		vertices[index] = vertex(pos, normal, stoi(words[7]));
+		Vector3 pos(stof(words[1]), stof(words[2]), stof(words[3]));
+		Vector3 normal(stof(words[4]), stof(words[5]), stof(words[6]));
+		vertices[index] = Vertex(pos, normal, stoi(words[7]));
 		index++;
 	}
 }
 
 void Mesh::trianglesSection(std::ifstream &file,
-							std::vector<triangle> &triangles) {
+							std::vector<Triangle> &triangles) {
 	std::string line = "";
 	bool found = false;
 	while (getCleanLine(file, line)) {
@@ -130,7 +130,7 @@ void Mesh::trianglesSection(std::ifstream &file,
 			exit(1);
 		}
 		int tri[3] = {stoi(words[1]), stoi(words[2]), stoi(words[3])};
-		triangles[index] = triangle(tri, stoi(words[7]));
+		triangles[index] = Triangle(tri, stoi(words[7]));
 		index++;
 	}
 }

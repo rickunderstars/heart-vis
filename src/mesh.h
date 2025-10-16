@@ -4,15 +4,14 @@
 #include "utils.h"
 #include "vector3.h"
 #include "vertex.h"
-#include <iostream>
 
 class Mesh {
   private:
 	std::string meshID = "";
-	std::vector<vertex> vertices;
-	std::vector<triangle> triangles;
+	std::vector<Vertex> vertices;
+	std::vector<Triangle> triangles;
 
-	Mesh(std::vector<vertex> &vertices, std::vector<triangle> &triangles,
+	Mesh(std::vector<Vertex> &vertices, std::vector<Triangle> &triangles,
 		 std::string meshID);
 
 	static Mesh sectionsHandler(std::ifstream &file);
@@ -21,10 +20,10 @@ class Mesh {
 										 int &triNum, std::string &id);
 
 	static void verticesSection(std::ifstream &file,
-								std::vector<vertex> &vertices);
+								std::vector<Vertex> &vertices);
 
 	static void trianglesSection(std::ifstream &file,
-								 std::vector<triangle> &triangle);
+								 std::vector<Triangle> &triangle);
 
   public:
 	static Mesh importMesh(std::string filepath);

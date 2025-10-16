@@ -1,15 +1,15 @@
 #pragma once
 
-#include <iostream>
+#include <string>
 
-class triangle {
+class Triangle {
   private:
 	int vertices[3];
 	int groupID;
 
   public:
-	triangle();
-	triangle(int vertices[3], int groupID);
+	Triangle();
+	Triangle(int vertices[3], int groupID);
 
 	std::string toString();
 
