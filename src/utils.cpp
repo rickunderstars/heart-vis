@@ -41,6 +41,7 @@ Mesh sectionsHandler(std::ifstream &file) {
 	verticesColorsSection(file, verts);
 
 	// vertices properties 2
+	verticesAttributesSection(file, verts);
 
 	return Mesh(verts, tris);
 }
@@ -108,41 +109,6 @@ void verticesSection(std::ifstream &file, std::vector<Vertex> &vertices) {
 	}
 }
 
-void verticesColorsSection(std::ifstream &file, std::vector<Vertex> &vertices) {
-	std::string line = "";
-	bool found = false;
-	while (getCleanLine(file, line)) {
-		if (line == "[VerticesColorsSection]") {
-			found = true;
-			break;
-		}
-	}
-	if (!found) {
-		std::cerr << "Could not find section '" << "[VerticesColorsSection]"
-				  << "'." << std::endl;
-		exit(1);
-	}
-	getCleanLine(file, line);
-	getCleanLine(file, line);
-	getCleanLine(file, line);
-	int index = 0;
-	while (getCleanLine(file, line) && !isWhitespace(line)) {
-		std::vector<std::string> words;
-		boost::split(words, line, boost::is_any_of(" ="),
-					 boost::token_compress_on);
-		if (index != stoi(words[0])) {
-			std::cerr << "Vertex properties at index " << index << " not found."
-					  << std::endl;
-			exit(1);
-		}
-
-		vertices[index].unipolar = stof(words[1]);
-		vertices[index].bipolar = stof(words[2]);
-		vertices[index].LAT = stof(words[3]);
-		index++;
-	}
-}
-
 void trianglesSection(std::ifstream &file, std::vector<Triangle> &triangles) {
 	std::string line = "";
 	bool found = false;
@@ -170,6 +136,82 @@ void trianglesSection(std::ifstream &file, std::vector<Triangle> &triangles) {
 		}
 		int tri[3] = {stoi(words[1]), stoi(words[2]), stoi(words[3])};
 		triangles[index] = Triangle(tri, stoi(words[7]));
+		index++;
+	}
+}
+
+void verticesColorsSection(std::ifstream &file, std::vector<Vertex> &vertices) {
+	std::string line = "";
+	bool found = false;
+	while (getCleanLine(file, line)) {
+		if (line == "[VerticesColorsSection]") {
+			found = true;
+			break;
+		}
+	}
+	if (!found) {
+		std::cerr << "Could not find section '" << "[VerticesColorsSection]"
+				  << "'." << std::endl;
+		exit(1);
+	}
+	getCleanLine(file, line);
+	getCleanLine(file, line);
+	getCleanLine(file, line);
+	int index = 0;
+	while (getCleanLine(file, line) && !isWhitespace(line)) {
+		std::vector<std::string> words;
+		boost::split(words, line, boost::is_any_of(" ="),
+					 boost::token_compress_on);
+		if (index != stoi(words[0])) {
+			std::cerr << "Vertex colors at index " << index << " not found."
+					  << std::endl;
+			exit(1);
+		}
+
+		vertices[index].unipolar = stof(words[1]);
+		vertices[index].bipolar = stof(words[2]);
+		vertices[index].LAT = stof(words[3]);
+		index++;
+	}
+}
+
+void verticesAttributesSection(std::ifstream &file,
+							   std::vector<Vertex> &vertices) {
+	std::string line = "";
+	bool found = false;
+	while (getCleanLine(file, line)) {
+		if (line == "[VerticesAttributesSection]") {
+			found = true;
+			break;
+		}
+	}
+	if (!found) {
+		std::cerr << "Could not find section '" << "[VerticesAttributesSection]"
+				  << "'." << std::endl;
+		exit(1);
+	}
+	int index = 0;
+	bool found_first = false;
+	getCleanLine(file, line);
+	getCleanLine(file, line);
+	getCleanLine(file, line);
+	getCleanLine(file, line);
+	getCleanLine(file, line);
+	getCleanLine(file, line);
+	getCleanLine(file, line);
+	while (getCleanLine(file, line) && !isWhitespace(line)) {
+		std::vector<std::string> words;
+		boost::split(words, line, boost::is_any_of(" ="),
+					 boost::token_compress_on);
+		if (index != stoi(words[0])) {
+			std::cerr << "Vertex attributes at index " << index << " not found."
+					  << std::endl;
+			exit(1);
+		}
+
+		vertices[index].EML = stoi(words[1]);
+		vertices[index].ExtEML = stoi(words[2]);
+		vertices[index].SCAR = stoi(words[3]);
 		index++;
 	}
 }
