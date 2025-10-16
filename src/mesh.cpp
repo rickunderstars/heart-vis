@@ -77,7 +77,7 @@ bool Mesh::toPly(std::string filename, std::string quality) {
 
 	if (!(filename.length() >= ext.length() &&
 		  filename.substr(filename.length() - ext.length()) == ext)) {
-		filename = filename + "_" + quality + "_" + ext;
+		filename = filename + "_" + quality + ext;
 	}
 	std::ofstream fileOut(filename);
 	if (fileOut.is_open()) {

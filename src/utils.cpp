@@ -91,13 +91,23 @@ void verticesSection(std::ifstream &file, std::vector<Vertex> &vertices) {
 				  << std::endl;
 		exit(1);
 	}
-	getCleanLine(file, line);
-	getCleanLine(file, line);
+	bool found_first = false;
 	int index = 0;
-	while (getCleanLine(file, line) && !isWhitespace(line)) {
+	while (getCleanLine(file, line)) {
+
 		std::vector<std::string> words;
 		boost::split(words, line, boost::is_any_of(" ="),
 					 boost::token_compress_on);
+
+		if (!found_first && words[0] != "0") {
+			continue;
+		} else {
+			found_first = true;
+		}
+		if (isWhitespace(line)) {
+			break;
+		}
+
 		if (index != stoi(words[0])) {
 			std::cerr << "Vertex " << index << " not found." << std::endl;
 			exit(1);
@@ -123,13 +133,24 @@ void trianglesSection(std::ifstream &file, std::vector<Triangle> &triangles) {
 				  << std::endl;
 		exit(1);
 	}
-	getCleanLine(file, line);
-	getCleanLine(file, line);
+
+	bool found_first = false;
 	int index = 0;
-	while (getCleanLine(file, line) && !isWhitespace(line)) {
+	while (getCleanLine(file, line)) {
+
 		std::vector<std::string> words;
 		boost::split(words, line, boost::is_any_of(" ="),
 					 boost::token_compress_on);
+
+		if (!found_first && words[0] != "0") {
+			continue;
+		} else {
+			found_first = true;
+		}
+		if (isWhitespace(line)) {
+			break;
+		}
+
 		if (index != stoi(words[0])) {
 			std::cerr << "Triangle " << index << " not found." << std::endl;
 			exit(1);
@@ -154,14 +175,25 @@ void verticesColorsSection(std::ifstream &file, std::vector<Vertex> &vertices) {
 				  << "'." << std::endl;
 		exit(1);
 	}
-	getCleanLine(file, line);
-	getCleanLine(file, line);
-	getCleanLine(file, line);
+
+	bool found_first = false;
 	int index = 0;
-	while (getCleanLine(file, line) && !isWhitespace(line)) {
+	while (getCleanLine(file, line)) {
+
 		std::vector<std::string> words;
 		boost::split(words, line, boost::is_any_of(" ="),
 					 boost::token_compress_on);
+
+		if (!found_first && words[0] != "0") {
+			continue;
+		} else {
+			found_first = true;
+		}
+
+		if (isWhitespace(line)) {
+			break;
+		}
+
 		if (index != stoi(words[0])) {
 			std::cerr << "Vertex colors at index " << index << " not found."
 					  << std::endl;
@@ -190,19 +222,24 @@ void verticesAttributesSection(std::ifstream &file,
 				  << "'." << std::endl;
 		exit(1);
 	}
-	int index = 0;
+
 	bool found_first = false;
-	getCleanLine(file, line);
-	getCleanLine(file, line);
-	getCleanLine(file, line);
-	getCleanLine(file, line);
-	getCleanLine(file, line);
-	getCleanLine(file, line);
-	getCleanLine(file, line);
-	while (getCleanLine(file, line) && !isWhitespace(line)) {
+	int index = 0;
+	while (getCleanLine(file, line)) {
+
 		std::vector<std::string> words;
 		boost::split(words, line, boost::is_any_of(" ="),
 					 boost::token_compress_on);
+
+		if (!found_first && words[0] != "0") {
+			continue;
+		} else {
+			found_first = true;
+		}
+		if (isWhitespace(line)) {
+			break;
+		}
+
 		if (index != stoi(words[0])) {
 			std::cerr << "Vertex attributes at index " << index << " not found."
 					  << std::endl;
