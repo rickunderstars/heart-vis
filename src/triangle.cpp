@@ -1,4 +1,4 @@
-#include "triangle.h"
+#include "triangle.hpp"
 
 #include <sstream>
 
