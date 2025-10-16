@@ -2,8 +2,6 @@
 
 #include <iostream>
 
-using namespace std;
-
 class vector3 {
   private:
 	float x;
@@ -13,9 +11,9 @@ class vector3 {
   public:
 	vector3();
 	vector3(float x, float y, float z);
-	string toString();
+	std::string toString();
 
-	string getX();
-	string getY();
-	string getZ();
+	std::string getX();
+	std::string getY();
+	std::string getZ();
 };

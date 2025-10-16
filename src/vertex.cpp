@@ -9,28 +9,28 @@ vertex::vertex(vector3 &pos, vector3 &normal, int id) {
 	this->normal = normal;
 	this->groupID = id;
 }
-string vertex::toString() {
-	ostringstream oss;
+std::string vertex::toString() {
+	std::ostringstream oss;
 	oss << "{ pos: " << pos.toString() << " | normal: " << normal.toString()
 		<< " | groupID: " << groupID << " }";
 	return oss.str();
 }
 
-string vertex::posToObj() {
-	ostringstream oss;
+std::string vertex::posToObj() {
+	std::ostringstream oss;
 	oss << "v  " << pos.getX() << " " << pos.getY() << " " << pos.getZ();
 	return oss.str();
 }
 
-string vertex::normalToObj() {
-	ostringstream oss;
+std::string vertex::normalToObj() {
+	std::ostringstream oss;
 	oss << "vn " << normal.getX() << " " << normal.getY() << " "
 		<< normal.getZ();
 	return oss.str();
 }
 
-string vertex::toPly() {
-	ostringstream oss;
+std::string vertex::toPly() {
+	std::ostringstream oss;
 	oss << pos.getX() << " " << pos.getY() << " " << pos.getZ() << " "
 		<< normal.getX() << " " << normal.getY() << " " << normal.getZ();
 	return oss.str();

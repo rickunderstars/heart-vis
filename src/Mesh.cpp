@@ -5,46 +5,44 @@
 #include <fstream>
 #include <sstream>
 
-using namespace std;
-
-const string GENERAL_ATTRIBUTES = "[GeneralAttributes]";
-const string GA_NUM_VERTEX = "NumVertex";
-const string GA_NUM_TRIANGLES = "NumTriangle";
-const string GA_MESH_ID = "MeshID";
-const string VERTICES_SECTION = "[VerticesSection]";
-const string TRIANGLES_SECTION = "[TrianglesSection]";
-const string VERTICES_COLORS_SECTION = "[VerticesColorsSection]";
-const string VERTICES_ATTRIBUTES_SECTION = "[VerticesAttributesSection]";
+const std::string GENERAL_ATTRIBUTES = "[GeneralAttributes]";
+const std::string GA_NUM_VERTEX = "NumVertex";
+const std::string GA_NUM_TRIANGLES = "NumTriangle";
+const std::string GA_MESH_ID = "MeshID";
+const std::string VERTICES_SECTION = "[VerticesSection]";
+const std::string TRIANGLES_SECTION = "[TrianglesSection]";
+const std::string VERTICES_COLORS_SECTION = "[VerticesColorsSection]";
+const std::string VERTICES_ATTRIBUTES_SECTION = "[VerticesAttributesSection]";
 const int SECTIONS_NUM = 4;
 
-Mesh::Mesh(vector<vertex> &vertices, vector<triangle> &triangles,
-		   string meshID) {
+Mesh::Mesh(std::vector<vertex> &vertices, std::vector<triangle> &triangles,
+		   std::string meshID) {
 	this->meshID = meshID;
 	this->vertices = vertices;
 	this->triangles = triangles;
 }
 
-Mesh Mesh::sectionsHandler(ifstream &file) {
+Mesh Mesh::sectionsHandler(std::ifstream &file) {
 	// general attributes
 	int vertNum = 0;
 	int triNum = 0;
-	string id = "";
+	std::string id = "";
 	generalAttributesSection(file, vertNum, triNum, id);
 
 	// vertices
-	vector<vertex> verts(vertNum);
+	std::vector<vertex> verts(vertNum);
 	verticesSection(file, verts);
 
 	// triangles
-	vector<triangle> tris(triNum);
+	std::vector<triangle> tris(triNum);
 	trianglesSection(file, tris);
 
 	return Mesh(verts, tris, id);
 }
 
-void Mesh::generalAttributesSection(ifstream &file, int &vertNum, int &triNum,
-									string &id) {
-	string line = "";
+void Mesh::generalAttributesSection(std::ifstream &file, int &vertNum,
+									int &triNum, std::string &id) {
+	std::string line = "";
 	bool found = false;
 	while (getCleanLine(file, line)) {
 		if (line == GENERAL_ATTRIBUTES) {
@@ -53,12 +51,12 @@ void Mesh::generalAttributesSection(ifstream &file, int &vertNum, int &triNum,
 		}
 	}
 	if (!found) {
-		cerr << "Could not find section '" << VERTICES_COLORS_SECTION << "'."
-			 << endl;
+		std::cerr << "Could not find section '" << VERTICES_COLORS_SECTION
+				  << "'." << std::endl;
 		exit(1);
 	}
 	while (getCleanLine(file, line) && !isWhitespace(line)) {
-		vector<string> words;
+		std::vector<std::string> words;
 		boost::split(words, line, boost::is_any_of(" "),
 					 boost::token_compress_on);
 		if (words.size() == 3) {
@@ -73,8 +71,8 @@ void Mesh::generalAttributesSection(ifstream &file, int &vertNum, int &triNum,
 	}
 }
 
-void Mesh::verticesSection(ifstream &file, vector<vertex> &vertices) {
-	string line = "";
+void Mesh::verticesSection(std::ifstream &file, std::vector<vertex> &vertices) {
+	std::string line = "";
 	bool found = false;
 	while (getCleanLine(file, line)) {
 		if (line == VERTICES_SECTION) {
@@ -83,18 +81,19 @@ void Mesh::verticesSection(ifstream &file, vector<vertex> &vertices) {
 		}
 	}
 	if (!found) {
-		cerr << "Could not find section '" << VERTICES_SECTION << "'." << endl;
+		std::cerr << "Could not find section '" << VERTICES_SECTION << "'."
+				  << std::endl;
 		exit(1);
 	}
 	getCleanLine(file, line);
 	getCleanLine(file, line);
 	int index = 0;
 	while (getCleanLine(file, line) && !isWhitespace(line)) {
-		vector<string> words;
+		std::vector<std::string> words;
 		boost::split(words, line, boost::is_any_of(" ="),
 					 boost::token_compress_on);
 		if (index != stoi(words[0])) {
-			cerr << "Vertex " << index << " not found.";
+			std::cerr << "Vertex " << index << " not found." << std::endl;
 			exit(1);
 		}
 		vector3 pos(stof(words[1]), stof(words[2]), stof(words[3]));
@@ -104,8 +103,9 @@ void Mesh::verticesSection(ifstream &file, vector<vertex> &vertices) {
 	}
 }
 
-void Mesh::trianglesSection(ifstream &file, vector<triangle> &triangles) {
-	string line = "";
+void Mesh::trianglesSection(std::ifstream &file,
+							std::vector<triangle> &triangles) {
+	std::string line = "";
 	bool found = false;
 	while (getCleanLine(file, line)) {
 		if (line == TRIANGLES_SECTION) {
@@ -114,18 +114,19 @@ void Mesh::trianglesSection(ifstream &file, vector<triangle> &triangles) {
 		}
 	}
 	if (!found) {
-		cerr << "Could not find section '" << TRIANGLES_SECTION << "'." << endl;
+		std::cerr << "Could not find section '" << TRIANGLES_SECTION << "'."
+				  << std::endl;
 		exit(1);
 	}
 	getCleanLine(file, line);
 	getCleanLine(file, line);
 	int index = 0;
 	while (getCleanLine(file, line) && !isWhitespace(line)) {
-		vector<string> words;
+		std::vector<std::string> words;
 		boost::split(words, line, boost::is_any_of(" ="),
 					 boost::token_compress_on);
 		if (index != stoi(words[0])) {
-			cerr << "Triangle " << index << " not found.";
+			std::cerr << "Triangle " << index << " not found." << std::endl;
 			exit(1);
 		}
 		int tri[3] = {stoi(words[1]), stoi(words[2]), stoi(words[3])};
@@ -134,10 +135,11 @@ void Mesh::trianglesSection(ifstream &file, vector<triangle> &triangles) {
 	}
 }
 
-Mesh Mesh::importMesh(string filepath) {
-	ifstream file(filepath);
+Mesh Mesh::importMesh(std::string filepath) {
+	std::ifstream file(filepath);
 	if (!file.is_open()) {
-		cerr << "error: could not open file '" << filepath << "'" << endl;
+		std::cerr << "error: could not open file '" << filepath << "'"
+				  << std::endl;
 		exit(1);
 	}
 	Mesh h = sectionsHandler(file);
@@ -145,37 +147,37 @@ Mesh Mesh::importMesh(string filepath) {
 	return h;
 }
 
-string Mesh::getMeshID() { return meshID; }
+std::string Mesh::getMeshID() { return meshID; }
 
 int Mesh::getVertexNum() { return vertices.size(); }
 
 int Mesh::getTriangleNum() { return triangles.size(); }
 
-string Mesh::verticesString() {
-	ostringstream oss;
-	oss << "Vertices:" << endl << "---------" << endl;
+std::string Mesh::verticesString() {
+	std::ostringstream oss;
+	oss << "Vertices:\n---------\n";
 	for (int i = 0; i < vertices.size(); i++) {
-		oss << i << ": " << vertices[i].toString() << endl;
+		oss << i << ": " << vertices[i].toString() << std::endl;
 	}
 	return oss.str();
 }
 
-string Mesh::trianglesString() {
-	ostringstream oss;
-	oss << "Triangles:" << endl << "----------" << endl;
+std::string Mesh::trianglesString() {
+	std::ostringstream oss;
+	oss << "Triangles:\n----------\n";
 	for (int i = 0; i < vertices.size(); i++) {
-		oss << i << ": " << triangles[i].toString() << endl;
+		oss << i << ": " << triangles[i].toString() << std::endl;
 	}
 	return oss.str();
 }
 
-bool Mesh::toObj(string filename) {
-	string ext = ".obj";
+bool Mesh::toObj(std::string filename) {
+	std::string ext = ".obj";
 	if (!(filename.length() >= ext.length() &&
 		  filename.substr(filename.length() - ext.length()) == ext)) {
 		filename = filename + ext;
 	}
-	ofstream fileOut(filename);
+	std::ofstream fileOut(filename);
 	if (fileOut.is_open()) {
 		fileOut << "# Obj file converted from proprietary mesh format";
 		fileOut << "\n\n############\n# vertices #\n############\n\n";
@@ -191,20 +193,20 @@ bool Mesh::toObj(string filename) {
 			fileOut << triangles[i].toObj() << "\n";
 		}
 	} else {
-		cerr << "Could not create obj file." << endl;
+		std::cerr << "Could not create obj file." << std::endl;
 		return false;
 	}
 	fileOut.close();
 	return true;
 }
 
-bool Mesh::toPly(string filename) {
-	string ext = ".ply";
+bool Mesh::toPly(std::string filename) {
+	std::string ext = ".ply";
 	if (!(filename.length() >= ext.length() &&
 		  filename.substr(filename.length() - ext.length()) == ext)) {
 		filename = filename + ext;
 	}
-	ofstream fileOut(filename);
+	std::ofstream fileOut(filename);
 	if (fileOut.is_open()) {
 
 		fileOut << "ply\nformat ascii 1.0\n";
@@ -225,15 +227,15 @@ bool Mesh::toPly(string filename) {
 		}
 		fileOut << "\n\n";
 	} else {
-		cerr << "Could not create ply file." << endl;
+		std::cerr << "Could not create ply file." << std::endl;
 		return false;
 	}
 	fileOut.close();
 	return true;
 }
 
-string Mesh::toString() {
-	ostringstream oss;
+std::string Mesh::toString() {
+	std::ostringstream oss;
 	oss << "MeshID: " << meshID
 		<< "\n\n---------------------------------------------------------"
 		   "\n\n"
@@ -243,6 +245,6 @@ string Mesh::toString() {
 		<< trianglesString()
 		<< "\n\n---------------------------------------------------------"
 		   "\n\n"
-		<< "MeshID: " << meshID << endl;
+		<< "MeshID: " << meshID << std::endl;
 	return oss.str();
 }

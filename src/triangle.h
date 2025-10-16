@@ -2,8 +2,6 @@
 
 #include <iostream>
 
-using namespace std;
-
 class triangle {
   private:
 	int vertices[3];
@@ -13,9 +11,9 @@ class triangle {
 	triangle();
 	triangle(int vertices[3], int groupID);
 
-	string toString();
+	std::string toString();
 
-	string toObj();
+	std::string toObj();
 
-	string toPly();
+	std::string toPly();
 };

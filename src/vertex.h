@@ -11,11 +11,11 @@ class vertex {
   public:
 	vertex();
 	vertex(vector3 &pos, vector3 &normal, int id);
-	string toString();
+	std::string toString();
 
-	string posToObj();
+	std::string posToObj();
 
-	string normalToObj();
+	std::string normalToObj();
 
-	string toPly();
+	std::string toPly();
 };

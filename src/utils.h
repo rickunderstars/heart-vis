@@ -3,10 +3,8 @@
 #include <iostream>
 #include <vector>
 
-using namespace std;
+bool isWhitespace(const std::string &str);
 
-bool isWhitespace(const string &str);
+void printVector(std::vector<std::string> v);
 
-void printVector(vector<string> v);
-
-istream &getCleanLine(ifstream &file, string &line);
+std::istream &getCleanLine(std::ifstream &file, std::string &line);

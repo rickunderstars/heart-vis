@@ -6,41 +6,42 @@
 #include "vertex.h"
 #include <iostream>
 
-using namespace std;
-
 class Mesh {
   private:
-	string meshID = "";
-	vector<vertex> vertices;
-	vector<triangle> triangles;
+	std::string meshID = "";
+	std::vector<vertex> vertices;
+	std::vector<triangle> triangles;
 
-	Mesh(vector<vertex> &vertices, vector<triangle> &triangles, string meshID);
+	Mesh(std::vector<vertex> &vertices, std::vector<triangle> &triangles,
+		 std::string meshID);
 
-	static Mesh sectionsHandler(ifstream &file);
+	static Mesh sectionsHandler(std::ifstream &file);
 
-	static void generalAttributesSection(ifstream &file, int &vertNum,
-										 int &triNum, string &id);
+	static void generalAttributesSection(std::ifstream &file, int &vertNum,
+										 int &triNum, std::string &id);
 
-	static void verticesSection(ifstream &file, vector<vertex> &vertices);
+	static void verticesSection(std::ifstream &file,
+								std::vector<vertex> &vertices);
 
-	static void trianglesSection(ifstream &file, vector<triangle> &triangle);
+	static void trianglesSection(std::ifstream &file,
+								 std::vector<triangle> &triangle);
 
   public:
-	static Mesh importMesh(string filepath);
+	static Mesh importMesh(std::string filepath);
 
-	string getMeshID();
+	std::string getMeshID();
 
 	int getVertexNum();
 
 	int getTriangleNum();
 
-	string verticesString();
+	std::string verticesString();
 
-	string trianglesString();
+	std::string trianglesString();
 
-	bool toObj(string filename);
+	bool toObj(std::string filename);
 
-	bool toPly(string filename);
+	bool toPly(std::string filename);
 
-	string toString();
+	std::string toString();
 };
