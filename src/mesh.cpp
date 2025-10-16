@@ -58,11 +58,26 @@ bool Mesh::toObj(std::string filename) {
 	return true;
 }
 
-bool Mesh::toPly(std::string filename) {
+bool Mesh::toPly(std::string filename, std::string quality) {
 	std::string ext = ".ply";
+	std::vector<std::string> qualities = {"unipolar", "bipolar", "lat",
+										  "eml",	  "exteml",	 "scar"};
+	for (char &c : quality) {
+		c = std::tolower(static_cast<unsigned char>(c));
+	}
+
+	bool quality_found =
+		std::any_of(qualities.begin(), qualities.end(),
+					[&](const std::string &s) { return s == quality; });
+
+	if (!quality_found) {
+		std::cerr << "'" << quality << "' is not an attribute.\n";
+		exit(1);
+	}
+
 	if (!(filename.length() >= ext.length() &&
 		  filename.substr(filename.length() - ext.length()) == ext)) {
-		filename = filename + ext;
+		filename = filename + "_" + quality + "_" + ext;
 	}
 	std::ofstream fileOut(filename);
 	if (fileOut.is_open()) {
@@ -73,12 +88,13 @@ bool Mesh::toPly(std::string filename) {
 		fileOut << "property float x\nproperty float y\nproperty float "
 				   "z\nproperty float nx\nproperty float ny\nproperty "
 				   "float nz\n";
+		fileOut << "property float quality\n";
 		fileOut << "element face " << triangles.size() << "\n";
 		fileOut << "property list uchar int vertex_indices\n";
 		fileOut << "end_header\n";
 
 		for (int i = 0; i < vertices.size(); i++) {
-			fileOut << vertices[i].toPly() << "\n";
+			fileOut << vertices[i].toPly(quality) << "\n";
 		}
 		for (int i = 0; i < triangles.size(); i++) {
 			fileOut << triangles[i].toPly() << "\n";

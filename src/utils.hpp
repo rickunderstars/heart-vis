@@ -18,4 +18,9 @@ void verticesSection(std::ifstream &file, std::vector<Vertex> &vertices);
 
 void trianglesSection(std::ifstream &file, std::vector<Triangle> &triangle);
 
+void verticesColorsSection(std::ifstream &file, std::vector<Vertex> &vertices);
+
+void verticesAttributesSection(std::ifstream &file,
+							   std::vector<Vertex> &vertices);
+
 Mesh importMesh(std::string filepath);

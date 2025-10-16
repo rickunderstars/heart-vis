@@ -2,6 +2,7 @@
 
 #include <boost/algorithm/string.hpp>
 #include <fstream>
+#include <ostream>
 
 bool isWhitespace(const std::string &str) {
 	return all_of(str.begin(), str.end(),
@@ -35,6 +36,11 @@ Mesh sectionsHandler(std::ifstream &file) {
 	// triangles
 	std::vector<Triangle> tris(triNum);
 	trianglesSection(file, tris);
+
+	// vertices properties 1
+	verticesColorsSection(file, verts);
+
+	// vertices properties 2
 
 	return Mesh(verts, tris);
 }
@@ -98,6 +104,41 @@ void verticesSection(std::ifstream &file, std::vector<Vertex> &vertices) {
 		glm::vec3 pos(stof(words[1]), stof(words[2]), stof(words[3]));
 		glm::vec3 normal(stof(words[4]), stof(words[5]), stof(words[6]));
 		vertices[index] = Vertex(pos, normal, stoi(words[7]));
+		index++;
+	}
+}
+
+void verticesColorsSection(std::ifstream &file, std::vector<Vertex> &vertices) {
+	std::string line = "";
+	bool found = false;
+	while (getCleanLine(file, line)) {
+		if (line == "[VerticesColorsSection]") {
+			found = true;
+			break;
+		}
+	}
+	if (!found) {
+		std::cerr << "Could not find section '" << "[VerticesColorsSection]"
+				  << "'." << std::endl;
+		exit(1);
+	}
+	getCleanLine(file, line);
+	getCleanLine(file, line);
+	getCleanLine(file, line);
+	int index = 0;
+	while (getCleanLine(file, line) && !isWhitespace(line)) {
+		std::vector<std::string> words;
+		boost::split(words, line, boost::is_any_of(" ="),
+					 boost::token_compress_on);
+		if (index != stoi(words[0])) {
+			std::cerr << "Vertex properties at index " << index << " not found."
+					  << std::endl;
+			exit(1);
+		}
+
+		vertices[index].unipolar = stof(words[1]);
+		vertices[index].bipolar = stof(words[2]);
+		vertices[index].LAT = stof(words[3]);
 		index++;
 	}
 }

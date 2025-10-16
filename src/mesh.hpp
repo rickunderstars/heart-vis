@@ -17,7 +17,7 @@ class Mesh {
 
 	bool toObj(std::string filename);
 
-	bool toPly(std::string filename);
+	bool toPly(std::string filename, std::string quality);
 
 	std::string toString();
 };

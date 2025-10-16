@@ -2,10 +2,13 @@
 
 #include <glm/ext/vector_float3.hpp>
 #include <glm/vec3.hpp>
+#include <iostream>
 #include <sstream>
+#include <string>
 
 Vertex::Vertex()
-	: pos(glm::vec3(0, 0, 0)), normal(glm::vec3(0, 0, 0)), groupID(-1) {}
+	: pos(glm::vec3(0, 0, 0)), normal(glm::vec3(0, 0, 0)), groupID(-1),
+	  unipolar(0), bipolar(0), LAT(0), EML(-1), ExtEML(-1), SCAR(-1) {}
 Vertex::Vertex(glm::vec3 &pos, glm::vec3 &normal, int id) {
 	this->pos = pos;
 	this->normal = normal;
@@ -15,7 +18,9 @@ std::string Vertex::toString() {
 	std::ostringstream oss;
 	oss << "{ pos: (" << pos.x << ", " << pos.y << ", " << pos.z
 		<< ") | normal: (" << normal.x << ", " << normal.y << ", " << normal.z
-		<< ") | groupID: " << groupID << " }";
+		<< ") | groupID: " << groupID << "\n\tunipolar: " << unipolar
+		<< " | bipolar: " << bipolar << " | LAT: " << LAT << "\n\tEML: " << EML
+		<< " | ExtEml: " << ExtEML << " | SCAR: " << SCAR << " }";
 	return oss.str();
 }
 
@@ -31,9 +36,26 @@ std::string Vertex::normalToObj() {
 	return oss.str();
 }
 
-std::string Vertex::toPly() {
+std::string Vertex::toPly(std::string quality) {
+
+	std::string q = "-1";
+
+	if (quality == "unipolar") {
+		q = std::to_string(this->unipolar);
+	} else if (quality == "bipolar") {
+		q = std::to_string(this->bipolar);
+	} else if (quality == "lat") {
+		q = std::to_string(this->LAT);
+	} else if (quality == "eml") {
+		q = std::to_string(this->EML);
+	} else if (quality == "exteml") {
+		q = std::to_string(this->ExtEML);
+	} else if (quality == "scar") {
+		q = std::to_string(this->SCAR);
+	}
+
 	std::ostringstream oss;
 	oss << pos.x << " " << pos.y << " " << pos.z << " " << normal.x << " "
-		<< normal.y << " " << normal.z;
+		<< normal.y << " " << normal.z << " " << q;
 	return oss.str();
 }
