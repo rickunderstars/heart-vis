@@ -5,19 +5,7 @@
 #include <fstream>
 #include <sstream>
 
-const std::string GENERAL_ATTRIBUTES = "[GeneralAttributes]";
-const std::string GA_NUM_VERTEX = "NumVertex";
-const std::string GA_NUM_TRIANGLES = "NumTriangle";
-const std::string GA_MESH_ID = "MeshID";
-const std::string VERTICES_SECTION = "[VerticesSection]";
-const std::string TRIANGLES_SECTION = "[TrianglesSection]";
-const std::string VERTICES_COLORS_SECTION = "[VerticesColorsSection]";
-const std::string VERTICES_ATTRIBUTES_SECTION = "[VerticesAttributesSection]";
-const int SECTIONS_NUM = 4;
-
-Mesh::Mesh(std::vector<Vertex> &vertices, std::vector<Triangle> &triangles,
-		   std::string meshID) {
-	this->meshID = meshID;
+Mesh::Mesh(std::vector<Vertex> &vertices, std::vector<Triangle> &triangles) {
 	this->vertices = vertices;
 	this->triangles = triangles;
 }
@@ -37,7 +25,7 @@ Mesh Mesh::sectionsHandler(std::ifstream &file) {
 	std::vector<Triangle> tris(triNum);
 	trianglesSection(file, tris);
 
-	return Mesh(verts, tris, id);
+	return Mesh(verts, tris);
 }
 
 void Mesh::generalAttributesSection(std::ifstream &file, int &vertNum,
@@ -45,13 +33,13 @@ void Mesh::generalAttributesSection(std::ifstream &file, int &vertNum,
 	std::string line = "";
 	bool found = false;
 	while (getCleanLine(file, line)) {
-		if (line == GENERAL_ATTRIBUTES) {
+		if (line == "[GeneralAttributes]") {
 			found = true;
 			break;
 		}
 	}
 	if (!found) {
-		std::cerr << "Could not find section '" << VERTICES_COLORS_SECTION
+		std::cerr << "Could not find section '" << "[VerticesColorsSection]"
 				  << "'." << std::endl;
 		exit(1);
 	}
@@ -60,11 +48,11 @@ void Mesh::generalAttributesSection(std::ifstream &file, int &vertNum,
 		boost::split(words, line, boost::is_any_of(" "),
 					 boost::token_compress_on);
 		if (words.size() == 3) {
-			if (words[0] == GA_MESH_ID) {
+			if (words[0] == "MeshID") {
 				id = words[2];
-			} else if (words[0] == GA_NUM_VERTEX) {
+			} else if (words[0] == "NumVertex") {
 				vertNum = stoi(words[2]);
-			} else if (words[0] == GA_NUM_TRIANGLES) {
+			} else if (words[0] == "NumTriangle") {
 				triNum = stoi(words[2]);
 			}
 		}
@@ -75,13 +63,13 @@ void Mesh::verticesSection(std::ifstream &file, std::vector<Vertex> &vertices) {
 	std::string line = "";
 	bool found = false;
 	while (getCleanLine(file, line)) {
-		if (line == VERTICES_SECTION) {
+		if (line == "[VerticesSection]") {
 			found = true;
 			break;
 		}
 	}
 	if (!found) {
-		std::cerr << "Could not find section '" << VERTICES_SECTION << "'."
+		std::cerr << "Could not find section '" << "[VerticesSection]" << "'."
 				  << std::endl;
 		exit(1);
 	}
@@ -96,8 +84,8 @@ void Mesh::verticesSection(std::ifstream &file, std::vector<Vertex> &vertices) {
 			std::cerr << "Vertex " << index << " not found." << std::endl;
 			exit(1);
 		}
-		Vector3 pos(stof(words[1]), stof(words[2]), stof(words[3]));
-		Vector3 normal(stof(words[4]), stof(words[5]), stof(words[6]));
+		glm::vec3 pos(stof(words[1]), stof(words[2]), stof(words[3]));
+		glm::vec3 normal(stof(words[4]), stof(words[5]), stof(words[6]));
 		vertices[index] = Vertex(pos, normal, stoi(words[7]));
 		index++;
 	}
@@ -108,13 +96,13 @@ void Mesh::trianglesSection(std::ifstream &file,
 	std::string line = "";
 	bool found = false;
 	while (getCleanLine(file, line)) {
-		if (line == TRIANGLES_SECTION) {
+		if (line == "[TrianglesSection]") {
 			found = true;
 			break;
 		}
 	}
 	if (!found) {
-		std::cerr << "Could not find section '" << TRIANGLES_SECTION << "'."
+		std::cerr << "Could not find section '" << "[TrianglesSection]" << "'."
 				  << std::endl;
 		exit(1);
 	}
@@ -146,12 +134,6 @@ Mesh Mesh::importMesh(std::string filepath) {
 	file.close();
 	return h;
 }
-
-std::string Mesh::getMeshID() { return meshID; }
-
-int Mesh::getVertexNum() { return vertices.size(); }
-
-int Mesh::getTriangleNum() { return triangles.size(); }
 
 std::string Mesh::verticesString() {
 	std::ostringstream oss;
@@ -236,15 +218,11 @@ bool Mesh::toPly(std::string filename) {
 
 std::string Mesh::toString() {
 	std::ostringstream oss;
-	oss << "MeshID: " << meshID
-		<< "\n\n---------------------------------------------------------"
-		   "\n\n"
+	oss << "- Vertices -\n"
+		<< "----------------------------------------------------\n"
 		<< verticesString()
-		<< "\n\n---------------------------------------------------------"
-		   "\n\n"
-		<< trianglesString()
-		<< "\n\n---------------------------------------------------------"
-		   "\n\n"
-		<< "MeshID: " << meshID << std::endl;
+		<< "\n\n- Triangles -\n"
+		   "----------------------------------------------------\n"
+		<< trianglesString() << "\n";
 	return oss.str();
 }

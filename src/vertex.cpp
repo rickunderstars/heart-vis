@@ -1,37 +1,39 @@
 #include "vertex.h"
 
+#include <glm/ext/vector_float3.hpp>
+#include <glm/vec3.hpp>
 #include <sstream>
 
 Vertex::Vertex()
-	: pos(Vector3(0, 0, 0)), normal(Vector3(0, 0, 0)), groupID(-1) {}
-Vertex::Vertex(Vector3 &pos, Vector3 &normal, int id) {
+	: pos(glm::vec3(0, 0, 0)), normal(glm::vec3(0, 0, 0)), groupID(-1) {}
+Vertex::Vertex(glm::vec3 &pos, glm::vec3 &normal, int id) {
 	this->pos = pos;
 	this->normal = normal;
 	this->groupID = id;
 }
 std::string Vertex::toString() {
 	std::ostringstream oss;
-	oss << "{ pos: " << pos.toString() << " | normal: " << normal.toString()
-		<< " | groupID: " << groupID << " }";
+	oss << "{ pos: (" << pos.x << ", " << pos.y << ", " << pos.z
+		<< ") | normal: (" << normal.x << ", " << normal.y << ", " << normal.z
+		<< ") | groupID: " << groupID << " }";
 	return oss.str();
 }
 
 std::string Vertex::posToObj() {
 	std::ostringstream oss;
-	oss << "v  " << pos.getX() << " " << pos.getY() << " " << pos.getZ();
+	oss << "v  " << pos.x << " " << pos.y << " " << pos.z;
 	return oss.str();
 }
 
 std::string Vertex::normalToObj() {
 	std::ostringstream oss;
-	oss << "vn " << normal.getX() << " " << normal.getY() << " "
-		<< normal.getZ();
+	oss << "vn " << normal.x << " " << normal.y << " " << normal.z;
 	return oss.str();
 }
 
 std::string Vertex::toPly() {
 	std::ostringstream oss;
-	oss << pos.getX() << " " << pos.getY() << " " << pos.getZ() << " "
-		<< normal.getX() << " " << normal.getY() << " " << normal.getZ();
+	oss << pos.x << " " << pos.y << " " << pos.z << " " << normal.x << " "
+		<< normal.y << " " << normal.z;
 	return oss.str();
 }

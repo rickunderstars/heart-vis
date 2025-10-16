@@ -1,4 +1,5 @@
 #include "mesh.h"
+#include <glm/ext/vector_float3.hpp>
 
 int main() {
 	std::string file1 = "../assets/mesh/2-LA.mesh";
@@ -10,6 +11,5 @@ int main() {
 	Mesh msh2 = Mesh::importMesh(file1);
 	msh2.toObj(file2);
 	msh2.toPly(file2);
-
 	return 0;
 }

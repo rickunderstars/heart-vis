@@ -1,16 +1,18 @@
 #pragma once
 
-#include "vector3.h"
+#include <glm/detail/qualifier.hpp>
+#include <glm/ext/vector_float3.hpp>
+#include <glm/vec3.hpp>
+#include <string>
 
 class Vertex {
-  private:
-	Vector3 pos;
-	Vector3 normal;
+  public:
+	glm::vec3 pos;
+	glm::vec3 normal;
 	int groupID;
 
-  public:
 	Vertex();
-	Vertex(Vector3 &pos, Vector3 &normal, int id);
+	Vertex(glm::vec3 &pos, glm::vec3 &normal, int id);
 	std::string toString();
 
 	std::string posToObj();
