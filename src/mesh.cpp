@@ -11,24 +11,6 @@ Mesh::Mesh(std::vector<Vertex> &vertices, std::vector<Triangle> &triangles) {
 	this->triangles = triangles;
 }
 
-std::string Mesh::verticesString() {
-	std::ostringstream oss;
-	oss << "Vertices:\n---------\n";
-	for (int i = 0; i < vertices.size(); i++) {
-		oss << i << ": " << vertices[i].toString() << std::endl;
-	}
-	return oss.str();
-}
-
-std::string Mesh::trianglesString() {
-	std::ostringstream oss;
-	oss << "Triangles:\n----------\n";
-	for (int i = 0; i < vertices.size(); i++) {
-		oss << i << ": " << triangles[i].toString() << std::endl;
-	}
-	return oss.str();
-}
-
 bool Mesh::toObj(std::string filename) {
 	std::string ext = ".obj";
 	if (!(filename.length() >= ext.length() &&
@@ -106,6 +88,54 @@ bool Mesh::toPly(std::string filename, std::string quality) {
 	}
 	fileOut.close();
 	return true;
+}
+
+bool Mesh::triangleFix(int face, int oldVertex, int newVertex) {
+	if (face < 0 || face >= triangles.size()) {
+		std::cerr << "Face " << face << " out of bounds (0-"
+				  << triangles.size() - 1 << ")." << std::endl;
+		return false;
+	}
+	int v = -1;
+	for (int i = 0; i < 3; i++) {
+		if (oldVertex == triangles[face].vertices[i]) {
+			v = i;
+		}
+	}
+	if (v < 0) {
+		std::cerr << "Vertex " << oldVertex << " is not in face " << face
+				  << ": (" << triangles[face].vertices[0] << ", "
+				  << triangles[face].vertices[1] << ", "
+				  << triangles[face].vertices[2] << " )" << std::endl;
+		return false;
+	}
+	if (newVertex < 0 || newVertex >= vertices.size()) {
+		std::cerr << "Vertex " << newVertex << " out of bounds (0-"
+				  << vertices.size() - 1 << ")." << std::endl;
+		return false;
+	}
+
+	triangles[face].vertices[v] = newVertex;
+
+	return true;
+}
+
+std::string Mesh::verticesString() {
+	std::ostringstream oss;
+	oss << "Vertices:\n---------\n";
+	for (int i = 0; i < vertices.size(); i++) {
+		oss << i << ": " << vertices[i].toString() << std::endl;
+	}
+	return oss.str();
+}
+
+std::string Mesh::trianglesString() {
+	std::ostringstream oss;
+	oss << "Triangles:\n----------\n";
+	for (int i = 0; i < vertices.size(); i++) {
+		oss << i << ": " << triangles[i].toString() << std::endl;
+	}
+	return oss.str();
 }
 
 std::string Mesh::toString() {

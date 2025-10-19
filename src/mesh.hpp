@@ -11,13 +11,15 @@ class Mesh {
 
 	Mesh(std::vector<Vertex> &vertices, std::vector<Triangle> &triangles);
 
-	std::string verticesString();
-
-	std::string trianglesString();
+	bool triangleFix(int face, int oldVertex, int newVertex);
 
 	bool toObj(std::string filename);
 
 	bool toPly(std::string filename, std::string quality);
+
+	std::string verticesString();
+
+	std::string trianglesString();
 
 	std::string toString();
 };
