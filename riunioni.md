@@ -38,3 +38,9 @@ TODO:
     -   rimuovere i getter e mettere gli attributi pubblici
 -   ripulire a mano il vertice non two manifold (rinominare il file con \*fix\*)
 -   aggiungere a vertex gli attributi SCI, ICL, ACL, EML, ExtEML, SCAR e fare accettare al metodo un parametro per decidere quale delle 6 possibili versioni della mesh in ply far esportare (messo in "property \<type\> quality" nell'header)
+
+# 2025-10-15
+
+-   convertire il codice c++ in javascript con enscripten
+-   provare ad importare il .mesh dalla pagina web (.mesh -> buffer -> threejs)
+-   fare il makefile (successivamente inserire il compilatore di emscripten: emcc)

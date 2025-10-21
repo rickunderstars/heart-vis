@@ -1,0 +1,26 @@
+{
+	"name": "heart",
+	"version": "1.0.0",
+	"description": "",
+	"main": "main.js",
+	"scripts": {
+		"start": "npx vite",
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/rickunderstars/tirocinio.git"
+	},
+	"author": "",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/rickunderstars/tirocinio/issues"
+	},
+	"homepage": "https://github.com/rickunderstars/tirocinio#readme",
+	"dependencies": {
+		"three": "^0.180.0"
+	},
+	"devDependencies": {
+		"vite": "^7.1.11"
+	}
+}

@@ -1,0 +1,14 @@
+body {
+	margin: 3%;
+	color: whitesmoke;
+	font-family: Helvetca, Arial, sans-serif;
+	background-color: #545c7e;
+}
+
+#viewport {
+	border: 4px solid whitesmoke;
+	border-radius: 10px;
+	width: 600px;
+	height: 600px;
+	background-color: #282328;
+}
