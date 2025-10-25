@@ -1,5 +1,13 @@
 .obsidian/workspace.json
 .obsidian/workspaces.json
+cbuild/cmake_install.cmake
+cbuild/CMakeCache.txt
+cbuild/Makefile
+.clang-format
+cbuild/CMakeFiles/
+
+
+
 
 *.bak
 *~
