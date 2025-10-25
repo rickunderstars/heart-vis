@@ -1,0 +1,1 @@
+/nix/store/dmypp1h4ldn0vfk3fi6yfyf5yxp9yz0k-gcc-wrapper-14.3.0/bin/g++ -Wl,--dependency-file=CMakeFiles/heart.out.dir/link.d CMakeFiles/heart.out.dir/src/cpp/main.cpp.o CMakeFiles/heart.out.dir/src/cpp/mesh.cpp.o CMakeFiles/heart.out.dir/src/cpp/utils.cpp.o CMakeFiles/heart.out.dir/src/cpp/triangle.cpp.o CMakeFiles/heart.out.dir/src/cpp/vertex.cpp.o -o heart.out
