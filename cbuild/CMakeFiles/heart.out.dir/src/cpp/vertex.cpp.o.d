@@ -1,7 +1,7 @@
 CMakeFiles/heart.out.dir/src/cpp/vertex.cpp.o: \
- /home/riki/tirocinio/src/cpp/vertex.cpp \
+ /home/riki/heart-vis/src/cpp/vertex.cpp \
  /nix/store/0zv32kh0zb4s1v4ld6mc99vmzydj9nm9-glibc-2.40-66-dev/include/stdc-predef.h \
- /home/riki/tirocinio/src/cpp/vertex.hpp \
+ /home/riki/heart-vis/src/cpp/vertex.hpp \
  /nix/store/k9wgl5dqj4bg8c98gdw0w57z8rbg1819-glm-1.0.1/include/glm/detail/qualifier.hpp \
  /nix/store/k9wgl5dqj4bg8c98gdw0w57z8rbg1819-glm-1.0.1/include/glm/detail/setup.hpp \
  /nix/store/k6gpflj398qaxzx4bmqhnnj4l328vabk-gcc-14.3.0/include/c++/14.3.0/cassert \

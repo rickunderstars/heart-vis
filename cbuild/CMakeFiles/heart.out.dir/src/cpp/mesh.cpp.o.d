@@ -1,8 +1,8 @@
 CMakeFiles/heart.out.dir/src/cpp/mesh.cpp.o: \
- /home/riki/tirocinio/src/cpp/mesh.cpp \
+ /home/riki/heart-vis/src/cpp/mesh.cpp \
  /nix/store/0zv32kh0zb4s1v4ld6mc99vmzydj9nm9-glibc-2.40-66-dev/include/stdc-predef.h \
- /home/riki/tirocinio/src/cpp/mesh.hpp \
- /home/riki/tirocinio/src/cpp/triangle.hpp \
+ /home/riki/heart-vis/src/cpp/mesh.hpp \
+ /home/riki/heart-vis/src/cpp/triangle.hpp \
  /nix/store/k6gpflj398qaxzx4bmqhnnj4l328vabk-gcc-14.3.0/include/c++/14.3.0/string \
  /nix/store/k6gpflj398qaxzx4bmqhnnj4l328vabk-gcc-14.3.0/include/c++/14.3.0/bits/requires_hosted.h \
  /nix/store/k6gpflj398qaxzx4bmqhnnj4l328vabk-gcc-14.3.0/include/c++/14.3.0/x86_64-unknown-linux-gnu/bits/c++config.h \
@@ -151,7 +151,7 @@ CMakeFiles/heart.out.dir/src/cpp/mesh.cpp.o: \
  /nix/store/k6gpflj398qaxzx4bmqhnnj4l328vabk-gcc-14.3.0/include/c++/14.3.0/bits/uses_allocator.h \
  /nix/store/k6gpflj398qaxzx4bmqhnnj4l328vabk-gcc-14.3.0/include/c++/14.3.0/bits/uses_allocator_args.h \
  /nix/store/k6gpflj398qaxzx4bmqhnnj4l328vabk-gcc-14.3.0/include/c++/14.3.0/tuple \
- /home/riki/tirocinio/src/cpp/vertex.hpp \
+ /home/riki/heart-vis/src/cpp/vertex.hpp \
  /nix/store/k9wgl5dqj4bg8c98gdw0w57z8rbg1819-glm-1.0.1/include/glm/detail/qualifier.hpp \
  /nix/store/k9wgl5dqj4bg8c98gdw0w57z8rbg1819-glm-1.0.1/include/glm/detail/setup.hpp \
  /nix/store/k6gpflj398qaxzx4bmqhnnj4l328vabk-gcc-14.3.0/include/c++/14.3.0/cassert \

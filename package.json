@@ -9,14 +9,14 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/rickunderstars/tirocinio.git"
+		"url": "git+https://github.com/rickunderstars/heart-vis.git"
 	},
 	"author": "",
 	"license": "ISC",
 	"bugs": {
-		"url": "https://github.com/rickunderstars/tirocinio/issues"
+		"url": "https://github.com/rickunderstars/heart-vis/issues"
 	},
-	"homepage": "https://github.com/rickunderstars/tirocinio#readme",
+	"homepage": "https://github.com/rickunderstars/heart-vis#readme",
 	"dependencies": {
 		"three": "^0.180.0"
 	},

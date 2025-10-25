@@ -8,11 +8,11 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/home/riki/tirocinio/src/cpp/main.cpp" "CMakeFiles/heart.out.dir/src/cpp/main.cpp.o" "gcc" "CMakeFiles/heart.out.dir/src/cpp/main.cpp.o.d"
-  "/home/riki/tirocinio/src/cpp/mesh.cpp" "CMakeFiles/heart.out.dir/src/cpp/mesh.cpp.o" "gcc" "CMakeFiles/heart.out.dir/src/cpp/mesh.cpp.o.d"
-  "/home/riki/tirocinio/src/cpp/triangle.cpp" "CMakeFiles/heart.out.dir/src/cpp/triangle.cpp.o" "gcc" "CMakeFiles/heart.out.dir/src/cpp/triangle.cpp.o.d"
-  "/home/riki/tirocinio/src/cpp/utils.cpp" "CMakeFiles/heart.out.dir/src/cpp/utils.cpp.o" "gcc" "CMakeFiles/heart.out.dir/src/cpp/utils.cpp.o.d"
-  "/home/riki/tirocinio/src/cpp/vertex.cpp" "CMakeFiles/heart.out.dir/src/cpp/vertex.cpp.o" "gcc" "CMakeFiles/heart.out.dir/src/cpp/vertex.cpp.o.d"
+  "/home/riki/heart-vis/src/cpp/main.cpp" "CMakeFiles/heart.out.dir/src/cpp/main.cpp.o" "gcc" "CMakeFiles/heart.out.dir/src/cpp/main.cpp.o.d"
+  "/home/riki/heart-vis/src/cpp/mesh.cpp" "CMakeFiles/heart.out.dir/src/cpp/mesh.cpp.o" "gcc" "CMakeFiles/heart.out.dir/src/cpp/mesh.cpp.o.d"
+  "/home/riki/heart-vis/src/cpp/triangle.cpp" "CMakeFiles/heart.out.dir/src/cpp/triangle.cpp.o" "gcc" "CMakeFiles/heart.out.dir/src/cpp/triangle.cpp.o.d"
+  "/home/riki/heart-vis/src/cpp/utils.cpp" "CMakeFiles/heart.out.dir/src/cpp/utils.cpp.o" "gcc" "CMakeFiles/heart.out.dir/src/cpp/utils.cpp.o.d"
+  "/home/riki/heart-vis/src/cpp/vertex.cpp" "CMakeFiles/heart.out.dir/src/cpp/vertex.cpp.o" "gcc" "CMakeFiles/heart.out.dir/src/cpp/vertex.cpp.o.d"
   "" "heart.out" "gcc" "CMakeFiles/heart.out.dir/link.d"
   )
 

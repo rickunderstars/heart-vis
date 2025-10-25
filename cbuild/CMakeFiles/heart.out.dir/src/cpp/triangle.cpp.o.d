@@ -1,7 +1,7 @@
 CMakeFiles/heart.out.dir/src/cpp/triangle.cpp.o: \
- /home/riki/tirocinio/src/cpp/triangle.cpp \
+ /home/riki/heart-vis/src/cpp/triangle.cpp \
  /nix/store/0zv32kh0zb4s1v4ld6mc99vmzydj9nm9-glibc-2.40-66-dev/include/stdc-predef.h \
- /home/riki/tirocinio/src/cpp/triangle.hpp \
+ /home/riki/heart-vis/src/cpp/triangle.hpp \
  /nix/store/k6gpflj398qaxzx4bmqhnnj4l328vabk-gcc-14.3.0/include/c++/14.3.0/string \
  /nix/store/k6gpflj398qaxzx4bmqhnnj4l328vabk-gcc-14.3.0/include/c++/14.3.0/bits/requires_hosted.h \
  /nix/store/k6gpflj398qaxzx4bmqhnnj4l328vabk-gcc-14.3.0/include/c++/14.3.0/x86_64-unknown-linux-gnu/bits/c++config.h \

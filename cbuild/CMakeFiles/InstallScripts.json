@@ -1,7 +1,7 @@
 {
 	"InstallScripts" : 
 	[
-		"/home/riki/tirocinio/cbuild/cmake_install.cmake"
+		"/home/riki/heart-vis/cbuild/cmake_install.cmake"
 	],
 	"Parallel" : false
 }

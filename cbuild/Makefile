@@ -48,19 +48,19 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /nix/store/sykamkn3k6xf2lp0z9wcs8v9jf2kz65j-home-manager-path/bin/cmake
+CMAKE_COMMAND = /nix/store/crw4pnkmp76hmv1wl3id4vmb7csq3zrz-home-manager-path/bin/cmake
 
 # The command to remove a file.
-RM = /nix/store/sykamkn3k6xf2lp0z9wcs8v9jf2kz65j-home-manager-path/bin/cmake -E rm -f
+RM = /nix/store/crw4pnkmp76hmv1wl3id4vmb7csq3zrz-home-manager-path/bin/cmake -E rm -f
 
 # Escaping for special characters.
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/riki/tirocinio
+CMAKE_SOURCE_DIR = /home/riki/heart-vis
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/riki/tirocinio/cbuild
+CMAKE_BINARY_DIR = /home/riki/heart-vis/cbuild
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -68,7 +68,7 @@ CMAKE_BINARY_DIR = /home/riki/tirocinio/cbuild
 # Special rule for the target edit_cache
 edit_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "No interactive CMake dialog available..."
-	/nix/store/sykamkn3k6xf2lp0z9wcs8v9jf2kz65j-home-manager-path/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+	/nix/store/crw4pnkmp76hmv1wl3id4vmb7csq3zrz-home-manager-path/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
 .PHONY : edit_cache
 
 # Special rule for the target edit_cache
@@ -78,7 +78,7 @@ edit_cache/fast: edit_cache
 # Special rule for the target rebuild_cache
 rebuild_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Running CMake to regenerate build system..."
-	/nix/store/sykamkn3k6xf2lp0z9wcs8v9jf2kz65j-home-manager-path/bin/cmake --regenerate-during-build -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+	/nix/store/crw4pnkmp76hmv1wl3id4vmb7csq3zrz-home-manager-path/bin/cmake --regenerate-during-build -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
 .PHONY : rebuild_cache
 
 # Special rule for the target rebuild_cache
@@ -87,16 +87,16 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/riki/tirocinio/cbuild/CMakeFiles /home/riki/tirocinio/cbuild//CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/riki/heart-vis/cbuild/CMakeFiles /home/riki/heart-vis/cbuild//CMakeFiles/progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/riki/tirocinio/cbuild/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/riki/heart-vis/cbuild/CMakeFiles 0
 .PHONY : all
 
 # The main codegen target
 codegen: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/riki/tirocinio/cbuild/CMakeFiles /home/riki/tirocinio/cbuild//CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/riki/heart-vis/cbuild/CMakeFiles /home/riki/heart-vis/cbuild//CMakeFiles/progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 codegen
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/riki/tirocinio/cbuild/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/riki/heart-vis/cbuild/CMakeFiles 0
 .PHONY : codegen
 
 # The main clean target
