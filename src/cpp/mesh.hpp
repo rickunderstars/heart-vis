@@ -17,6 +17,8 @@ class Mesh {
 
 	bool toPly(std::string filename, std::string quality);
 
+	static Mesh simpleShape();
+
 	std::string verticesString();
 
 	std::string trianglesString();

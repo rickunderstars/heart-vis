@@ -1,10 +1,14 @@
 #include "mesh.hpp"
+#include "triangle.hpp"
+#include "vertex.hpp"
 
 #include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/constants.hpp>
 #include <fstream>
+#include <glm/ext/vector_float3.hpp>
 #include <iostream>
 #include <sstream>
+#include <vector>
 
 Mesh::Mesh(std::vector<Vertex> &vertices, std::vector<Triangle> &triangles) {
 	this->vertices = vertices;
@@ -122,7 +126,6 @@ bool Mesh::triangleFix(int face, int oldVertex, int newVertex) {
 
 std::string Mesh::verticesString() {
 	std::ostringstream oss;
-	oss << "Vertices:\n---------\n";
 	for (int i = 0; i < vertices.size(); i++) {
 		oss << i << ": " << vertices[i].toString() << std::endl;
 	}
@@ -131,8 +134,7 @@ std::string Mesh::verticesString() {
 
 std::string Mesh::trianglesString() {
 	std::ostringstream oss;
-	oss << "Triangles:\n----------\n";
-	for (int i = 0; i < vertices.size(); i++) {
+	for (int i = 0; i < triangles.size(); i++) {
 		oss << i << ": " << triangles[i].toString() << std::endl;
 	}
 	return oss.str();
@@ -148,3 +150,24 @@ std::string Mesh::toString() {
 		<< trianglesString() << "\n";
 	return oss.str();
 }
+
+Mesh Mesh::simpleShape() {
+	std::vector<Triangle> tri(2);
+	int f0[3] = {0, 1, 2};
+	int f1[3] = {0, 2, 3};
+	tri[0] = Triangle(f0, -1);
+	tri[1] = Triangle(f1, -1);
+
+	std::vector<Vertex> vert(4);
+	glm::vec3 nrm(0, 0, 1);
+	glm::vec3 v0(0, 0, 0);
+	glm::vec3 v1(0, 2, 0);
+	glm::vec3 v2(2, 2, 0);
+	glm::vec3 v3(2, 0, 0);
+	vert[0] = Vertex(v0, nrm, -1);
+	vert[1] = Vertex(v1, nrm, -1);
+	vert[2] = Vertex(v2, nrm, -1);
+	vert[3] = Vertex(v3, nrm, -1);
+
+	return Mesh(vert, tri);
+};
