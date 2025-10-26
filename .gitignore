@@ -5,6 +5,10 @@ cbuild/CMakeCache.txt
 cbuild/Makefile
 .clang-format
 cbuild/CMakeFiles/
+.vite/
+.vscode/
+node_modules/
+package-lock.json
 
 
 
