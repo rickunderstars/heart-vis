@@ -15,7 +15,7 @@ class Mesh {
 
 	bool toObj(std::string filename);
 
-	bool toPly(std::string filename, std::string quality);
+	bool toPly(std::string filename, std::string quality = "");
 
 	static Mesh simpleShape();
 

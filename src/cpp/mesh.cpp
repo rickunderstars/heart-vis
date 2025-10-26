@@ -46,8 +46,8 @@ bool Mesh::toObj(std::string filename) {
 
 bool Mesh::toPly(std::string filename, std::string quality) {
 	std::string ext = ".ply";
-	std::vector<std::string> qualities = {"unipolar", "bipolar", "lat",
-										  "eml",	  "exteml",	 "scar"};
+	std::vector<std::string> qualities = {"",	 "unipolar", "bipolar", "lat",
+										  "eml", "exteml",	 "scar"};
 	for (char &c : quality) {
 		c = std::tolower(static_cast<unsigned char>(c));
 	}

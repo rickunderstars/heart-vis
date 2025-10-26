@@ -22,7 +22,7 @@ int main() {
 	}
 
 	Mesh smsh = Mesh::simpleShape();
-	std::cout << smsh.toString();
+	smsh.toPly("assets/mesh/simple");
 
 	return 0;
 }
