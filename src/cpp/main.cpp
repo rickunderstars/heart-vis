@@ -20,8 +20,10 @@ int main() {
 	// from string to Mesh object
 	Mesh msh1 = importMesh(rawString1);
 
-	// mesh fixes
+	// mesh fixes (first vertices, faces and then edges, order is important!)
 	msh1.triangleFix(8703, 4559, 4538);
+
+	msh1.fixNMEdges();
 
 	for (std::string q : qualities) {
 		// from Mesh object to string, then from string to file
@@ -37,16 +39,20 @@ int main() {
 	// from string to Mesh object
 	Mesh msh2 = importMesh(rawString2);
 
-	// mesh fixes
+	// mesh fixes (first vertices, faces and then edges, order is important!)
 	msh2.triangleFix(25180, 12810, 12813);
 	msh2.triangleFix(29108, 9930, 14703);
 	msh2.triangleFix(21420, 10857, 10941);
 	msh2.triangleFix(56, 38, 29);
 	msh2.triangleFix(30812, 15492, 15447);
 	msh2.triangleFix(30578, 14384, 14398);
+
 	int face[3] = {15417, 14398, 14381};
 	Triangle newTri(face, -1);
 	msh2.triangles.push_back(newTri);
+
+	msh2.fixNMEdges();
+
 	for (std::string q : qualities) {
 		// from Mesh object to string, then from string to file
 		stringToFile(msh2.toPlyString(q), filepath2, "ply", q);

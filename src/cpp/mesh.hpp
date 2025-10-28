@@ -13,6 +13,8 @@ class Mesh {
 
 	bool triangleFix(int face, int oldVertex, int newVertex);
 
+	void fixNMEdges();
+
 	std::string toObjString();
 
 	std::string toPlyString(std::string quality = "");

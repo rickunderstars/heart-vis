@@ -66,7 +66,6 @@ std::string Mesh::toPlyString(std::string quality) {
 	for (int i = 0; i < triangles.size(); i++) {
 		oss << triangles[i].toPly() << "\n";
 	}
-	oss << "\n\n";
 
 	return oss.str();
 }
@@ -99,6 +98,26 @@ bool Mesh::triangleFix(int face, int oldVertex, int newVertex) {
 	triangles[face].vertices[v] = newVertex;
 
 	return true;
+}
+
+void Mesh::fixNMEdges() {
+	int healthy = 0;
+	for (int i = 0; i < triangles.size(); i++) {
+		if (triangles[i].groupID != -1000000) {
+			healthy++;
+		}
+	}
+
+	std::vector<Triangle> newTris(healthy);
+
+	for (int i = 0, k = 0; i < triangles.size(); i++) {
+		if (triangles[i].groupID != -1000000) {
+			newTris[k] = Triangle(triangles[i].vertices, triangles[i].groupID);
+			k++;
+		}
+	}
+
+	triangles = newTris;
 }
 
 std::string Mesh::verticesString() {
