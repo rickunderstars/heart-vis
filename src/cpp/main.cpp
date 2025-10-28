@@ -3,6 +3,7 @@
 #include "utils.hpp"
 
 int main() {
+
 	std::string file1 = "assets/mesh/2-LA.mesh";
 	std::string file2 = "assets/mesh/2-LA-FA.mesh";
 	std::vector<std::string> qualities = {"unipolar", "bipolar", "lat",
@@ -14,6 +15,7 @@ int main() {
 	for (std::string q : qualities) {
 		msh1.toPly(file1, q);
 	}
+
 	std::string buffer2 = fileToString(file2);
 	Mesh msh2 = importMesh(buffer2);
 	msh2.triangleFix(25180, 12810, 12813);
@@ -25,13 +27,15 @@ int main() {
 	int face[3] = {15417, 14398, 14381};
 	Triangle newTri(face, -1);
 	msh2.triangles.push_back(newTri);
-
 	for (std::string q : qualities) {
 		msh2.toPly(file2, q);
 	}
-
 	Mesh smsh = Mesh::simpleShape();
 	smsh.toPly("assets/mesh/simple");
+
+	std::string text =
+		"poshanka!\n			poshanka!!!   \nPOSHANKA!!!!!\tPoshanka...";
+	stringToFile(text, "poshanka", "txt");
 
 	return 0;
 }

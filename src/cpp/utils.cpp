@@ -40,6 +40,24 @@ std::string fileToString(std::string filepath) {
 	return buffer.str();
 }
 
+bool stringToFile(std::string fileContent, std::string filename,
+				  std::string extension) {
+	std::string ext = "." + extension;
+	if (!(filename.length() >= ext.length() &&
+		  filename.substr(filename.length() - ext.length()) == ext)) {
+		filename = filename + ext;
+	}
+	std::ofstream fileOut(filename);
+	if (fileOut.is_open()) {
+		fileOut << fileContent;
+		fileOut.close();
+		return true;
+	} else {
+		std::cerr << "Could not create " << extension << " file." << std::endl;
+		return false;
+	}
+}
+
 Mesh sectionsHandler(std::stringstream &file) {
 	// general attributes
 	int vertNum = 0;
