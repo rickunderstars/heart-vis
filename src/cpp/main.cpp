@@ -1,4 +1,5 @@
 #include "mesh.hpp"
+#include "triangle.hpp"
 #include "utils.hpp"
 
 int main() {
@@ -20,7 +21,10 @@ int main() {
 	msh2.triangleFix(21420, 10857, 10941);
 	msh2.triangleFix(56, 38, 29);
 	msh2.triangleFix(30812, 15492, 15447);
-	//    msh2.triangleFix();
+	msh2.triangleFix(30578, 14384, 14398);
+	int face[3] = {15417, 14398, 14381};
+	Triangle newTri(face, -1);
+	msh2.triangles.push_back(newTri);
 
 	for (std::string q : qualities) {
 		msh2.toPly(file2, q);
