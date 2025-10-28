@@ -19,7 +19,11 @@ std::istream &getCleanLine(std::ifstream &file, std::string &line) {
 	getline(file, line);
 	line.erase(remove(line.begin(), line.end(), '\r'), line.end());
 	boost::trim(line);
-	return file;
+	if (!line.empty() && line[0] == ';') {
+		return getCleanLine(file, line);
+	} else {
+		return file;
+	}
 }
 
 Mesh sectionsHandler(std::ifstream &file) {
@@ -87,8 +91,8 @@ void verticesSection(std::ifstream &file, std::vector<Vertex> &vertices) {
 		}
 	}
 	if (!found) {
-		std::cerr << "Could not find section '" << "[VerticesSection]" << "'."
-				  << std::endl;
+		std::cerr << "Could not find section '" << "[VerticesSection]"
+				  << "'." << std::endl;
 		exit(1);
 	}
 	bool found_first = false;
@@ -129,8 +133,8 @@ void trianglesSection(std::ifstream &file, std::vector<Triangle> &triangles) {
 		}
 	}
 	if (!found) {
-		std::cerr << "Could not find section '" << "[TrianglesSection]" << "'."
-				  << std::endl;
+		std::cerr << "Could not find section '" << "[TrianglesSection]"
+				  << "'." << std::endl;
 		exit(1);
 	}
 
@@ -218,7 +222,8 @@ void verticesAttributesSection(std::ifstream &file,
 		}
 	}
 	if (!found) {
-		std::cerr << "Could not find section '" << "[VerticesAttributesSection]"
+		std::cerr << "Could not find section '"
+				  << "[VerticesAttributesSection]"
 				  << "'." << std::endl;
 		exit(1);
 	}
