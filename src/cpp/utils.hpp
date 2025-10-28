@@ -9,6 +9,8 @@ void printVector(std::vector<std::string> v);
 
 std::istream &getCleanLine(std::ifstream &file, std::string &line);
 
+std::string fileToString(std::string filepath);
+
 Mesh sectionsHandler(std::ifstream &file);
 
 void generalAttributesSection(std::ifstream &file, int &vertNum, int &triNum,

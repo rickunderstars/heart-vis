@@ -3,6 +3,7 @@
 #include <boost/algorithm/string.hpp>
 #include <fstream>
 #include <ostream>
+#include <sstream>
 
 bool isWhitespace(const std::string &str) {
 	return all_of(str.begin(), str.end(),
@@ -24,6 +25,18 @@ std::istream &getCleanLine(std::ifstream &file, std::string &line) {
 	} else {
 		return file;
 	}
+}
+
+std::string fileToString(std::string filepath) {
+	std::ifstream file(filepath);
+	if (!file.is_open()) {
+		std::cerr << "Error: could not open file '" << filepath << "'"
+				  << std::endl;
+		exit(1);
+	}
+	std::stringstream buffer;
+	buffer << file.rdbuf();
+	return buffer.str();
 }
 
 Mesh sectionsHandler(std::ifstream &file) {
