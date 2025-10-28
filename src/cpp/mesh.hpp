@@ -13,9 +13,9 @@ class Mesh {
 
 	bool triangleFix(int face, int oldVertex, int newVertex);
 
-	bool toObj(std::string filename);
+	std::string toObjString();
 
-	bool toPly(std::string filename, std::string quality = "");
+	std::string toPlyString(std::string quality = "");
 
 	static Mesh simpleShape();
 

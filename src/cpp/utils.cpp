@@ -41,8 +41,11 @@ std::string fileToString(std::string filepath) {
 }
 
 bool stringToFile(std::string fileContent, std::string filename,
-				  std::string extension) {
+				  std::string extension, std::string quality) {
 	std::string ext = "." + extension;
+	if (!quality.empty()) {
+		ext = "_" + quality + ext;
+	}
 	if (!(filename.length() >= ext.length() &&
 		  filename.substr(filename.length() - ext.length()) == ext)) {
 		filename = filename + ext;

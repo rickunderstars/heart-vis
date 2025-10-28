@@ -12,7 +12,7 @@ std::istream &getCleanLine(std::stringstream &file, std::string &line);
 std::string fileToString(std::string filepath);
 
 bool stringToFile(std::string fileContent, std::string filename,
-				  std::string extension);
+				  std::string extension, std::string quality = "");
 
 Mesh sectionsHandler(std::stringstream &file);
 

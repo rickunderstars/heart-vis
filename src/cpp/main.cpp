@@ -4,20 +4,40 @@
 
 int main() {
 
-	std::string file1 = "assets/mesh/2-LA.mesh";
-	std::string file2 = "assets/mesh/2-LA-FA.mesh";
+	// filepaths
+	std::string base = "assets/mesh/";
+	std::string filepath1 = base + "2-LA.mesh";
+	std::string filepath2 = base + "2-LA-FA.mesh";
+	std::string simplepath = base + "simple";
+
+	// vector of qualities
 	std::vector<std::string> qualities = {"unipolar", "bipolar", "lat",
 										  "eml",	  "exteml",	 "scar"};
 
-	std::string buffer1 = fileToString(file1);
-	Mesh msh1 = importMesh(buffer1);
-	msh1.triangleFix(8703, 4559, 4538);
-	for (std::string q : qualities) {
-		msh1.toPly(file1, q);
-	}
+	// from file to string
+	std::string rawString1 = fileToString(filepath1);
 
-	std::string buffer2 = fileToString(file2);
-	Mesh msh2 = importMesh(buffer2);
+	// from string to Mesh object
+	Mesh msh1 = importMesh(rawString1);
+
+	// mesh fixes
+	msh1.triangleFix(8703, 4559, 4538);
+
+	for (std::string q : qualities) {
+		// from Mesh object to string, then from string to file
+		stringToFile(msh1.toPlyString(q), filepath1, "ply", q);
+	}
+	stringToFile(msh1.toObjString(), filepath1, "obj");
+
+	/// --- second mesh --- ///
+
+	// from file to string
+	std::string rawString2 = fileToString(filepath2);
+
+	// from string to Mesh object
+	Mesh msh2 = importMesh(rawString2);
+
+	// mesh fixes
 	msh2.triangleFix(25180, 12810, 12813);
 	msh2.triangleFix(29108, 9930, 14703);
 	msh2.triangleFix(21420, 10857, 10941);
@@ -28,14 +48,15 @@ int main() {
 	Triangle newTri(face, -1);
 	msh2.triangles.push_back(newTri);
 	for (std::string q : qualities) {
-		msh2.toPly(file2, q);
+		// from Mesh object to string, then from string to file
+		stringToFile(msh2.toPlyString(q), filepath2, "ply", q);
 	}
-	Mesh smsh = Mesh::simpleShape();
-	smsh.toPly("assets/mesh/simple");
+	stringToFile(msh2.toObjString(), filepath2, "obj");
 
-	std::string text =
-		"poshanka!\n			poshanka!!!   \nPOSHANKA!!!!!\tPoshanka...";
-	stringToFile(text, "poshanka", "txt");
+	/// --- simple mesh (square) --- ///
+
+	Mesh smsh = Mesh::simpleShape();
+	stringToFile(smsh.toPlyString(), simplepath, "ply");
 
 	return 0;
 }
