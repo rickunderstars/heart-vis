@@ -16,7 +16,7 @@ void printVector(std::vector<std::string> v) {
 	}
 }
 
-std::istream &getCleanLine(std::ifstream &file, std::string &line) {
+std::istream &getCleanLine(std::stringstream &file, std::string &line) {
 	getline(file, line);
 	line.erase(remove(line.begin(), line.end(), '\r'), line.end());
 	boost::trim(line);
@@ -36,10 +36,11 @@ std::string fileToString(std::string filepath) {
 	}
 	std::stringstream buffer;
 	buffer << file.rdbuf();
+	file.close();
 	return buffer.str();
 }
 
-Mesh sectionsHandler(std::ifstream &file) {
+Mesh sectionsHandler(std::stringstream &file) {
 	// general attributes
 	int vertNum = 0;
 	int triNum = 0;
@@ -63,8 +64,8 @@ Mesh sectionsHandler(std::ifstream &file) {
 	return Mesh(verts, tris);
 }
 
-void generalAttributesSection(std::ifstream &file, int &vertNum, int &triNum,
-							  std::string &id) {
+void generalAttributesSection(std::stringstream &file, int &vertNum,
+							  int &triNum, std::string &id) {
 	std::string line = "";
 	bool found = false;
 	while (getCleanLine(file, line)) {
@@ -94,7 +95,7 @@ void generalAttributesSection(std::ifstream &file, int &vertNum, int &triNum,
 	}
 }
 
-void verticesSection(std::ifstream &file, std::vector<Vertex> &vertices) {
+void verticesSection(std::stringstream &file, std::vector<Vertex> &vertices) {
 	std::string line = "";
 	bool found = false;
 	while (getCleanLine(file, line)) {
@@ -136,7 +137,8 @@ void verticesSection(std::ifstream &file, std::vector<Vertex> &vertices) {
 	}
 }
 
-void trianglesSection(std::ifstream &file, std::vector<Triangle> &triangles) {
+void trianglesSection(std::stringstream &file,
+					  std::vector<Triangle> &triangles) {
 	std::string line = "";
 	bool found = false;
 	while (getCleanLine(file, line)) {
@@ -178,7 +180,8 @@ void trianglesSection(std::ifstream &file, std::vector<Triangle> &triangles) {
 	}
 }
 
-void verticesColorsSection(std::ifstream &file, std::vector<Vertex> &vertices) {
+void verticesColorsSection(std::stringstream &file,
+						   std::vector<Vertex> &vertices) {
 	std::string line = "";
 	bool found = false;
 	while (getCleanLine(file, line)) {
@@ -224,7 +227,7 @@ void verticesColorsSection(std::ifstream &file, std::vector<Vertex> &vertices) {
 	}
 }
 
-void verticesAttributesSection(std::ifstream &file,
+void verticesAttributesSection(std::stringstream &file,
 							   std::vector<Vertex> &vertices) {
 	std::string line = "";
 	bool found = false;
@@ -271,14 +274,9 @@ void verticesAttributesSection(std::ifstream &file,
 	}
 }
 
-Mesh importMesh(std::string filepath) {
-	std::ifstream file(filepath);
-	if (!file.is_open()) {
-		std::cerr << "error: could not open file '" << filepath << "'"
-				  << std::endl;
-		exit(1);
-	}
+Mesh importMesh(std::string fileString) {
+	std::stringstream file(fileString);
+
 	Mesh h = sectionsHandler(file);
-	file.close();
 	return h;
 }
