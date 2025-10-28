@@ -7,20 +7,26 @@ bool isWhitespace(const std::string &str);
 
 void printVector(std::vector<std::string> v);
 
-std::istream &getCleanLine(std::ifstream &file, std::string &line);
+std::istream &getCleanLine(std::stringstream &file, std::string &line);
 
-Mesh sectionsHandler(std::ifstream &file);
+std::string fileToString(std::string filepath);
 
-void generalAttributesSection(std::ifstream &file, int &vertNum, int &triNum,
-							  std::string &id);
+bool stringToFile(std::string fileContent, std::string filename,
+				  std::string extension, std::string quality = "");
 
-void verticesSection(std::ifstream &file, std::vector<Vertex> &vertices);
+Mesh sectionsHandler(std::stringstream &file);
 
-void trianglesSection(std::ifstream &file, std::vector<Triangle> &triangle);
+void generalAttributesSection(std::stringstream &file, int &vertNum,
+							  int &triNum, std::string &id);
 
-void verticesColorsSection(std::ifstream &file, std::vector<Vertex> &vertices);
+void verticesSection(std::stringstream &file, std::vector<Vertex> &vertices);
 
-void verticesAttributesSection(std::ifstream &file,
+void trianglesSection(std::stringstream &file, std::vector<Triangle> &triangle);
+
+void verticesColorsSection(std::stringstream &file,
+						   std::vector<Vertex> &vertices);
+
+void verticesAttributesSection(std::stringstream &file,
 							   std::vector<Vertex> &vertices);
 
-Mesh importMesh(std::string filepath);
+Mesh importMesh(std::string fileString);

@@ -3,6 +3,7 @@
 #include <boost/algorithm/string.hpp>
 #include <fstream>
 #include <ostream>
+#include <sstream>
 
 bool isWhitespace(const std::string &str) {
 	return all_of(str.begin(), str.end(),
@@ -15,7 +16,7 @@ void printVector(std::vector<std::string> v) {
 	}
 }
 
-std::istream &getCleanLine(std::ifstream &file, std::string &line) {
+std::istream &getCleanLine(std::stringstream &file, std::string &line) {
 	getline(file, line);
 	line.erase(remove(line.begin(), line.end(), '\r'), line.end());
 	boost::trim(line);
@@ -26,7 +27,41 @@ std::istream &getCleanLine(std::ifstream &file, std::string &line) {
 	}
 }
 
-Mesh sectionsHandler(std::ifstream &file) {
+std::string fileToString(std::string filepath) {
+	std::ifstream file(filepath);
+	if (!file.is_open()) {
+		std::cerr << "Error: could not open file '" << filepath << "'"
+				  << std::endl;
+		exit(1);
+	}
+	std::stringstream buffer;
+	buffer << file.rdbuf();
+	file.close();
+	return buffer.str();
+}
+
+bool stringToFile(std::string fileContent, std::string filename,
+				  std::string extension, std::string quality) {
+	std::string ext = "." + extension;
+	if (!quality.empty()) {
+		ext = "_" + quality + ext;
+	}
+	if (!(filename.length() >= ext.length() &&
+		  filename.substr(filename.length() - ext.length()) == ext)) {
+		filename = filename + ext;
+	}
+	std::ofstream fileOut(filename);
+	if (fileOut.is_open()) {
+		fileOut << fileContent;
+		fileOut.close();
+		return true;
+	} else {
+		std::cerr << "Could not create " << extension << " file." << std::endl;
+		return false;
+	}
+}
+
+Mesh sectionsHandler(std::stringstream &file) {
 	// general attributes
 	int vertNum = 0;
 	int triNum = 0;
@@ -50,8 +85,8 @@ Mesh sectionsHandler(std::ifstream &file) {
 	return Mesh(verts, tris);
 }
 
-void generalAttributesSection(std::ifstream &file, int &vertNum, int &triNum,
-							  std::string &id) {
+void generalAttributesSection(std::stringstream &file, int &vertNum,
+							  int &triNum, std::string &id) {
 	std::string line = "";
 	bool found = false;
 	while (getCleanLine(file, line)) {
@@ -81,7 +116,7 @@ void generalAttributesSection(std::ifstream &file, int &vertNum, int &triNum,
 	}
 }
 
-void verticesSection(std::ifstream &file, std::vector<Vertex> &vertices) {
+void verticesSection(std::stringstream &file, std::vector<Vertex> &vertices) {
 	std::string line = "";
 	bool found = false;
 	while (getCleanLine(file, line)) {
@@ -123,7 +158,8 @@ void verticesSection(std::ifstream &file, std::vector<Vertex> &vertices) {
 	}
 }
 
-void trianglesSection(std::ifstream &file, std::vector<Triangle> &triangles) {
+void trianglesSection(std::stringstream &file,
+					  std::vector<Triangle> &triangles) {
 	std::string line = "";
 	bool found = false;
 	while (getCleanLine(file, line)) {
@@ -165,7 +201,8 @@ void trianglesSection(std::ifstream &file, std::vector<Triangle> &triangles) {
 	}
 }
 
-void verticesColorsSection(std::ifstream &file, std::vector<Vertex> &vertices) {
+void verticesColorsSection(std::stringstream &file,
+						   std::vector<Vertex> &vertices) {
 	std::string line = "";
 	bool found = false;
 	while (getCleanLine(file, line)) {
@@ -211,7 +248,7 @@ void verticesColorsSection(std::ifstream &file, std::vector<Vertex> &vertices) {
 	}
 }
 
-void verticesAttributesSection(std::ifstream &file,
+void verticesAttributesSection(std::stringstream &file,
 							   std::vector<Vertex> &vertices) {
 	std::string line = "";
 	bool found = false;
@@ -258,14 +295,9 @@ void verticesAttributesSection(std::ifstream &file,
 	}
 }
 
-Mesh importMesh(std::string filepath) {
-	std::ifstream file(filepath);
-	if (!file.is_open()) {
-		std::cerr << "error: could not open file '" << filepath << "'"
-				  << std::endl;
-		exit(1);
-	}
+Mesh importMesh(std::string fileString) {
+	std::stringstream file(fileString);
+
 	Mesh h = sectionsHandler(file);
-	file.close();
 	return h;
 }
