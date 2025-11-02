@@ -1,0 +1,32 @@
+[
+{
+  "directory": "/home/riki/heart-vis/build",
+  "command": "/nix/store/x8mydcgbry214s802nzvy7fdljx404ym-gcc-wrapper-14.3.0/bin/g++   -g -std=gnu++17 -o CMakeFiles/heart.out.dir/src/cpp/main.cpp.o -c /home/riki/heart-vis/src/cpp/main.cpp",
+  "file": "/home/riki/heart-vis/src/cpp/main.cpp",
+  "output": "CMakeFiles/heart.out.dir/src/cpp/main.cpp.o"
+},
+{
+  "directory": "/home/riki/heart-vis/build",
+  "command": "/nix/store/x8mydcgbry214s802nzvy7fdljx404ym-gcc-wrapper-14.3.0/bin/g++   -g -std=gnu++17 -o CMakeFiles/heart.out.dir/src/cpp/mesh.cpp.o -c /home/riki/heart-vis/src/cpp/mesh.cpp",
+  "file": "/home/riki/heart-vis/src/cpp/mesh.cpp",
+  "output": "CMakeFiles/heart.out.dir/src/cpp/mesh.cpp.o"
+},
+{
+  "directory": "/home/riki/heart-vis/build",
+  "command": "/nix/store/x8mydcgbry214s802nzvy7fdljx404ym-gcc-wrapper-14.3.0/bin/g++   -g -std=gnu++17 -o CMakeFiles/heart.out.dir/src/cpp/utils.cpp.o -c /home/riki/heart-vis/src/cpp/utils.cpp",
+  "file": "/home/riki/heart-vis/src/cpp/utils.cpp",
+  "output": "CMakeFiles/heart.out.dir/src/cpp/utils.cpp.o"
+},
+{
+  "directory": "/home/riki/heart-vis/build",
+  "command": "/nix/store/x8mydcgbry214s802nzvy7fdljx404ym-gcc-wrapper-14.3.0/bin/g++   -g -std=gnu++17 -o CMakeFiles/heart.out.dir/src/cpp/triangle.cpp.o -c /home/riki/heart-vis/src/cpp/triangle.cpp",
+  "file": "/home/riki/heart-vis/src/cpp/triangle.cpp",
+  "output": "CMakeFiles/heart.out.dir/src/cpp/triangle.cpp.o"
+},
+{
+  "directory": "/home/riki/heart-vis/build",
+  "command": "/nix/store/x8mydcgbry214s802nzvy7fdljx404ym-gcc-wrapper-14.3.0/bin/g++   -g -std=gnu++17 -o CMakeFiles/heart.out.dir/src/cpp/vertex.cpp.o -c /home/riki/heart-vis/src/cpp/vertex.cpp",
+  "file": "/home/riki/heart-vis/src/cpp/vertex.cpp",
+  "output": "CMakeFiles/heart.out.dir/src/cpp/vertex.cpp.o"
+}
+]

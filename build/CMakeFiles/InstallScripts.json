@@ -1,0 +1,7 @@
+{
+	"InstallScripts" : 
+	[
+		"/home/riki/heart-vis/build/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

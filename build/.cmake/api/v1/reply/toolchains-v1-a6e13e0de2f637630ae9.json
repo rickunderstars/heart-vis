@@ -1,0 +1,122 @@
+{
+	"kind" : "toolchains",
+	"toolchains" : 
+	[
+		{
+			"compiler" : 
+			{
+				"id" : "GNU",
+				"implicit" : 
+				{
+					"includeDirectories" : 
+					[
+						"/nix/store/gwsb412i8x720vhadyx9h29z28c63c4p-boost-1.87.0-dev/include",
+						"/nix/store/3hc7x9k93zki53zx8zawpcl1d4plpbky-glm-1.0.2/include",
+						"/nix/store/x62pydw9kpd88m4986kyc02q8x3ipp3j-nodejs-22.20.0-dev/include",
+						"/nix/store/nvf9kaarb9kqqdbygl9cbzhli1y8yjik-nodejs-22.20.0/include",
+						"/nix/store/ffrg0560kj0066s4k9pznjand907nlnz-gcc-14.3.0/lib/gcc/x86_64-unknown-linux-gnu/14.3.0/include",
+						"/nix/store/ffrg0560kj0066s4k9pznjand907nlnz-gcc-14.3.0/include",
+						"/nix/store/ffrg0560kj0066s4k9pznjand907nlnz-gcc-14.3.0/lib/gcc/x86_64-unknown-linux-gnu/14.3.0/include-fixed",
+						"/nix/store/0vqrw0y515015i3065r9s00jcp1cd4hy-glibc-2.40-66-dev/include"
+					],
+					"linkDirectories" : 
+					[
+						"/nix/store/60r20pmax67dfba9aagjbjygsdf0vc8d-boost-1.87.0/lib",
+						"/nix/store/qgf52g6vj1y089l4nzwlag4dqww2pk1p-meshlab-2023.12/lib",
+						"/nix/store/3hc7x9k93zki53zx8zawpcl1d4plpbky-glm-1.0.2/lib",
+						"/nix/store/daamdpmaz2vjvna55ccrc30qw3qb8h6d-glibc-2.40-66/lib",
+						"/nix/store/ffrg0560kj0066s4k9pznjand907nlnz-gcc-14.3.0/lib/gcc/x86_64-unknown-linux-gnu/14.3.0",
+						"/nix/store/z7a34j3xnp66rpddayyxrxwsahxccbip-gcc-14.3.0-lib/lib",
+						"/nix/store/ffrg0560kj0066s4k9pznjand907nlnz-gcc-14.3.0/lib"
+					],
+					"linkFrameworkDirectories" : [],
+					"linkLibraries" : 
+					[
+						"gcc",
+						"gcc_s",
+						"c",
+						"gcc",
+						"gcc_s"
+					]
+				},
+				"path" : "/nix/store/x8mydcgbry214s802nzvy7fdljx404ym-gcc-wrapper-14.3.0/bin/gcc",
+				"version" : "14.3.0"
+			},
+			"language" : "C",
+			"sourceFileExtensions" : 
+			[
+				"c",
+				"m"
+			]
+		},
+		{
+			"compiler" : 
+			{
+				"id" : "GNU",
+				"implicit" : 
+				{
+					"includeDirectories" : 
+					[
+						"/nix/store/gwsb412i8x720vhadyx9h29z28c63c4p-boost-1.87.0-dev/include",
+						"/nix/store/3hc7x9k93zki53zx8zawpcl1d4plpbky-glm-1.0.2/include",
+						"/nix/store/x62pydw9kpd88m4986kyc02q8x3ipp3j-nodejs-22.20.0-dev/include",
+						"/nix/store/nvf9kaarb9kqqdbygl9cbzhli1y8yjik-nodejs-22.20.0/include",
+						"/nix/store/ffrg0560kj0066s4k9pznjand907nlnz-gcc-14.3.0/include/c++/14.3.0",
+						"/nix/store/ffrg0560kj0066s4k9pznjand907nlnz-gcc-14.3.0/include/c++/14.3.0/x86_64-unknown-linux-gnu",
+						"/nix/store/ffrg0560kj0066s4k9pznjand907nlnz-gcc-14.3.0/include/c++/14.3.0/backward",
+						"/nix/store/ffrg0560kj0066s4k9pznjand907nlnz-gcc-14.3.0/lib/gcc/x86_64-unknown-linux-gnu/14.3.0/include",
+						"/nix/store/ffrg0560kj0066s4k9pznjand907nlnz-gcc-14.3.0/include",
+						"/nix/store/ffrg0560kj0066s4k9pznjand907nlnz-gcc-14.3.0/lib/gcc/x86_64-unknown-linux-gnu/14.3.0/include-fixed",
+						"/nix/store/0vqrw0y515015i3065r9s00jcp1cd4hy-glibc-2.40-66-dev/include"
+					],
+					"linkDirectories" : 
+					[
+						"/nix/store/60r20pmax67dfba9aagjbjygsdf0vc8d-boost-1.87.0/lib",
+						"/nix/store/qgf52g6vj1y089l4nzwlag4dqww2pk1p-meshlab-2023.12/lib",
+						"/nix/store/3hc7x9k93zki53zx8zawpcl1d4plpbky-glm-1.0.2/lib",
+						"/nix/store/daamdpmaz2vjvna55ccrc30qw3qb8h6d-glibc-2.40-66/lib",
+						"/nix/store/ffrg0560kj0066s4k9pznjand907nlnz-gcc-14.3.0/lib/gcc/x86_64-unknown-linux-gnu/14.3.0",
+						"/nix/store/z7a34j3xnp66rpddayyxrxwsahxccbip-gcc-14.3.0-lib/lib",
+						"/nix/store/ffrg0560kj0066s4k9pznjand907nlnz-gcc-14.3.0/lib"
+					],
+					"linkFrameworkDirectories" : [],
+					"linkLibraries" : 
+					[
+						"stdc++",
+						"m",
+						"gcc_s",
+						"gcc",
+						"c",
+						"gcc_s",
+						"gcc"
+					]
+				},
+				"path" : "/nix/store/x8mydcgbry214s802nzvy7fdljx404ym-gcc-wrapper-14.3.0/bin/g++",
+				"version" : "14.3.0"
+			},
+			"language" : "CXX",
+			"sourceFileExtensions" : 
+			[
+				"C",
+				"M",
+				"c++",
+				"cc",
+				"cpp",
+				"cxx",
+				"mm",
+				"mpp",
+				"CPP",
+				"ixx",
+				"cppm",
+				"ccm",
+				"cxxm",
+				"c++m"
+			]
+		}
+	],
+	"version" : 
+	{
+		"major" : 1,
+		"minor" : 0
+	}
+}
