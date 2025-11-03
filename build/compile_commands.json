@@ -1,32 +1,38 @@
 [
 {
   "directory": "/home/riki/heart-vis/build",
-  "command": "/nix/store/x8mydcgbry214s802nzvy7fdljx404ym-gcc-wrapper-14.3.0/bin/g++   -g -std=gnu++17 -o CMakeFiles/heart.out.dir/src/cpp/main.cpp.o -c /home/riki/heart-vis/src/cpp/main.cpp",
+  "command": "/nix/store/a4bclp7ilqxn74by33lm1g1h4pnbkwcc-emscripten-4.0.12/share/emscripten/em++  @CMakeFiles/heart.out.dir/includes_CXX.rsp -std=gnu++17 -o CMakeFiles/heart.out.dir/src/cpp/main.cpp.o -c /home/riki/heart-vis/src/cpp/main.cpp",
   "file": "/home/riki/heart-vis/src/cpp/main.cpp",
   "output": "CMakeFiles/heart.out.dir/src/cpp/main.cpp.o"
 },
 {
   "directory": "/home/riki/heart-vis/build",
-  "command": "/nix/store/x8mydcgbry214s802nzvy7fdljx404ym-gcc-wrapper-14.3.0/bin/g++   -g -std=gnu++17 -o CMakeFiles/heart.out.dir/src/cpp/mesh.cpp.o -c /home/riki/heart-vis/src/cpp/mesh.cpp",
+  "command": "/nix/store/a4bclp7ilqxn74by33lm1g1h4pnbkwcc-emscripten-4.0.12/share/emscripten/em++  @CMakeFiles/heart.out.dir/includes_CXX.rsp -std=gnu++17 -o CMakeFiles/heart.out.dir/src/cpp/mesh.cpp.o -c /home/riki/heart-vis/src/cpp/mesh.cpp",
   "file": "/home/riki/heart-vis/src/cpp/mesh.cpp",
   "output": "CMakeFiles/heart.out.dir/src/cpp/mesh.cpp.o"
 },
 {
   "directory": "/home/riki/heart-vis/build",
-  "command": "/nix/store/x8mydcgbry214s802nzvy7fdljx404ym-gcc-wrapper-14.3.0/bin/g++   -g -std=gnu++17 -o CMakeFiles/heart.out.dir/src/cpp/utils.cpp.o -c /home/riki/heart-vis/src/cpp/utils.cpp",
+  "command": "/nix/store/a4bclp7ilqxn74by33lm1g1h4pnbkwcc-emscripten-4.0.12/share/emscripten/em++  @CMakeFiles/heart.out.dir/includes_CXX.rsp -std=gnu++17 -o CMakeFiles/heart.out.dir/src/cpp/utils.cpp.o -c /home/riki/heart-vis/src/cpp/utils.cpp",
   "file": "/home/riki/heart-vis/src/cpp/utils.cpp",
   "output": "CMakeFiles/heart.out.dir/src/cpp/utils.cpp.o"
 },
 {
   "directory": "/home/riki/heart-vis/build",
-  "command": "/nix/store/x8mydcgbry214s802nzvy7fdljx404ym-gcc-wrapper-14.3.0/bin/g++   -g -std=gnu++17 -o CMakeFiles/heart.out.dir/src/cpp/triangle.cpp.o -c /home/riki/heart-vis/src/cpp/triangle.cpp",
+  "command": "/nix/store/a4bclp7ilqxn74by33lm1g1h4pnbkwcc-emscripten-4.0.12/share/emscripten/em++  @CMakeFiles/heart.out.dir/includes_CXX.rsp -std=gnu++17 -o CMakeFiles/heart.out.dir/src/cpp/triangle.cpp.o -c /home/riki/heart-vis/src/cpp/triangle.cpp",
   "file": "/home/riki/heart-vis/src/cpp/triangle.cpp",
   "output": "CMakeFiles/heart.out.dir/src/cpp/triangle.cpp.o"
 },
 {
   "directory": "/home/riki/heart-vis/build",
-  "command": "/nix/store/x8mydcgbry214s802nzvy7fdljx404ym-gcc-wrapper-14.3.0/bin/g++   -g -std=gnu++17 -o CMakeFiles/heart.out.dir/src/cpp/vertex.cpp.o -c /home/riki/heart-vis/src/cpp/vertex.cpp",
+  "command": "/nix/store/a4bclp7ilqxn74by33lm1g1h4pnbkwcc-emscripten-4.0.12/share/emscripten/em++  @CMakeFiles/heart.out.dir/includes_CXX.rsp -std=gnu++17 -o CMakeFiles/heart.out.dir/src/cpp/vertex.cpp.o -c /home/riki/heart-vis/src/cpp/vertex.cpp",
   "file": "/home/riki/heart-vis/src/cpp/vertex.cpp",
   "output": "CMakeFiles/heart.out.dir/src/cpp/vertex.cpp.o"
+},
+{
+  "directory": "/home/riki/heart-vis/build",
+  "command": "/nix/store/a4bclp7ilqxn74by33lm1g1h4pnbkwcc-emscripten-4.0.12/share/emscripten/em++  @CMakeFiles/heart.out.dir/includes_CXX.rsp -std=gnu++17 -o CMakeFiles/heart.out.dir/src/cpp/bindings.cpp.o -c /home/riki/heart-vis/src/cpp/bindings.cpp",
+  "file": "/home/riki/heart-vis/src/cpp/bindings.cpp",
+  "output": "CMakeFiles/heart.out.dir/src/cpp/bindings.cpp.o"
 }
 ]

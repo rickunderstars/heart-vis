@@ -44,10 +44,10 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /nix/store/wkcgiqrky5q76sfn4i0d40z7x0gn8wv2-home-manager-path/bin/cmake
+CMAKE_COMMAND = /nix/store/5bn5f4ivqf4xn19khh4kcg4ngnjs6spg-cmake-4.1.2/bin/cmake
 
 # The command to remove a file.
-RM = /nix/store/wkcgiqrky5q76sfn4i0d40z7x0gn8wv2-home-manager-path/bin/cmake -E rm -f
+RM = /nix/store/5bn5f4ivqf4xn19khh4kcg4ngnjs6spg-cmake-4.1.2/bin/cmake -E rm -f
 
 # Escaping for special characters.
 EQUALS = =
@@ -73,74 +73,94 @@ CMakeFiles/heart.out.dir/codegen:
 .PHONY : CMakeFiles/heart.out.dir/codegen
 
 CMakeFiles/heart.out.dir/src/cpp/main.cpp.o: CMakeFiles/heart.out.dir/flags.make
+CMakeFiles/heart.out.dir/src/cpp/main.cpp.o: CMakeFiles/heart.out.dir/includes_CXX.rsp
 CMakeFiles/heart.out.dir/src/cpp/main.cpp.o: /home/riki/heart-vis/src/cpp/main.cpp
 CMakeFiles/heart.out.dir/src/cpp/main.cpp.o: CMakeFiles/heart.out.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/riki/heart-vis/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/heart.out.dir/src/cpp/main.cpp.o"
-	/nix/store/x8mydcgbry214s802nzvy7fdljx404ym-gcc-wrapper-14.3.0/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/heart.out.dir/src/cpp/main.cpp.o -MF CMakeFiles/heart.out.dir/src/cpp/main.cpp.o.d -o CMakeFiles/heart.out.dir/src/cpp/main.cpp.o -c /home/riki/heart-vis/src/cpp/main.cpp
+	/nix/store/a4bclp7ilqxn74by33lm1g1h4pnbkwcc-emscripten-4.0.12/share/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/heart.out.dir/src/cpp/main.cpp.o -MF CMakeFiles/heart.out.dir/src/cpp/main.cpp.o.d -o CMakeFiles/heart.out.dir/src/cpp/main.cpp.o -c /home/riki/heart-vis/src/cpp/main.cpp
 
 CMakeFiles/heart.out.dir/src/cpp/main.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/heart.out.dir/src/cpp/main.cpp.i"
-	/nix/store/x8mydcgbry214s802nzvy7fdljx404ym-gcc-wrapper-14.3.0/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/riki/heart-vis/src/cpp/main.cpp > CMakeFiles/heart.out.dir/src/cpp/main.cpp.i
+	/nix/store/a4bclp7ilqxn74by33lm1g1h4pnbkwcc-emscripten-4.0.12/share/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/riki/heart-vis/src/cpp/main.cpp > CMakeFiles/heart.out.dir/src/cpp/main.cpp.i
 
 CMakeFiles/heart.out.dir/src/cpp/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/heart.out.dir/src/cpp/main.cpp.s"
-	/nix/store/x8mydcgbry214s802nzvy7fdljx404ym-gcc-wrapper-14.3.0/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/riki/heart-vis/src/cpp/main.cpp -o CMakeFiles/heart.out.dir/src/cpp/main.cpp.s
+	/nix/store/a4bclp7ilqxn74by33lm1g1h4pnbkwcc-emscripten-4.0.12/share/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/riki/heart-vis/src/cpp/main.cpp -o CMakeFiles/heart.out.dir/src/cpp/main.cpp.s
 
 CMakeFiles/heart.out.dir/src/cpp/mesh.cpp.o: CMakeFiles/heart.out.dir/flags.make
+CMakeFiles/heart.out.dir/src/cpp/mesh.cpp.o: CMakeFiles/heart.out.dir/includes_CXX.rsp
 CMakeFiles/heart.out.dir/src/cpp/mesh.cpp.o: /home/riki/heart-vis/src/cpp/mesh.cpp
 CMakeFiles/heart.out.dir/src/cpp/mesh.cpp.o: CMakeFiles/heart.out.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/riki/heart-vis/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/heart.out.dir/src/cpp/mesh.cpp.o"
-	/nix/store/x8mydcgbry214s802nzvy7fdljx404ym-gcc-wrapper-14.3.0/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/heart.out.dir/src/cpp/mesh.cpp.o -MF CMakeFiles/heart.out.dir/src/cpp/mesh.cpp.o.d -o CMakeFiles/heart.out.dir/src/cpp/mesh.cpp.o -c /home/riki/heart-vis/src/cpp/mesh.cpp
+	/nix/store/a4bclp7ilqxn74by33lm1g1h4pnbkwcc-emscripten-4.0.12/share/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/heart.out.dir/src/cpp/mesh.cpp.o -MF CMakeFiles/heart.out.dir/src/cpp/mesh.cpp.o.d -o CMakeFiles/heart.out.dir/src/cpp/mesh.cpp.o -c /home/riki/heart-vis/src/cpp/mesh.cpp
 
 CMakeFiles/heart.out.dir/src/cpp/mesh.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/heart.out.dir/src/cpp/mesh.cpp.i"
-	/nix/store/x8mydcgbry214s802nzvy7fdljx404ym-gcc-wrapper-14.3.0/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/riki/heart-vis/src/cpp/mesh.cpp > CMakeFiles/heart.out.dir/src/cpp/mesh.cpp.i
+	/nix/store/a4bclp7ilqxn74by33lm1g1h4pnbkwcc-emscripten-4.0.12/share/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/riki/heart-vis/src/cpp/mesh.cpp > CMakeFiles/heart.out.dir/src/cpp/mesh.cpp.i
 
 CMakeFiles/heart.out.dir/src/cpp/mesh.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/heart.out.dir/src/cpp/mesh.cpp.s"
-	/nix/store/x8mydcgbry214s802nzvy7fdljx404ym-gcc-wrapper-14.3.0/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/riki/heart-vis/src/cpp/mesh.cpp -o CMakeFiles/heart.out.dir/src/cpp/mesh.cpp.s
+	/nix/store/a4bclp7ilqxn74by33lm1g1h4pnbkwcc-emscripten-4.0.12/share/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/riki/heart-vis/src/cpp/mesh.cpp -o CMakeFiles/heart.out.dir/src/cpp/mesh.cpp.s
 
 CMakeFiles/heart.out.dir/src/cpp/utils.cpp.o: CMakeFiles/heart.out.dir/flags.make
+CMakeFiles/heart.out.dir/src/cpp/utils.cpp.o: CMakeFiles/heart.out.dir/includes_CXX.rsp
 CMakeFiles/heart.out.dir/src/cpp/utils.cpp.o: /home/riki/heart-vis/src/cpp/utils.cpp
 CMakeFiles/heart.out.dir/src/cpp/utils.cpp.o: CMakeFiles/heart.out.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/riki/heart-vis/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/heart.out.dir/src/cpp/utils.cpp.o"
-	/nix/store/x8mydcgbry214s802nzvy7fdljx404ym-gcc-wrapper-14.3.0/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/heart.out.dir/src/cpp/utils.cpp.o -MF CMakeFiles/heart.out.dir/src/cpp/utils.cpp.o.d -o CMakeFiles/heart.out.dir/src/cpp/utils.cpp.o -c /home/riki/heart-vis/src/cpp/utils.cpp
+	/nix/store/a4bclp7ilqxn74by33lm1g1h4pnbkwcc-emscripten-4.0.12/share/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/heart.out.dir/src/cpp/utils.cpp.o -MF CMakeFiles/heart.out.dir/src/cpp/utils.cpp.o.d -o CMakeFiles/heart.out.dir/src/cpp/utils.cpp.o -c /home/riki/heart-vis/src/cpp/utils.cpp
 
 CMakeFiles/heart.out.dir/src/cpp/utils.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/heart.out.dir/src/cpp/utils.cpp.i"
-	/nix/store/x8mydcgbry214s802nzvy7fdljx404ym-gcc-wrapper-14.3.0/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/riki/heart-vis/src/cpp/utils.cpp > CMakeFiles/heart.out.dir/src/cpp/utils.cpp.i
+	/nix/store/a4bclp7ilqxn74by33lm1g1h4pnbkwcc-emscripten-4.0.12/share/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/riki/heart-vis/src/cpp/utils.cpp > CMakeFiles/heart.out.dir/src/cpp/utils.cpp.i
 
 CMakeFiles/heart.out.dir/src/cpp/utils.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/heart.out.dir/src/cpp/utils.cpp.s"
-	/nix/store/x8mydcgbry214s802nzvy7fdljx404ym-gcc-wrapper-14.3.0/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/riki/heart-vis/src/cpp/utils.cpp -o CMakeFiles/heart.out.dir/src/cpp/utils.cpp.s
+	/nix/store/a4bclp7ilqxn74by33lm1g1h4pnbkwcc-emscripten-4.0.12/share/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/riki/heart-vis/src/cpp/utils.cpp -o CMakeFiles/heart.out.dir/src/cpp/utils.cpp.s
 
 CMakeFiles/heart.out.dir/src/cpp/triangle.cpp.o: CMakeFiles/heart.out.dir/flags.make
+CMakeFiles/heart.out.dir/src/cpp/triangle.cpp.o: CMakeFiles/heart.out.dir/includes_CXX.rsp
 CMakeFiles/heart.out.dir/src/cpp/triangle.cpp.o: /home/riki/heart-vis/src/cpp/triangle.cpp
 CMakeFiles/heart.out.dir/src/cpp/triangle.cpp.o: CMakeFiles/heart.out.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/riki/heart-vis/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/heart.out.dir/src/cpp/triangle.cpp.o"
-	/nix/store/x8mydcgbry214s802nzvy7fdljx404ym-gcc-wrapper-14.3.0/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/heart.out.dir/src/cpp/triangle.cpp.o -MF CMakeFiles/heart.out.dir/src/cpp/triangle.cpp.o.d -o CMakeFiles/heart.out.dir/src/cpp/triangle.cpp.o -c /home/riki/heart-vis/src/cpp/triangle.cpp
+	/nix/store/a4bclp7ilqxn74by33lm1g1h4pnbkwcc-emscripten-4.0.12/share/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/heart.out.dir/src/cpp/triangle.cpp.o -MF CMakeFiles/heart.out.dir/src/cpp/triangle.cpp.o.d -o CMakeFiles/heart.out.dir/src/cpp/triangle.cpp.o -c /home/riki/heart-vis/src/cpp/triangle.cpp
 
 CMakeFiles/heart.out.dir/src/cpp/triangle.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/heart.out.dir/src/cpp/triangle.cpp.i"
-	/nix/store/x8mydcgbry214s802nzvy7fdljx404ym-gcc-wrapper-14.3.0/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/riki/heart-vis/src/cpp/triangle.cpp > CMakeFiles/heart.out.dir/src/cpp/triangle.cpp.i
+	/nix/store/a4bclp7ilqxn74by33lm1g1h4pnbkwcc-emscripten-4.0.12/share/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/riki/heart-vis/src/cpp/triangle.cpp > CMakeFiles/heart.out.dir/src/cpp/triangle.cpp.i
 
 CMakeFiles/heart.out.dir/src/cpp/triangle.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/heart.out.dir/src/cpp/triangle.cpp.s"
-	/nix/store/x8mydcgbry214s802nzvy7fdljx404ym-gcc-wrapper-14.3.0/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/riki/heart-vis/src/cpp/triangle.cpp -o CMakeFiles/heart.out.dir/src/cpp/triangle.cpp.s
+	/nix/store/a4bclp7ilqxn74by33lm1g1h4pnbkwcc-emscripten-4.0.12/share/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/riki/heart-vis/src/cpp/triangle.cpp -o CMakeFiles/heart.out.dir/src/cpp/triangle.cpp.s
 
 CMakeFiles/heart.out.dir/src/cpp/vertex.cpp.o: CMakeFiles/heart.out.dir/flags.make
+CMakeFiles/heart.out.dir/src/cpp/vertex.cpp.o: CMakeFiles/heart.out.dir/includes_CXX.rsp
 CMakeFiles/heart.out.dir/src/cpp/vertex.cpp.o: /home/riki/heart-vis/src/cpp/vertex.cpp
 CMakeFiles/heart.out.dir/src/cpp/vertex.cpp.o: CMakeFiles/heart.out.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/riki/heart-vis/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/heart.out.dir/src/cpp/vertex.cpp.o"
-	/nix/store/x8mydcgbry214s802nzvy7fdljx404ym-gcc-wrapper-14.3.0/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/heart.out.dir/src/cpp/vertex.cpp.o -MF CMakeFiles/heart.out.dir/src/cpp/vertex.cpp.o.d -o CMakeFiles/heart.out.dir/src/cpp/vertex.cpp.o -c /home/riki/heart-vis/src/cpp/vertex.cpp
+	/nix/store/a4bclp7ilqxn74by33lm1g1h4pnbkwcc-emscripten-4.0.12/share/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/heart.out.dir/src/cpp/vertex.cpp.o -MF CMakeFiles/heart.out.dir/src/cpp/vertex.cpp.o.d -o CMakeFiles/heart.out.dir/src/cpp/vertex.cpp.o -c /home/riki/heart-vis/src/cpp/vertex.cpp
 
 CMakeFiles/heart.out.dir/src/cpp/vertex.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/heart.out.dir/src/cpp/vertex.cpp.i"
-	/nix/store/x8mydcgbry214s802nzvy7fdljx404ym-gcc-wrapper-14.3.0/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/riki/heart-vis/src/cpp/vertex.cpp > CMakeFiles/heart.out.dir/src/cpp/vertex.cpp.i
+	/nix/store/a4bclp7ilqxn74by33lm1g1h4pnbkwcc-emscripten-4.0.12/share/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/riki/heart-vis/src/cpp/vertex.cpp > CMakeFiles/heart.out.dir/src/cpp/vertex.cpp.i
 
 CMakeFiles/heart.out.dir/src/cpp/vertex.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/heart.out.dir/src/cpp/vertex.cpp.s"
-	/nix/store/x8mydcgbry214s802nzvy7fdljx404ym-gcc-wrapper-14.3.0/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/riki/heart-vis/src/cpp/vertex.cpp -o CMakeFiles/heart.out.dir/src/cpp/vertex.cpp.s
+	/nix/store/a4bclp7ilqxn74by33lm1g1h4pnbkwcc-emscripten-4.0.12/share/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/riki/heart-vis/src/cpp/vertex.cpp -o CMakeFiles/heart.out.dir/src/cpp/vertex.cpp.s
+
+CMakeFiles/heart.out.dir/src/cpp/bindings.cpp.o: CMakeFiles/heart.out.dir/flags.make
+CMakeFiles/heart.out.dir/src/cpp/bindings.cpp.o: CMakeFiles/heart.out.dir/includes_CXX.rsp
+CMakeFiles/heart.out.dir/src/cpp/bindings.cpp.o: /home/riki/heart-vis/src/cpp/bindings.cpp
+CMakeFiles/heart.out.dir/src/cpp/bindings.cpp.o: CMakeFiles/heart.out.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/riki/heart-vis/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/heart.out.dir/src/cpp/bindings.cpp.o"
+	/nix/store/a4bclp7ilqxn74by33lm1g1h4pnbkwcc-emscripten-4.0.12/share/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/heart.out.dir/src/cpp/bindings.cpp.o -MF CMakeFiles/heart.out.dir/src/cpp/bindings.cpp.o.d -o CMakeFiles/heart.out.dir/src/cpp/bindings.cpp.o -c /home/riki/heart-vis/src/cpp/bindings.cpp
+
+CMakeFiles/heart.out.dir/src/cpp/bindings.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/heart.out.dir/src/cpp/bindings.cpp.i"
+	/nix/store/a4bclp7ilqxn74by33lm1g1h4pnbkwcc-emscripten-4.0.12/share/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/riki/heart-vis/src/cpp/bindings.cpp > CMakeFiles/heart.out.dir/src/cpp/bindings.cpp.i
+
+CMakeFiles/heart.out.dir/src/cpp/bindings.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/heart.out.dir/src/cpp/bindings.cpp.s"
+	/nix/store/a4bclp7ilqxn74by33lm1g1h4pnbkwcc-emscripten-4.0.12/share/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/riki/heart-vis/src/cpp/bindings.cpp -o CMakeFiles/heart.out.dir/src/cpp/bindings.cpp.s
 
 # Object files for target heart.out
 heart_out_OBJECTS = \
@@ -148,24 +168,26 @@ heart_out_OBJECTS = \
 "CMakeFiles/heart.out.dir/src/cpp/mesh.cpp.o" \
 "CMakeFiles/heart.out.dir/src/cpp/utils.cpp.o" \
 "CMakeFiles/heart.out.dir/src/cpp/triangle.cpp.o" \
-"CMakeFiles/heart.out.dir/src/cpp/vertex.cpp.o"
+"CMakeFiles/heart.out.dir/src/cpp/vertex.cpp.o" \
+"CMakeFiles/heart.out.dir/src/cpp/bindings.cpp.o"
 
 # External object files for target heart.out
 heart_out_EXTERNAL_OBJECTS =
 
-heart.out: CMakeFiles/heart.out.dir/src/cpp/main.cpp.o
-heart.out: CMakeFiles/heart.out.dir/src/cpp/mesh.cpp.o
-heart.out: CMakeFiles/heart.out.dir/src/cpp/utils.cpp.o
-heart.out: CMakeFiles/heart.out.dir/src/cpp/triangle.cpp.o
-heart.out: CMakeFiles/heart.out.dir/src/cpp/vertex.cpp.o
-heart.out: CMakeFiles/heart.out.dir/build.make
-heart.out: CMakeFiles/heart.out.dir/compiler_depend.ts
-heart.out: CMakeFiles/heart.out.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/riki/heart-vis/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Linking CXX executable heart.out"
+heart.out.js: CMakeFiles/heart.out.dir/src/cpp/main.cpp.o
+heart.out.js: CMakeFiles/heart.out.dir/src/cpp/mesh.cpp.o
+heart.out.js: CMakeFiles/heart.out.dir/src/cpp/utils.cpp.o
+heart.out.js: CMakeFiles/heart.out.dir/src/cpp/triangle.cpp.o
+heart.out.js: CMakeFiles/heart.out.dir/src/cpp/vertex.cpp.o
+heart.out.js: CMakeFiles/heart.out.dir/src/cpp/bindings.cpp.o
+heart.out.js: CMakeFiles/heart.out.dir/build.make
+heart.out.js: CMakeFiles/heart.out.dir/objects1.rsp
+heart.out.js: CMakeFiles/heart.out.dir/link.txt
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/riki/heart-vis/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Linking CXX executable heart.out.js"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/heart.out.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
-CMakeFiles/heart.out.dir/build: heart.out
+CMakeFiles/heart.out.dir/build: heart.out.js
 .PHONY : CMakeFiles/heart.out.dir/build
 
 CMakeFiles/heart.out.dir/clean:

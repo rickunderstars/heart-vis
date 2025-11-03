@@ -1,6 +1,14 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-import { PLYLoader } from "./libs/PLYLoader";
+
+HeartModule().then(module => {
+			console.log('Module loaded!');
+
+			const mesh = module.Mesh.simpleShape();
+			console.log(mesh.toString()) ;
+
+			mesh.delete();
+		})
 
 const scene = new THREE.Scene();
 const viewport = document.getElementById("viewport");
@@ -17,9 +25,6 @@ const controls = new OrbitControls(camera, renderer.domElement);
 renderer.setAnimationLoop(animate);
 
 viewport.append(renderer.domElement);
-
-const loader = new PLYLoader();
-// fare il load dal buffer
 
 const geometry = new THREE.BoxGeometry(1, 1, 1);
 const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });

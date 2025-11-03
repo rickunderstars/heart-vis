@@ -7,8 +7,8 @@ body {
 
 #viewport {
 	border: 4px solid whitesmoke;
-	border-radius: 10px;
-	width: 600px;
-	height: 600px;
+	border-radius: 2px;
+	width: 1000px;
+	height: 650px;
 	background-color: #282328;
 }

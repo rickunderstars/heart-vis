@@ -1,17 +1,16 @@
 .obsidian/workspace.json
 .obsidian/workspaces.json
-cbuild/cmake_install.cmake
-cbuild/CMakeCache.txt
-cbuild/Makefile
+build/cmake_install.cmake
+build/CMakeCache.txt
+build/Makefile
+build/compile_commands.json
 .clang-format
-cbuild/CMakeFiles/
+build/CMakeFiles/
 .vite/
 .vscode/
 node_modules/
 package-lock.json
-
-
-
+.cache/
 
 *.bak
 *~

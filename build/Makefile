@@ -48,10 +48,10 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /nix/store/wkcgiqrky5q76sfn4i0d40z7x0gn8wv2-home-manager-path/bin/cmake
+CMAKE_COMMAND = /nix/store/5bn5f4ivqf4xn19khh4kcg4ngnjs6spg-cmake-4.1.2/bin/cmake
 
 # The command to remove a file.
-RM = /nix/store/wkcgiqrky5q76sfn4i0d40z7x0gn8wv2-home-manager-path/bin/cmake -E rm -f
+RM = /nix/store/5bn5f4ivqf4xn19khh4kcg4ngnjs6spg-cmake-4.1.2/bin/cmake -E rm -f
 
 # Escaping for special characters.
 EQUALS = =
@@ -68,7 +68,7 @@ CMAKE_BINARY_DIR = /home/riki/heart-vis/build
 # Special rule for the target edit_cache
 edit_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "No interactive CMake dialog available..."
-	/nix/store/wkcgiqrky5q76sfn4i0d40z7x0gn8wv2-home-manager-path/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+	/nix/store/5bn5f4ivqf4xn19khh4kcg4ngnjs6spg-cmake-4.1.2/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
 .PHONY : edit_cache
 
 # Special rule for the target edit_cache
@@ -78,7 +78,7 @@ edit_cache/fast: edit_cache
 # Special rule for the target rebuild_cache
 rebuild_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Running CMake to regenerate build system..."
-	/nix/store/wkcgiqrky5q76sfn4i0d40z7x0gn8wv2-home-manager-path/bin/cmake --regenerate-during-build -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+	/nix/store/5bn5f4ivqf4xn19khh4kcg4ngnjs6spg-cmake-4.1.2/bin/cmake --regenerate-during-build -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
 .PHONY : rebuild_cache
 
 # Special rule for the target rebuild_cache
@@ -91,13 +91,6 @@ all: cmake_check_build_system
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/riki/heart-vis/build/CMakeFiles 0
 .PHONY : all
-
-# The main codegen target
-codegen: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/riki/heart-vis/build/CMakeFiles /home/riki/heart-vis/build//CMakeFiles/progress.marks
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 codegen
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/riki/heart-vis/build/CMakeFiles 0
-.PHONY : codegen
 
 # The main clean target
 clean:
@@ -135,6 +128,30 @@ heart.out: cmake_check_build_system
 heart.out/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/heart.out.dir/build.make CMakeFiles/heart.out.dir/build
 .PHONY : heart.out/fast
+
+src/cpp/bindings.o: src/cpp/bindings.cpp.o
+.PHONY : src/cpp/bindings.o
+
+# target to build an object file
+src/cpp/bindings.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/heart.out.dir/build.make CMakeFiles/heart.out.dir/src/cpp/bindings.cpp.o
+.PHONY : src/cpp/bindings.cpp.o
+
+src/cpp/bindings.i: src/cpp/bindings.cpp.i
+.PHONY : src/cpp/bindings.i
+
+# target to preprocess a source file
+src/cpp/bindings.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/heart.out.dir/build.make CMakeFiles/heart.out.dir/src/cpp/bindings.cpp.i
+.PHONY : src/cpp/bindings.cpp.i
+
+src/cpp/bindings.s: src/cpp/bindings.cpp.s
+.PHONY : src/cpp/bindings.s
+
+# target to generate assembly for a file
+src/cpp/bindings.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/heart.out.dir/build.make CMakeFiles/heart.out.dir/src/cpp/bindings.cpp.s
+.PHONY : src/cpp/bindings.cpp.s
 
 src/cpp/main.o: src/cpp/main.cpp.o
 .PHONY : src/cpp/main.o
@@ -262,10 +279,12 @@ help:
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
-	@echo "... codegen"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... heart.out"
+	@echo "... src/cpp/bindings.o"
+	@echo "... src/cpp/bindings.i"
+	@echo "... src/cpp/bindings.s"
 	@echo "... src/cpp/main.o"
 	@echo "... src/cpp/main.i"
 	@echo "... src/cpp/main.s"
