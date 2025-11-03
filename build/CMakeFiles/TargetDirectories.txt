@@ -1,3 +1,0 @@
-/home/riki/heart-vis/build/CMakeFiles/heart.out.dir
-/home/riki/heart-vis/build/CMakeFiles/edit_cache.dir
-/home/riki/heart-vis/build/CMakeFiles/rebuild_cache.dir

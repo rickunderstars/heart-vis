@@ -1,11 +1,8 @@
 .obsidian/workspace.json
 .obsidian/workspaces.json
-build/cmake_install.cmake
-build/CMakeCache.txt
-build/Makefile
-build/compile_commands.json
+build/
 .clang-format
-build/CMakeFiles/
+
 .vite/
 .vscode/
 node_modules/
