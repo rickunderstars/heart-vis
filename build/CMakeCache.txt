@@ -85,7 +85,7 @@ CMAKE_EXPORT_COMPILE_COMMANDS:UNINITIALIZED=ON
 CMAKE_FIND_PACKAGE_REDIRECTS_DIR:STATIC=/home/riki/heart-vis/build/CMakeFiles/pkgRedirects
 
 //Install path prefix, prepended onto install directories.
-CMAKE_INSTALL_PREFIX:PATH=/home/riki/.emscripten_cache/sysroot
+CMAKE_INSTALL_PREFIX:PATH=/home/riki/heart-vis/.emscripten_cache/sysroot
 
 //Path to a program.
 CMAKE_LINKER:FILEPATH=/nix/store/x8mydcgbry214s802nzvy7fdljx404ym-gcc-wrapper-14.3.0/bin/ld

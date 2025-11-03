@@ -90,7 +90,7 @@ endif()
 
 
 
-set(CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES "/home/riki/.emscripten_cache/sysroot/include;/home/riki/.emscripten_cache/sysroot/include/c++/v1")
+set(CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES "/home/riki/heart-vis/.emscripten_cache/sysroot/include;/home/riki/heart-vis/.emscripten_cache/sysroot/include/c++/v1")
 set(CMAKE_CXX_IMPLICIT_LINK_LIBRARIES "")
 set(CMAKE_CXX_IMPLICIT_LINK_DIRECTORIES "")
 set(CMAKE_CXX_IMPLICIT_LINK_FRAMEWORK_DIRECTORIES "")
