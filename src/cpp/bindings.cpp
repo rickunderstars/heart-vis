@@ -8,7 +8,6 @@
 using namespace emscripten;
 
 EMSCRIPTEN_BINDINGS(heart_module) {
-  // Registra i vector per poterli usare
   register_vector<Vertex>("VectorVertex");
   register_vector<Triangle>("VectorTriangle");
 

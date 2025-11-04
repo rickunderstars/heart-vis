@@ -2,7 +2,7 @@
 
 if not test -d build
     emcmake cmake -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
-    and ln -sf build/compile_commands.json .
+    and bear -- cmake --build build
+else
+    cmake --build build
 end
-
-cmake --build build
