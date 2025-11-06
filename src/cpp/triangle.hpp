@@ -10,6 +10,12 @@ class Triangle {
 	Triangle();
 	Triangle(int vertices[3], int groupID);
 
+	int v0();
+
+	int v1();
+
+	int v2();
+
 	std::string toString();
 
 	std::string toObj();

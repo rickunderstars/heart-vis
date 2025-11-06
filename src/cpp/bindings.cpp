@@ -8,36 +8,47 @@
 #include <vector>
 
 EMSCRIPTEN_BINDINGS(heart_module) {
-  emscripten::register_vector<Vertex>("VectorVertex");
-  emscripten::register_vector<Triangle>("VectorTriangle");
 
-  emscripten::function("importMesh", &importMesh);
-  emscripten::class_<Vertex>("Vertex")
-      .property("pos", &pos)
-      .property("normal", &normal)
-      .property("groupID", groupID)
-      .property("unipolar", unipolar)
-      .property("bipolar", bipolar)
-      .property("LAT", LAT)
-      .property("EML", EML)
-      .property("ExtEML", ExtEML)
-      .property("SCAR", SCAR);
+	emscripten::function("importMesh", &importMesh);
 
-  emscripten::class_<Triangle>("Triangle");
+	emscripten::value_object<glm::vec3>("vec3")
+		.field("x", &glm::vec3::x)
+		.field("y", &glm::vec3::y)
+		.field("z", &glm::vec3::z);
 
-  emscripten::class_<Mesh>("Mesh")
-      .constructor<std::vector<Vertex> &, std::vector<Triangle> &>()
-      .property("vertices", &Mesh::vertices)
-      .property("triangles", &Mesh::triangles)
-      .function("triangleFix", &Mesh::triangleFix)
-      .function("fixNMEdges", &Mesh::fixNMEdges)
-      .function("toPlyString", emscripten::optional_override(
-                                   [](Mesh &self, std::string quality) {
-                                     return self.toPlyString(quality);
-                                   }))
-      .function("toPlyStringDefault",
-                emscripten::optional_override(
-                    [](Mesh &self) { return self.toPlyString(); }))
-      .function("toString", &Mesh::toString)
-      .class_function("simpleShape", &Mesh::simpleShape);
+	emscripten::class_<Vertex>("Vertex")
+		.property("pos", &Vertex::pos)
+		.property("normal", &Vertex::normal)
+		.property("groupID", &Vertex::groupID)
+		.property("unipolar", &Vertex::unipolar)
+		.property("bipolar", &Vertex::bipolar)
+		.property("LAT", &Vertex::LAT)
+		.property("EML", &Vertex::EML)
+		.property("ExtEML", &Vertex::ExtEML)
+		.property("SCAR", &Vertex::SCAR);
+
+	emscripten::register_vector<Vertex>("VertexVector");
+
+	emscripten::class_<Triangle>("Triangle")
+		.function("v0", &Triangle::v0)
+		.function("v1", &Triangle::v1)
+		.function("v2", &Triangle::v2)
+		.property("groupID", &Triangle::groupID);
+
+	emscripten::register_vector<Triangle>("TriangleVector");
+
+	emscripten::class_<Mesh>("Mesh")
+		.property("vertices", &Mesh::vertices)
+		.property("triangles", &Mesh::triangles)
+		.function("triangleFix", &Mesh::triangleFix)
+		.function("fixNMEdges", &Mesh::fixNMEdges)
+		.function("toPlyString", emscripten::optional_override(
+									 [](Mesh &self, std::string quality) {
+										 return self.toPlyString(quality);
+									 }))
+		.function("toPlyStringDefault",
+				  emscripten::optional_override(
+					  [](Mesh &self) { return self.toPlyString(); }))
+		.function("toString", &Mesh::toString)
+		.class_function("simpleShape", &Mesh::simpleShape);
 }

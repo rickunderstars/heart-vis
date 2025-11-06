@@ -26,7 +26,13 @@ scene.add(cube);
 
 camera.position.z = 5;
 
-/////// load model ///////
+function animate() {
+	controls.update();
+
+	renderer.render(scene, camera);
+}
+
+/////// model upload ///////
 
 HeartModule().then(cpp => {
 	const rawMeshElement = document.getElementById('raw-mesh');
@@ -51,9 +57,3 @@ HeartModule().then(cpp => {
 	});
 
 });
-
-function animate() {
-	controls.update();
-
-	renderer.render(scene, camera);
-}
