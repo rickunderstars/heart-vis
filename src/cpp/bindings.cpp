@@ -13,8 +13,15 @@ EMSCRIPTEN_BINDINGS(heart_module) {
 
   emscripten::function("importMesh", &importMesh);
   emscripten::class_<Vertex>("Vertex")
-      .constructor<>()
-      .constructor<glm::vec3 &, glm::vec3 &, int>();
+      .property("pos", &pos)
+      .property("normal", &normal)
+      .property("groupID", groupID)
+      .property("unipolar", unipolar)
+      .property("bipolar", bipolar)
+      .property("LAT", LAT)
+      .property("EML", EML)
+      .property("ExtEML", ExtEML)
+      .property("SCAR", SCAR);
 
   emscripten::class_<Triangle>("Triangle");
 
