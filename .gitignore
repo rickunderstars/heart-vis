@@ -3,7 +3,6 @@
 build/*
 !build/heart.out.js
 !build/heart.out.wasm
-.clang-format
 
 .vite/
 .vscode/

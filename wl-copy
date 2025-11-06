@@ -1,0 +1,74 @@
+In file included from /home/riki/heart-vis/src/cpp/bindings.cpp:5:
+In file included from /home/riki/.emscripten_cache/sysroot/include/emscripten/bind.h:26:
+In file included from /home/riki/.emscripten_cache/sysroot/include/emscripten/val.h:17:
+/home/riki/.emscripten_cache/sysroot/include/emscripten/wire.h:388:16: error: array 'new' cannot have initialization arguments
+  388 |         return new ActualT(v);
+      |                ^           ~
+/home/riki/.emscripten_cache/sysroot/include/emscripten/bind.h:718:31: note: in instantiation of function template specialization 'emscripten::internal::GenericBindingType<int[3]>::toWireType<int (&)[3]>' requested here
+  718 |         return MemberBinding::toWireType(ptr.*field, ReturnPolicy{});
+      |                               ^
+/home/riki/.emscripten_cache/sysroot/include/emscripten/bind.h:1802:69: note: in instantiation of function template specialization 'emscripten::internal::MemberAccess<Triangle, int[3]>::getWire<Triangle, emscripten::internal::rvp::default_tag>' requested here
+ 1802 |         auto getter = &MemberAccess<ClassType, FieldType>::template getWire<ClassType, ReturnPolicy>;
+      |                                                                     ^
+/home/riki/heart-vis/src/cpp/bindings.cpp:33:8: note: in instantiation of function template specialization 'emscripten::class_<Triangle>::property<int[3], void>' requested here
+   33 |       .property("vertices", &Triangle::vertices)
+      |        ^
+In file included from /home/riki/heart-vis/src/cpp/bindings.cpp:5:
+/home/riki/.emscripten_cache/sysroot/include/emscripten/bind.h:727:20: error: array type 'int[3]' is not assignable
+  727 |         ptr.*field = MemberBinding::fromWireType(value);
+      |         ~~~~~~~~~~ ^
+/home/riki/.emscripten_cache/sysroot/include/emscripten/bind.h:1803:69: note: in instantiation of function template specialization 'emscripten::internal::MemberAccess<Triangle, int[3]>::setWire<Triangle>' requested here
+ 1803 |         auto setter = &MemberAccess<ClassType, FieldType>::template setWire<ClassType>;
+      |                                                                     ^
+/home/riki/heart-vis/src/cpp/bindings.cpp:33:8: note: in instantiation of function template specialization 'emscripten::class_<Triangle>::property<int[3], void>' requested here
+   33 |       .property("vertices", &Triangle::vertices)
+      |        ^
+In file included from /home/riki/heart-vis/src/cpp/bindings.cpp:5:
+In file included from /home/riki/.emscripten_cache/sysroot/include/emscripten/bind.h:26:
+In file included from /home/riki/.emscripten_cache/sysroot/include/emscripten/val.h:17:
+/home/riki/.emscripten_cache/sysroot/include/emscripten/wire.h:72:23: error: static assertion failed due to requirement 'IsCanonicalized<int[3]>': T should not be a reference or cv-qualified
+   72 |         static_assert(IsCanonicalized<T>, "T should not be a reference or cv-qualified");
+      |                       ^~~~~~~~~~~~~~~~~~
+/home/riki/.emscripten_cache/sysroot/include/emscripten/wire.h:110:32: note: in instantiation of member function 'emscripten::internal::LightTypeID<int[3]>::get' requested here
+  110 |         return LightTypeID<T>::get();
+      |                                ^
+/home/riki/.emscripten_cache/sysroot/include/emscripten/wire.h:240:59: note: in instantiation of member function 'emscripten::internal::TypeID<int[3]>::get' requested here
+  240 |         static constexpr TYPEID types[] = { TypeID<Args>::get()... };
+      |                                                           ^
+/home/riki/.emscripten_cache/sysroot/include/emscripten/wire.h:263:16: note: in instantiation of member function 'emscripten::internal::ArgArrayGetter<emscripten::internal::TypeList<int[3]>>::get' requested here
+  263 |             >::get();
+      |                ^
+/home/riki/.emscripten_cache/sysroot/include/emscripten/bind.h:1807:24: note: in instantiation of member function 'emscripten::internal::WithPolicies<>::ArgTypeList<int[3]>::getTypes' requested here
+ 1807 |             returnType.getTypes()[0],
+      |                        ^
+/home/riki/heart-vis/src/cpp/bindings.cpp:33:8: note: in instantiation of function template specialization 'emscripten::class_<Triangle>::property<int[3], void>' requested here
+   33 |       .property("vertices", &Triangle::vertices)
+      |        ^
+In file included from /home/riki/heart-vis/src/cpp/bindings.cpp:5:
+In file included from /home/riki/.emscripten_cache/sysroot/include/emscripten/bind.h:26:
+In file included from /home/riki/.emscripten_cache/sysroot/include/emscripten/val.h:17:
+/home/riki/.emscripten_cache/sysroot/include/emscripten/wire.h:54:19: error: static assertion failed due to requirement 'IsCanonicalized<int[3]>': T should not be a reference or cv-qualified
+   54 |     static_assert(IsCanonicalized<T>, "T should not be a reference or cv-qualified");
+      |                   ^~~~~~~~~~~~~~~~~~
+/home/riki/.emscripten_cache/sysroot/include/emscripten/wire.h:85:16: note: in instantiation of template class 'emscripten::internal::CanonicalizedID<int[3]>' requested here
+   85 |         return CanonicalizedID<C>::get();
+      |                ^
+/home/riki/.emscripten_cache/sysroot/include/emscripten/wire.h:110:32: note: in instantiation of member function 'emscripten::internal::LightTypeID<int[3]>::get' requested here
+  110 |         return LightTypeID<T>::get();
+      |                                ^
+/home/riki/.emscripten_cache/sysroot/include/emscripten/wire.h:240:59: note: in instantiation of member function 'emscripten::internal::TypeID<int[3]>::get' requested here
+  240 |         static constexpr TYPEID types[] = { TypeID<Args>::get()... };
+      |                                                           ^
+/home/riki/.emscripten_cache/sysroot/include/emscripten/wire.h:263:16: note: in instantiation of member function 'emscripten::internal::ArgArrayGetter<emscripten::internal::TypeList<int[3]>>::get' requested here
+  263 |             >::get();
+      |                ^
+/home/riki/.emscripten_cache/sysroot/include/emscripten/bind.h:1807:24: note: in instantiation of member function 'emscripten::internal::WithPolicies<>::ArgTypeList<int[3]>::getTypes' requested here
+ 1807 |             returnType.getTypes()[0],
+      |                        ^
+/home/riki/heart-vis/src/cpp/bindings.cpp:33:8: note: in instantiation of function template specialization 'emscripten::class_<Triangle>::property<int[3], void>' requested here
+   33 |       .property("vertices", &Triangle::vertices)
+      |        ^
+4 errors generated.
+make[2]: *** [CMakeFiles/heart.out.dir/build.make:155: CMakeFiles/heart.out.dir/src/cpp/bindings.cpp.o] Error 1
+make[1]: *** [CMakeFiles/Makefile2:87: CMakeFiles/heart.out.dir/all] Error 2
+make: *** [Makefile:91: all] Error 2

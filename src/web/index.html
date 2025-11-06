@@ -9,7 +9,17 @@
 
 <body>
 	<h1>Visualization Test</h1>
-	<div id="viewport"></div>
+	<div class="mesh-vis">
+		<div id="viewport"></div>
+
+		<input type="file" id="raw-mesh" accept="text/*" class="hidden-upload-button">
+
+		<label for="raw-mesh" class="upload-button">
+			LOAD RAW<br>MESH FILE
+		</label>
+
+		<span id="filename">No file selected</span>
+	</div>
 
 
 	<script type="importmap">

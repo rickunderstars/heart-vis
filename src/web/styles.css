@@ -1,8 +1,36 @@
 body {
-	margin: 3%;
+	margin: 1%;
 	color: whitesmoke;
 	font-family: Helvetca, Arial, sans-serif;
 	background-color: #545c7e;
+}
+
+.mesh-vis {
+	display: flex;
+	align-items: center;
+}
+
+.hidden-upload-button {
+	display: none;
+}
+
+.upload-button {
+	font-size: 11px;
+	font-weight: bold;
+	font-style: italic;
+	color: white;
+
+	padding: 20px;
+	margin: 30px;
+
+	background-color: #007bff;
+	border-radius: 10px;
+	cursor: pointer;
+	transition: background-color 0.2s;
+}
+
+.upload-button:hover {
+	background-color: #0056b3;
 }
 
 #viewport {

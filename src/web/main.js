@@ -1,14 +1,7 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 
-HeartModule().then(module => {
-			console.log('Module loaded!');
-
-			const mesh = module.Mesh.simpleShape();
-			console.log(mesh.toString()) ;
-
-			mesh.delete();
-		})
+/////// three.js ///////
 
 const scene = new THREE.Scene();
 const viewport = document.getElementById("viewport");
@@ -38,3 +31,29 @@ function animate() {
 
 	renderer.render(scene, camera);
 }
+
+/////// model upload ///////
+
+HeartModule().then(cpp => {
+	const rawMeshElement = document.getElementById('raw-mesh');
+	const fileElement = document.getElementById('filename');
+
+	rawMeshElement.addEventListener('change', function(event) {
+		if (event.target.files.length > 0) {
+			const file = event.target.files[0];
+			fileElement.textContent = file.name;
+
+			const reader = new FileReader();
+
+			reader.onload = function(e) {
+				const fileContent = e.target.result;
+				const mesh = cpp.importMesh(fileContent);
+				console.log(mesh.toPlyStringDefault());
+			};
+			reader.readAsText(file);
+		} else {
+			fileElement.textContent = 'No file selected';
+		}
+	});
+
+});
