@@ -1,5 +1,3 @@
-UseTabs
-
 CompileFlags:
   CompilationDatabase: build
   Add:

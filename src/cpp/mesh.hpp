@@ -2,6 +2,7 @@
 
 #include "triangle.hpp"
 #include "vertex.hpp"
+#include <emscripten/val.h>
 #include <vector>
 
 class Mesh {
@@ -26,4 +27,8 @@ class Mesh {
 	std::string trianglesString();
 
 	std::string toString();
+
+	emscripten::val Float32ArrayOfVertices() const;
+
+	emscripten::val Uint32ArrayOfTriangles() const;
 };

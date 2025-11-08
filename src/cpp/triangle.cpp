@@ -3,18 +3,12 @@
 #include <sstream>
 
 Triangle::Triangle() : vertices{0, 0, 0}, groupID(-1) {}
-Triangle::Triangle(int vertices[3], int groupID) {
+Triangle::Triangle(const int vertices[3], int groupID) {
 	for (int i = 0; i < 3; i++) {
 		this->vertices[i] = vertices[i];
 	}
 	this->groupID = groupID;
 }
-
-int Triangle::v0() { return vertices[0]; }
-
-int Triangle::v1() { return vertices[1]; }
-
-int Triangle::v2() { return vertices[2]; }
 
 std::string Triangle::toString() {
 	std::ostringstream oss;

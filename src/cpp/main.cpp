@@ -5,6 +5,7 @@
 
 int main() {
 
+	/*
 	// filepaths
 	std::string base = "assets/mesh/";
 	std::string filepath1 = base + "2-LA.mesh";
@@ -13,7 +14,7 @@ int main() {
 
 	// vector of qualities
 	std::vector<std::string> qualities = {"unipolar", "bipolar", "lat",
-										  "eml",	  "exteml",	 "scar"};
+	"eml",	  "exteml",	 "scar"};
 
 	// from file to string
 	std::string rawString1 = fileToString(filepath1);
@@ -66,6 +67,7 @@ int main() {
 	// stringToFile(smsh.toPlyString(), simplepath, "ply");
 
 	std::cout << smsh.toPlyString() << std::endl;
+	*/
 
 	return 0;
 }

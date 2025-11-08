@@ -4,6 +4,8 @@
 
 #include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/constants.hpp>
+#include <cstdint>
+#include <emscripten/val.h>
 #include <glm/ext/vector_float3.hpp>
 #include <iostream>
 #include <sstream>
@@ -166,4 +168,44 @@ Mesh Mesh::simpleShape() {
 	vert[3] = Vertex(v3, nrm, -1);
 
 	return Mesh(vert, tri);
-};
+}
+
+emscripten::val Mesh::Float32ArrayOfVertices() const {
+	std::vector<float> positions;
+	positions.reserve(vertices.size() * 3);
+
+	for (const auto &v : vertices) {
+		positions.push_back(v.pos.x);
+		positions.push_back(v.pos.y);
+		positions.push_back(v.pos.z);
+	}
+
+	emscripten::val float32Array =
+		emscripten::val::global("Float32Array").new_(positions.size());
+	emscripten::val memory = emscripten::val::module_property("HEAPF32");
+
+	float32Array.call<void>("set",
+							emscripten::val(emscripten::typed_memory_view(
+								positions.size(), positions.data())));
+
+	return float32Array;
+}
+
+emscripten::val Mesh::Uint32ArrayOfTriangles() const {
+	std::vector<uint32_t> indices;
+	indices.reserve(triangles.size() * 3);
+
+	for (const auto &t : triangles) {
+		indices.push_back(static_cast<uint32_t>(t.vertices[0]));
+		indices.push_back(static_cast<uint32_t>(t.vertices[1]));
+		indices.push_back(static_cast<uint32_t>(t.vertices[2]));
+	}
+
+	emscripten::val uint32Array =
+		emscripten::val::global("Uint32Array").new_(indices.size());
+
+	uint32Array.call<void>("set", emscripten::val(emscripten::typed_memory_view(
+									  indices.size(), indices.data())));
+
+	return uint32Array;
+}

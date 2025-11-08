@@ -30,9 +30,7 @@ EMSCRIPTEN_BINDINGS(heart_module) {
 	emscripten::register_vector<Vertex>("VertexVector");
 
 	emscripten::class_<Triangle>("Triangle")
-		.function("v0", &Triangle::v0)
-		.function("v1", &Triangle::v1)
-		.function("v2", &Triangle::v2)
+		.constructor<const int *, int>()
 		.property("groupID", &Triangle::groupID);
 
 	emscripten::register_vector<Triangle>("TriangleVector");
@@ -50,5 +48,7 @@ EMSCRIPTEN_BINDINGS(heart_module) {
 				  emscripten::optional_override(
 					  [](Mesh &self) { return self.toPlyString(); }))
 		.function("toString", &Mesh::toString)
-		.class_function("simpleShape", &Mesh::simpleShape);
+		.class_function("simpleShape", &Mesh::simpleShape)
+		.function("Float32ArrayOfVertices", &Mesh::Float32ArrayOfVertices)
+		.function("Uint32ArrayOfTriangles", &Mesh::Uint32ArrayOfTriangles);
 }

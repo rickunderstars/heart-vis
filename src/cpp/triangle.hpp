@@ -8,13 +8,7 @@ class Triangle {
 	int groupID = -1;
 
 	Triangle();
-	Triangle(int vertices[3], int groupID);
-
-	int v0();
-
-	int v1();
-
-	int v2();
+	Triangle(const int vertices[3], int groupID);
 
 	std::string toString();
 
