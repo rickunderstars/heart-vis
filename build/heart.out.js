@@ -455,7 +455,7 @@ function updateMemoryViews() {
   HEAPU16 = new Uint16Array(b);
   HEAP32 = new Int32Array(b);
   HEAPU32 = new Uint32Array(b);
-  HEAPF32 = new Float32Array(b);
+  Module['HEAPF32'] = HEAPF32 = new Float32Array(b);
   HEAPF64 = new Float64Array(b);
   HEAP64 = new BigInt64Array(b);
   HEAPU64 = new BigUint64Array(b);
@@ -3155,6 +3155,24 @@ async function createWasm() {
       return emval_addMethodCaller(createNamedFunction(functionName, invokerFunction));
     };
 
+
+  
+  
+  var emval_get_global = () => globalThis;
+  var __emval_get_global = (name) => {
+      if (name===0) {
+        return Emval.toHandle(emval_get_global());
+      } else {
+        name = getStringOrSymbol(name);
+        return Emval.toHandle(emval_get_global()[name]);
+      }
+    };
+
+  
+  var __emval_get_module_property = (name) => {
+      name = getStringOrSymbol(name);
+      return Emval.toHandle(Module[name]);
+    };
 
   
   
@@ -6421,7 +6439,6 @@ if (Module['wasmBinary']) wasmBinary = Module['wasmBinary'];
   'enumReadValueFromPointer',
   'setDelayFunction',
   'count_emval_handles',
-  'emval_get_global',
 ];
 missingLibrarySymbols.forEach(missingLibrarySymbol)
 
@@ -6435,7 +6452,6 @@ missingLibrarySymbols.forEach(missingLibrarySymbol)
   'abort',
   'wasmMemory',
   'wasmExports',
-  'HEAPF32',
   'HEAPF64',
   'HEAP8',
   'HEAPU8',
@@ -6748,6 +6764,7 @@ missingLibrarySymbols.forEach(missingLibrarySymbol)
   'emval_symbols',
   'getStringOrSymbol',
   'Emval',
+  'emval_get_global',
   'emval_returnValue',
   'emval_lookupTypes',
   'emval_methodCallers',
@@ -6842,6 +6859,10 @@ var wasmImports = {
   _emval_create_invoker: __emval_create_invoker,
   /** @export */
   _emval_decref: __emval_decref,
+  /** @export */
+  _emval_get_global: __emval_get_global,
+  /** @export */
+  _emval_get_module_property: __emval_get_module_property,
   /** @export */
   _emval_invoke: __emval_invoke,
   /** @export */
