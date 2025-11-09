@@ -1,4 +1,5 @@
 #pragma once
+
 #include "mesh.hpp"
 #include <iostream>
 #include <vector>
@@ -30,3 +31,5 @@ void verticesAttributesSection(std::stringstream &file,
 							   std::vector<Vertex> &vertices);
 
 Mesh importMesh(std::string fileString);
+
+std::array<float, 3> scalarToTurbo(float scalar);

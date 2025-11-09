@@ -120,7 +120,7 @@ HeartModule().then((cpp) => {
 				camera.position.set(
 					center.x,
 					center.y,
-					center.z + radius * 2.5
+					center.z + radius * 1.5
 				);
 				controls.target.set(center.x, center.y, center.z);
 				controls.update();
@@ -134,6 +134,13 @@ HeartModule().then((cpp) => {
 					"Mesh loaded successfully. Meshes loaded:",
 					meshesInfo.length
 				);
+
+				console.log("1: ", mesh.vertices.get(10000).nUnipolar);
+				console.log("2: ", mesh.vertices.get(10000).nBipolar);
+				console.log("3: ", mesh.vertices.get(10000).nLAT);
+				console.log("4: ", mesh.vertices.get(10000).nEML);
+				console.log("5: ", mesh.vertices.get(10000).nExtEML);
+				console.log("6: ", mesh.vertices.get(10000).nSCAR);
 			};
 			reader.readAsText(file);
 		} else {

@@ -25,7 +25,13 @@ EMSCRIPTEN_BINDINGS(heart_module) {
 		.property("LAT", &Vertex::LAT)
 		.property("EML", &Vertex::EML)
 		.property("ExtEML", &Vertex::ExtEML)
-		.property("SCAR", &Vertex::SCAR);
+		.property("SCAR", &Vertex::SCAR)
+		.property("nUnipolar", &Vertex::nUnipolar)
+		.property("nBipolar", &Vertex::nBipolar)
+		.property("nLAT", &Vertex::nLAT)
+		.property("nEML", &Vertex::nEML)
+		.property("nExtEML", &Vertex::nExtEML)
+		.property("nSCAR", &Vertex::nSCAR);
 
 	emscripten::register_vector<Vertex>("VertexVector");
 

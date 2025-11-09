@@ -170,6 +170,82 @@ Mesh Mesh::simpleShape() {
 	return Mesh(vert, tri);
 }
 
+void Mesh::calcQualitiesMinMax() {
+	maxUnipolar = vertices[0].unipolar;
+	maxBipolar = vertices[0].bipolar;
+	maxLAT = vertices[0].LAT;
+	maxEML = vertices[0].EML;
+	maxExtEML = vertices[0].ExtEML;
+	maxSCAR = vertices[0].SCAR;
+
+	minUnipolar = vertices[0].unipolar;
+	minBipolar = vertices[0].bipolar;
+	minLAT = vertices[0].LAT;
+	minEML = vertices[0].EML;
+	minExtEML = vertices[0].ExtEML;
+	minSCAR = vertices[0].SCAR;
+	for (int i = 1; i < vertices.size(); i++) {
+		if (vertices[i].unipolar > maxUnipolar) {
+			maxUnipolar = vertices[i].unipolar;
+		}
+		if (vertices[i].bipolar > maxBipolar) {
+			maxBipolar = vertices[i].bipolar;
+		}
+		if (vertices[i].LAT > maxLAT) {
+			maxLAT = vertices[i].LAT;
+		}
+		if (vertices[i].EML > maxEML) {
+			maxEML = vertices[i].EML;
+		}
+		if (vertices[i].ExtEML > maxExtEML) {
+			maxExtEML = vertices[i].ExtEML;
+		}
+		if (vertices[i].SCAR > maxSCAR) {
+			maxSCAR = vertices[i].SCAR;
+		}
+
+		if (vertices[i].unipolar < minUnipolar) {
+			minUnipolar = vertices[i].unipolar;
+		}
+		if (vertices[i].bipolar < minBipolar) {
+			minBipolar = vertices[i].bipolar;
+		}
+		if (vertices[i].LAT < minLAT) {
+			minLAT = vertices[i].LAT;
+		}
+		if (vertices[i].EML < minEML) {
+			minEML = vertices[i].EML;
+		}
+		if (vertices[i].ExtEML < minExtEML) {
+			minExtEML = vertices[i].ExtEML;
+		}
+		if (vertices[i].SCAR < minSCAR) {
+			minSCAR = vertices[i].SCAR;
+		}
+	}
+}
+
+void Mesh::calcQualitiesNorm() {
+	float unipolarDelta =
+		maxUnipolar - minUnipolar != 0 ? maxUnipolar - minUnipolar : 1;
+	float bipolarDelta =
+		maxBipolar - minBipolar != 0 ? maxBipolar - minBipolar : 1;
+	float latDelta = maxLAT - minLAT != 0 ? maxLAT - minLAT : 1;
+	float emlDelta = maxEML - minEML != 0 ? maxEML - minEML : 1;
+	float extemlDelta = maxExtEML - minExtEML != 0 ? maxExtEML - minExtEML : 1;
+	float scarDelta = maxSCAR - minSCAR != 0 ? maxSCAR - minSCAR : 1;
+	for (int i = 0; i < vertices.size(); i++) {
+		vertices[i].nUnipolar =
+			(vertices[i].unipolar - minUnipolar) / unipolarDelta;
+		vertices[i].nBipolar =
+			(vertices[i].bipolar - minBipolar) / bipolarDelta;
+		vertices[i].nLAT = (vertices[i].LAT - minLAT) / latDelta;
+		vertices[i].nEML = (vertices[i].EML - minEML) / emlDelta;
+		vertices[i].nExtEML = (vertices[i].ExtEML - minExtEML) / extemlDelta;
+		vertices[i].nSCAR = (vertices[i].SCAR - minSCAR) / scarDelta;
+	}
+}
+
 emscripten::val Mesh::Float32ArrayOfVertices() const {
 	std::vector<float> positions;
 	positions.reserve(vertices.size() * 3);

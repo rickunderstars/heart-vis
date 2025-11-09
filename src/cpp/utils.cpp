@@ -1,4 +1,5 @@
 #include "utils.hpp"
+#include "turbo_colormap.hpp"
 
 #include <boost/algorithm/string.hpp>
 #include <fstream>
@@ -82,7 +83,12 @@ Mesh sectionsHandler(std::stringstream &file) {
 	// vertices properties 2
 	verticesAttributesSection(file, verts);
 
-	return Mesh(verts, tris);
+	Mesh heart(verts, tris);
+
+	heart.calcQualitiesMinMax();
+	heart.calcQualitiesNorm();
+
+	return heart;
 }
 
 void generalAttributesSection(std::stringstream &file, int &vertNum,
@@ -300,4 +306,18 @@ Mesh importMesh(std::string fileString) {
 
 	Mesh h = sectionsHandler(file);
 	return h;
+}
+
+std::array<float, 3> scalarToTurbo(float scalar) {
+	float s256 = scalar * 255.0;
+	int sx = s256;
+	int dx = s256 + 1 <= 255.0 ? s256 + 1 : 255;
+	float t = s256 - sx;
+
+	float r = turbo_srgb_floats[sx][0] * (1 - t) + turbo_srgb_floats[dx][0] * t;
+	float g = turbo_srgb_floats[sx][1] * (1 - t) + turbo_srgb_floats[dx][1] * t;
+	float b = turbo_srgb_floats[sx][2] * (1 - t) + turbo_srgb_floats[dx][2] * t;
+
+	std::array<float, 3> turbo = {r, g, b};
+	return turbo;
 }
