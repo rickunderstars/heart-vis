@@ -21,15 +21,18 @@ viewport.append(renderer.domElement);
 
 camera.position.z = 5;
 
-const light1 = new THREE.DirectionalLight(0xffdddd, 1);
-const light2 = new THREE.DirectionalLight(0xddddff, 1);
-const light3 = new THREE.DirectionalLight(0xddffdd, 1);
+const light1 = new THREE.DirectionalLight(0xffffff, 1);
+const light2 = new THREE.DirectionalLight(0xffffff, 1);
+const light3 = new THREE.DirectionalLight(0xffffff, 1);
+const light4 = new THREE.DirectionalLight(0xffffff, 1);
 light1.position.set(100, 100, 100);
-light2.position.set(-100, -100, 100);
-light2.position.set(0, -100, -100);
+light2.position.set(-100, -100, -100);
+light3.position.set(0, -100, -100);
+light4.position.set(0, 100, 100);
 scene.add(light1);
 scene.add(light2);
 scene.add(light3);
+scene.add(light4);
 scene.add(new THREE.AmbientLight(0x303030, 0.5));
 
 function animate() {
@@ -38,6 +41,9 @@ function animate() {
 }
 
 /////// model upload ///////
+
+const meshesInfo = [];
+const meshesGroup = new THREE.Group();
 
 HeartModule().then((cpp) => {
 	const rawMeshElement = document.getElementById("raw-mesh");
@@ -48,11 +54,35 @@ HeartModule().then((cpp) => {
 			const file = event.target.files[0];
 			fileElement.textContent = file.name;
 
+			if (meshesInfo.some((item) => item.filename === file.name)) {
+				console.log("Mesh already uploaded");
+				return;
+			}
+
 			const reader = new FileReader();
 
 			reader.onload = function (e) {
 				const fileContent = e.target.result;
-				const mesh = cpp.importMesh(fileContent);
+				let mesh = cpp.importMesh(fileContent);
+
+				/// -- test meshes fixes -- ///
+
+				if (file.name === "2-LA.mesh") {
+					mesh.triangleFix(8703, 4559, 4538);
+					mesh.fixNMEdges();
+				} else if (file.name === "2-LA-FA.mesh") {
+					mesh.triangleFix(25180, 12810, 12813);
+					mesh.triangleFix(29108, 9930, 14703);
+					mesh.triangleFix(21420, 10857, 10941);
+					mesh.triangleFix(56, 38, 29);
+					mesh.triangleFix(30812, 15492, 15447);
+					mesh.triangleFix(30578, 14384, 14398);
+					let fixTri = new cpp.Triangle(15417, 14398, 14381, -1);
+					mesh.triangles.push_back(fixTri);
+					mesh.fixNMEdges();
+				}
+
+				// -- end fix -- //
 
 				const verticesView = mesh.Float32ArrayOfVertices();
 				const trianglesView = mesh.Uint32ArrayOfTriangles();
@@ -72,15 +102,21 @@ HeartModule().then((cpp) => {
 
 				const material = new THREE.MeshStandardMaterial({
 					color: 0xddcccc,
-					flatShading: false,
+					flatShading: true,
 					side: THREE.DoubleSide,
 				});
 				const heart = new THREE.Mesh(geometry, material);
-				scene.add(heart);
 
-				geometry.computeBoundingSphere();
-				const center = geometry.boundingSphere.center;
-				const radius = geometry.boundingSphere.radius;
+				meshesGroup.add(heart);
+				scene.add(meshesGroup);
+
+				const box = new THREE.Box3();
+				box.setFromObject(meshesGroup);
+				const boundingSphere = new THREE.Sphere();
+				box.getBoundingSphere(boundingSphere);
+				const center = boundingSphere.center;
+				const radius = boundingSphere.radius;
+
 				camera.position.set(
 					center.x,
 					center.y,
@@ -89,16 +125,15 @@ HeartModule().then((cpp) => {
 				controls.target.set(center.x, center.y, center.z);
 				controls.update();
 
-				//const cubegeometry = new THREE.BoxGeometry(30, 30, 30);
-				//const cube = new THREE.Mesh(cubegeometry, material);
-				//scene.add(cube);
-				//
-				//cubegeometry.computeBoundingSphere();
-				//const center = cubegeometry.boundingSphere.center;
-				//const radius = cubegeometry.boundingSphere.radius;
-				//camera.position.set(center.x, center.y, center.z + radius * 3);
-				//controls.target.set(center.x, center.y, center.z);
-				//controls.update();
+				meshesInfo.push({
+					mesh: heart,
+					filename: file.name,
+				});
+
+				console.log(
+					"Mesh loaded successfully. Meshes loaded:",
+					meshesInfo.length
+				);
 			};
 			reader.readAsText(file);
 		} else {

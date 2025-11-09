@@ -30,7 +30,7 @@ EMSCRIPTEN_BINDINGS(heart_module) {
 	emscripten::register_vector<Vertex>("VertexVector");
 
 	emscripten::class_<Triangle>("Triangle")
-		.constructor<const int *, int>()
+		.constructor<int, int, int, int>()
 		.property("groupID", &Triangle::groupID);
 
 	emscripten::register_vector<Triangle>("TriangleVector");
