@@ -2,7 +2,7 @@
 	font-family: Helvetca, Arial, sans-serif;
 	font-weight: bold;
 	font-style: italic;
-	color: whitesmoke;
+	color: white;
 }
 
 body {
@@ -35,20 +35,14 @@ body {
 	vertical-align: middle;
 }
 
+.title-icon {
+	height: 1em;
+	width: auto;
+	vertical-align: middle;
+}
+
 .btn-upload {
-	font-size: 1.5vh;
-	font-weight: bold;
-	font-style: italic;
-	color: white;
 	background-color: #007bff;
-	border-radius: 10px;
-	cursor: pointer;
-	transition: background-color 0.2s;
-	display: flex;
-	text-align: center;
-	align-items: center;
-	padding: 1vh;
-	margin: 2vh 2vh 2vh 0vh;
 }
 
 .text-upload {
@@ -60,9 +54,35 @@ body {
 	background-color: #0056b3;
 }
 
+.btn-camera-reset {
+	background-color: #8833ff;
+	width: 10vh;
+}
+
+.btn-camera-reset:hover {
+	background-color: #6656b3;
+}
+
 .hidden-btn-upload {
 	display: none;
 }
+
+.btn-upload,
+.btn-camera-reset {
+	display: flex;
+	text-align: center;
+	align-items: center;
+	border-radius: 10px;
+	padding: 1vh;
+	margin: 2vh 2vh 2vh 0vh;
+	cursor: pointer;
+	font-size: 2vh;
+	font-weight: bold;
+	font-style: italic;
+	transition: background-color 0.2s;
+}
+
+/* chaos from here */
 
 .options-container {
 	display: flex;
@@ -76,7 +96,6 @@ body {
 	color: white;
 
 	background-color: #007bff;
-	border-radius: 10px;
 	cursor: pointer;
 	transition: background-color 0.2s;
 	text-align: center;

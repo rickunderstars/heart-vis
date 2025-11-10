@@ -39,6 +39,7 @@ function animate() {
 
 const meshes = [];
 const qualities = ["unipolar", "bipolar", "lat", "eml", "exteml", "scar"];
+let activeMesh = -1;
 
 HeartModule().then((cpp) => {
 	const rawMeshElement = document.getElementById("raw-mesh");
@@ -151,6 +152,9 @@ HeartModule().then((cpp) => {
 					colorSets: turboSets,
 				});
 
+				activeMesh = meshes.length - 1;
+				console.log(activeMesh);
+
 				console.log(
 					"Mesh loaded successfully. Meshes loaded:",
 					meshes.length
@@ -186,16 +190,13 @@ function setColorVariant(meshIndex, colorSet) {
 	}
 }
 
-// TODO: adapt for single mesh
 document.getElementById("camera-reset").addEventListener("click", () => {
-	const box = new THREE.Box3();
-	box.setFromObject(meshesGroup);
+	const box = new THREE.Box3().setFromObject(meshes[activeMesh].mesh);
 	const boundingSphere = new THREE.Sphere();
 	box.getBoundingSphere(boundingSphere);
 	const center = boundingSphere.center;
 	const radius = boundingSphere.radius;
-
-	camera.position.set(center.x, center.y, center.z + radius * 2);
+	camera.position.set(center.x, center.y, center.z + radius * 2.5);
 	controls.target.set(center.x, center.y, center.z);
 	controls.update();
 });

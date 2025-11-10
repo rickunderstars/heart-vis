@@ -5,7 +5,7 @@
 		<link rel="stylesheet" href="styles.css" />
 		<link
 			rel="icon"
-			href="../../assets/images/heart-icon-v2.png"
+			href="../../assets/images/heart-icon.png"
 			type="image/png"
 		/>
 		<title>heart-vis</title>
@@ -16,7 +16,14 @@
 			<div id="viewport"></div>
 			<div class="right-column">
 				<div class="title-and-upload">
-					<div class="title">heart-vis</div>
+					<div class="title">
+						heart-vis
+						<img
+							src="../../assets/images/heart-icon.png"
+							alt=""
+							class="title-icon"
+						/>
+					</div>
 					<input
 						type="file"
 						id="raw-mesh"
@@ -24,14 +31,14 @@
 						class="hidden-btn-upload"
 					/>
 					<label for="raw-mesh" class="btn-upload">
-						load raw mesh file
+						upload raw mesh file
 					</label>
 					<div id="filename" class="text-upload">
 						No file selected
 					</div>
 				</div>
 
-				<label id="camera-reset" class="small-button"
+				<label id="camera-reset" class="btn-camera-reset"
 					>camera reset</label
 				>
 
