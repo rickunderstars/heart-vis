@@ -10,7 +10,7 @@ const camera = new THREE.PerspectiveCamera(
 	viewport.clientWidth / viewport.clientHeight
 );
 
-const renderer = new THREE.WebGLRenderer();
+const renderer = new THREE.WebGLRenderer({ alpha: true });
 renderer.setSize(viewport.clientWidth, viewport.clientHeight);
 const controls = new OrbitControls(camera, renderer.domElement);
 renderer.setAnimationLoop(animate);
@@ -40,6 +40,7 @@ function animate() {
 const meshes = [];
 const qualities = ["unipolar", "bipolar", "lat", "eml", "exteml", "scar"];
 let activeMesh = -1;
+let activeQuality = qualities[0];
 
 HeartModule().then((cpp) => {
 	const rawMeshElement = document.getElementById("raw-mesh");
@@ -114,7 +115,7 @@ HeartModule().then((cpp) => {
 				geometry.computeVertexNormals();
 				geometry.setAttribute(
 					"color",
-					new THREE.BufferAttribute(turboSets.unipolar, 3)
+					new THREE.BufferAttribute(turboSets[activeQuality], 3)
 				);
 
 				const material = new THREE.MeshStandardMaterial({
@@ -180,7 +181,7 @@ function setColorVariant(meshIndex, colorSet) {
 	if (meshes[meshIndex]) {
 		const mesh = meshes[meshIndex].mesh;
 		const colorSets = meshes[meshIndex].colorSets;
-
+		activeQuality = colorSet;
 		mesh.geometry.setAttribute(
 			"color",
 			new THREE.BufferAttribute(colorSets[colorSet], 3)
@@ -201,26 +202,10 @@ document.getElementById("camera-reset").addEventListener("click", () => {
 	controls.update();
 });
 
-document.getElementById("btn-unipolar").addEventListener("click", () => {
-	setColorVariant(activeMesh, "unipolar");
-});
-
-document.getElementById("btn-bipolar").addEventListener("click", () => {
-	setColorVariant(activeMesh, "bipolar");
-});
-
-document.getElementById("btn-lat").addEventListener("click", () => {
-	setColorVariant(activeMesh, "lat");
-});
-
-document.getElementById("btn-eml").addEventListener("click", () => {
-	setColorVariant(activeMesh, "eml");
-});
-
-document.getElementById("btn-exteml").addEventListener("click", () => {
-	setColorVariant(activeMesh, "exteml");
-});
-
-document.getElementById("btn-scar").addEventListener("click", () => {
-	setColorVariant(activeMesh, "scar");
-});
+document
+	.querySelector(".qualities-container")
+	.addEventListener("change", function (e) {
+		if (e.target.name === "quality") {
+			setColorVariant(activeMesh, e.target.value);
+		}
+	});

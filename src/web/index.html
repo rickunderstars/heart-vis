@@ -20,7 +20,6 @@
 						heart-vis
 						<img
 							src="../../assets/images/heart-icon.png"
-							alt=""
 							class="title-icon"
 						/>
 					</div>
@@ -42,15 +41,62 @@
 					>camera reset</label
 				>
 
-				<div class="options-container">
-					<label id="btn-unipolar" class="small-button"
-						>Unipolar</label
-					>
-					<label id="btn-bipolar" class="small-button">Bipolar</label>
-					<label id="btn-lat" class="small-button">LAT</label>
-					<label id="btn-eml" class="small-button">EML</label>
-					<label id="btn-exteml" class="small-button">ExtEML</label>
-					<label id="btn-scar" class="small-button">Scar</label>
+				<div class="qualities-container">
+					<label>
+						<input
+							type="radio"
+							name="quality"
+							value="unipolar"
+							class="btn-quality"
+							checked
+						/>
+						<span>Unipolar</span>
+					</label>
+					<label>
+						<input
+							type="radio"
+							name="quality"
+							value="bipolar"
+							class="btn-quality"
+						/>
+						<span>Bipolar</span>
+					</label>
+					<label>
+						<input
+							type="radio"
+							name="quality"
+							value="lat"
+							class="btn-quality"
+						/>
+						<span>LAT</span>
+					</label>
+					<label>
+						<input
+							type="radio"
+							name="quality"
+							value="eml"
+							class="btn-quality"
+						/>
+						<span>EML</span>
+					</label>
+					<label>
+						<input
+							type="radio"
+							name="quality"
+							value="exteml"
+							class="btn-quality"
+						/>
+						<span>ExtEML</span>
+					</label>
+					<label>
+						<input
+							type="radio"
+							name="quality"
+							value="scar"
+							class="btn-quality"
+						/>
+						<span>SCAR</span>
+					</label>
 				</div>
 				<div id="info" class="info"></div>
 			</div>
