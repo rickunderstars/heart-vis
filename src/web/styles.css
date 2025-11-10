@@ -1,33 +1,71 @@
-body {
-	margin: 1%;
-	color: whitesmoke;
-
-	background-color: #545c7e;
-}
-
 * {
 	font-family: Helvetca, Arial, sans-serif;
 	font-weight: bold;
 	font-style: italic;
+	color: whitesmoke;
 }
 
-.mesh-vis {
+body {
+	margin: 0;
+	background-color: #545c7e;
+}
+
+.global-container {
 	display: flex;
+	flex-direction: row;
 	align-items: center;
 }
 
-.hidden-upload-button {
+.right-column {
+	display: flex;
+	flex-direction: column;
+	padding-left: 3vh;
+	height: 100vh;
+}
+
+.title-and-upload {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
+
+.title {
+	margin: 2vh 2vh 2vh 0vh;
+	font-size: 5vh;
+	vertical-align: middle;
+}
+
+.btn-upload {
+	font-size: 1.5vh;
+	font-weight: bold;
+	font-style: italic;
+	color: white;
+	background-color: #007bff;
+	border-radius: 10px;
+	cursor: pointer;
+	transition: background-color 0.2s;
+	display: flex;
+	text-align: center;
+	align-items: center;
+	padding: 1vh;
+	margin: 2vh 2vh 2vh 0vh;
+}
+
+.text-upload {
+	font-size: 1.8vh;
+	font-weight: normal;
+}
+
+.btn-upload:hover {
+	background-color: #0056b3;
+}
+
+.hidden-btn-upload {
 	display: none;
 }
 
 .options-container {
 	display: flex;
-}
-
-.column {
-	flex: 1;
-    display: flex;
-	align-items: center;
 }
 
 .small-button,
@@ -61,14 +99,9 @@ body {
 	background-color: #6656b3;
 }
 
-.big-button:hover {
-	background-color: #0056b3;
-}
-
 #viewport {
-	border: 4px solid whitesmoke;
-	border-radius: 2px;
-	width: 1000px;
-	height: 650px;
+	border-right: 0.2em solid whitesmoke;
+	width: 100vh;
+	height: 100vh;
 	background-color: #282328;
 }

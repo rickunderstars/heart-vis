@@ -37,10 +37,8 @@ function animate() {
 
 /////// model upload ///////
 
-const meshesInfo = [];
-const meshesGroup = new THREE.Group();
+const meshes = [];
 const qualities = ["unipolar", "bipolar", "lat", "eml", "exteml", "scar"];
-const meshesSetsOfColors = [];
 
 HeartModule().then((cpp) => {
 	const rawMeshElement = document.getElementById("raw-mesh");
@@ -49,9 +47,9 @@ HeartModule().then((cpp) => {
 	rawMeshElement.addEventListener("change", function (event) {
 		if (event.target.files.length > 0) {
 			const file = event.target.files[0];
-			fileElement.textContent = file.name;
+			fileElement.textContent = "Last upload: " + file.name;
 
-			if (meshesInfo.some((item) => item.filename === file.name)) {
+			if (meshes.some((item) => item.filename === file.name)) {
 				console.log("Mesh already uploaded");
 				return;
 			}
@@ -106,18 +104,13 @@ HeartModule().then((cpp) => {
 					scar: new Float32Array(scarView),
 				};
 
-				meshesSetsOfColors.push(turboSets);
-
 				const geometry = new THREE.BufferGeometry();
 				geometry.setAttribute(
 					"position",
 					new THREE.BufferAttribute(vertices, 3)
 				);
-
 				geometry.setIndex(new THREE.BufferAttribute(triangles, 1));
-
 				geometry.computeVertexNormals();
-
 				geometry.setAttribute(
 					"color",
 					new THREE.BufferAttribute(turboSets.unipolar, 3)
@@ -127,39 +120,47 @@ HeartModule().then((cpp) => {
 					vertexColors: true,
 					flatShading: false,
 					side: THREE.DoubleSide,
-					roughness: 0.5,
+					roughness: 1,
 				});
+
 				const heart = new THREE.Mesh(geometry, material);
 
-				meshesGroup.add(heart);
-				scene.add(meshesGroup);
+				meshes.forEach((meshData) => {
+					meshData.mesh.visible = false;
+				});
 
-				const box = new THREE.Box3();
-				box.setFromObject(meshesGroup);
+				scene.add(heart);
+
+				const box = new THREE.Box3().setFromObject(heart);
 				const boundingSphere = new THREE.Sphere();
 				box.getBoundingSphere(boundingSphere);
 				const center = boundingSphere.center;
 				const radius = boundingSphere.radius;
 
-				camera.position.set(center.x, center.y, center.z + radius * 2);
+				camera.position.set(
+					center.x,
+					center.y,
+					center.z + radius * 2.5
+				);
 				controls.target.set(center.x, center.y, center.z);
 				controls.update();
 
-				meshesInfo.push({
+				meshes.push({
 					mesh: heart,
 					filename: file.name,
+					colorSets: turboSets,
 				});
 
 				console.log(
 					"Mesh loaded successfully. Meshes loaded:",
-					meshesInfo.length
+					meshes.length
 				);
 
 				document.getElementById(
 					"info"
-				).innerHTML = `Loaded Meshes: ${meshesInfo.length}`;
+				).innerHTML = `Loaded Meshes: ${meshes.length}`;
 
-				for (const m of meshesInfo) {
+				for (const m of meshes) {
 					document.getElementById("info").innerHTML +=
 						"</br>- " + m.filename;
 				}
@@ -171,27 +172,21 @@ HeartModule().then((cpp) => {
 	});
 });
 
-function toggleMesh(index) {
-	if (meshesGroup.children[index]) {
-		meshesGroup.children[index].visible =
-			!meshesGroup.children[index].visible;
-	}
-}
-
-function setTurboVariant(meshIndex, turboSet) {
-	if (meshesGroup.children[meshIndex] && meshesSetsOfColors[meshIndex]) {
-		const mesh = meshesGroup.children[meshIndex];
-		const turboSets = meshesSetsOfColors[meshIndex];
+function setColorVariant(meshIndex, colorSet) {
+	if (meshes[meshIndex]) {
+		const mesh = meshes[meshIndex].mesh;
+		const colorSets = meshes[meshIndex].colorSets;
 
 		mesh.geometry.setAttribute(
 			"color",
-			new THREE.BufferAttribute(turboSets[turboSet], 3)
+			new THREE.BufferAttribute(colorSets[colorSet], 3)
 		);
 
 		mesh.geometry.attributes.color.needsUpdate = true;
 	}
 }
 
+// TODO: adapt for single mesh
 document.getElementById("camera-reset").addEventListener("click", () => {
 	const box = new THREE.Box3();
 	box.setFromObject(meshesGroup);
@@ -205,58 +200,26 @@ document.getElementById("camera-reset").addEventListener("click", () => {
 	controls.update();
 });
 
-document.getElementById("btn-mesh-0").addEventListener("click", () => {
-	toggleMesh(0);
+document.getElementById("btn-unipolar").addEventListener("click", () => {
+	setColorVariant(0, "unipolar");
 });
 
-document.getElementById("btn-mesh-1").addEventListener("click", () => {
-	toggleMesh(1);
+document.getElementById("btn-bipolar").addEventListener("click", () => {
+	setColorVariant(0, "bipolar");
 });
 
-document.getElementById("btn-unipolar-0").addEventListener("click", () => {
-	setTurboVariant(0, "unipolar");
+document.getElementById("btn-lat").addEventListener("click", () => {
+	setColorVariant(0, "lat");
 });
 
-document.getElementById("btn-unipolar-1").addEventListener("click", () => {
-	setTurboVariant(1, "unipolar");
+document.getElementById("btn-eml").addEventListener("click", () => {
+	setColorVariant(0, "eml");
 });
 
-document.getElementById("btn-bipolar-0").addEventListener("click", () => {
-	setTurboVariant(0, "bipolar");
+document.getElementById("btn-exteml").addEventListener("click", () => {
+	setColorVariant(0, "exteml");
 });
 
-document.getElementById("btn-bipolar-1").addEventListener("click", () => {
-	setTurboVariant(1, "bipolar");
-});
-
-document.getElementById("btn-lat-0").addEventListener("click", () => {
-	setTurboVariant(0, "lat");
-});
-
-document.getElementById("btn-lat-1").addEventListener("click", () => {
-	setTurboVariant(1, "lat");
-});
-
-document.getElementById("btn-eml-0").addEventListener("click", () => {
-	setTurboVariant(0, "eml");
-});
-
-document.getElementById("btn-eml-1").addEventListener("click", () => {
-	setTurboVariant(1, "eml");
-});
-
-document.getElementById("btn-exteml-0").addEventListener("click", () => {
-	setTurboVariant(0, "exteml");
-});
-
-document.getElementById("btn-exteml-1").addEventListener("click", () => {
-	setTurboVariant(1, "exteml");
-});
-
-document.getElementById("btn-scar-0").addEventListener("click", () => {
-	setTurboVariant(0, "scar");
-});
-
-document.getElementById("btn-scar-1").addEventListener("click", () => {
-	setTurboVariant(1, "scar");
+document.getElementById("btn-scar").addEventListener("click", () => {
+	setColorVariant(0, "scar");
 });

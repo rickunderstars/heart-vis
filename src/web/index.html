@@ -3,49 +3,51 @@
 	<head>
 		<meta charset="utf-8" />
 		<link rel="stylesheet" href="styles.css" />
-		<title>Heart</title>
+		<link
+			rel="icon"
+			href="../../assets/images/heart-icon-v2.png"
+			type="image/png"
+		/>
+		<title>heart-vis</title>
 	</head>
 
 	<body>
-		<h1>heart-vis</h1>
-		<div class="mesh-vis">
+		<div class="global-container">
 			<div id="viewport"></div>
+			<div class="right-column">
+				<div class="title-and-upload">
+					<div class="title">heart-vis</div>
+					<input
+						type="file"
+						id="raw-mesh"
+						accept="text/*"
+						class="hidden-btn-upload"
+					/>
+					<label for="raw-mesh" class="btn-upload">
+						load raw mesh file
+					</label>
+					<div id="filename" class="text-upload">
+						No file selected
+					</div>
+				</div>
 
-			<input
-				type="file"
-				id="raw-mesh"
-				accept="text/*"
-				class="hidden-upload-button"
-			/>
+				<label id="camera-reset" class="small-button"
+					>camera reset</label
+				>
 
-			<label for="raw-mesh" class="big-button">
-				LOAD RAW<br />MESH FILE
-			</label>
-
-			<span id="filename">No file selected</span>
-			<label id="camera-reset" class="small-button">camera reset</label>
-		</div>
-		<div class="options-container">
-			<div class="column">
-				<label id="btn-mesh-0" class="big-button">Toggle Mesh 1</label>
-				<label id="btn-unipolar-0" class="small-button">Unipolar</label>
-				<label id="btn-bipolar-0" class="small-button">Bipolar</label>
-				<label id="btn-lat-0" class="small-button">LAT</label>
-				<label id="btn-eml-0" class="small-button">EML</label>
-				<label id="btn-exteml-0" class="small-button">ExtEML</label>
-				<label id="btn-scar-0" class="small-button">Scar</label>
+				<div class="options-container">
+					<label id="btn-unipolar" class="small-button"
+						>Unipolar</label
+					>
+					<label id="btn-bipolar" class="small-button">Bipolar</label>
+					<label id="btn-lat" class="small-button">LAT</label>
+					<label id="btn-eml" class="small-button">EML</label>
+					<label id="btn-exteml" class="small-button">ExtEML</label>
+					<label id="btn-scar" class="small-button">Scar</label>
+				</div>
+				<div id="info" class="info"></div>
 			</div>
-			<div class="column">
-				<label id="btn-mesh-1" class="big-button">Toggle Mesh 2</label>
-				<label id="btn-unipolar-1" class="small-button">Unipolar</label>
-				<label id="btn-bipolar-1" class="small-button">Bipolar</label>
-				<label id="btn-lat-1" class="small-button">LAT</label>
-				<label id="btn-eml-1" class="small-button">EML</label>
-				<label id="btn-exteml-1" class="small-button">ExtEML</label>
-				<label id="btn-scar-1" class="small-button">Scar</label>
-			</div>
 		</div>
-		<div id="info" class="info"></div>
 
 		<script type="importmap">
 			{
