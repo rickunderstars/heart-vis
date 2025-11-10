@@ -56,5 +56,6 @@ EMSCRIPTEN_BINDINGS(heart_module) {
 		.function("toString", &Mesh::toString)
 		.class_function("simpleShape", &Mesh::simpleShape)
 		.function("Float32ArrayOfVertices", &Mesh::Float32ArrayOfVertices)
+		.function("Float32ArrayOfTurboColors", &Mesh::Float32ArrayOfTurboColors)
 		.function("Uint32ArrayOfTriangles", &Mesh::Uint32ArrayOfTriangles);
 }

@@ -49,4 +49,6 @@ class Mesh {
 	emscripten::val Float32ArrayOfVertices() const;
 
 	emscripten::val Uint32ArrayOfTriangles() const;
+
+	emscripten::val Float32ArrayOfTurboColors(std::string quality) const;
 };

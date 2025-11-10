@@ -1,8 +1,14 @@
 body {
 	margin: 1%;
 	color: whitesmoke;
-	font-family: Helvetca, Arial, sans-serif;
+
 	background-color: #545c7e;
+}
+
+* {
+	font-family: Helvetca, Arial, sans-serif;
+	font-weight: bold;
+	font-style: italic;
 }
 
 .mesh-vis {
@@ -14,22 +20,48 @@ body {
 	display: none;
 }
 
-.upload-button {
-	font-size: 11px;
+.options-container {
+	display: flex;
+}
+
+.column {
+	flex: 1;
+    display: flex;
+	align-items: center;
+}
+
+.small-button,
+.big-button {
+	font-size: 12px;
 	font-weight: bold;
 	font-style: italic;
 	color: white;
-
-	padding: 20px;
-	margin: 30px;
 
 	background-color: #007bff;
 	border-radius: 10px;
 	cursor: pointer;
 	transition: background-color 0.2s;
+	text-align: center;
 }
 
-.upload-button:hover {
+.big-button {
+	padding: 20px;
+	margin: 20px;
+	width: 80px;
+}
+
+.small-button {
+	background-color: #8833ff;
+	padding: 10px;
+	margin: 5px;
+	width: 50px;
+}
+
+.small-button:hover {
+	background-color: #6656b3;
+}
+
+.big-button:hover {
 	background-color: #0056b3;
 }
 
