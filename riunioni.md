@@ -44,3 +44,13 @@ TODO:
 -   convertire il codice c++ in javascript con enscripten
 -   provare ad importare il .mesh dalla pagina web (.mesh -> buffer -> threejs)
 -   fare il makefile (successivamente inserire il compilatore di emscripten: emcc)
+
+
+# 2025-11-10
+
+- picking (con finestra o tabella a lato)
+- viewport quadrato e tutto il resto di lato
+- color scale di lato con valore massimo e minimo
+- slider per passare da illuminato + ambientale a solo ambientale
+- visualizzazione di una singola mesh
+- eliminazione dei "non valori"
