@@ -202,25 +202,25 @@ document.getElementById("camera-reset").addEventListener("click", () => {
 });
 
 document.getElementById("btn-unipolar").addEventListener("click", () => {
-	setColorVariant(0, "unipolar");
+	setColorVariant(activeMesh, "unipolar");
 });
 
 document.getElementById("btn-bipolar").addEventListener("click", () => {
-	setColorVariant(0, "bipolar");
+	setColorVariant(activeMesh, "bipolar");
 });
 
 document.getElementById("btn-lat").addEventListener("click", () => {
-	setColorVariant(0, "lat");
+	setColorVariant(activeMesh, "lat");
 });
 
 document.getElementById("btn-eml").addEventListener("click", () => {
-	setColorVariant(0, "eml");
+	setColorVariant(activeMesh, "eml");
 });
 
 document.getElementById("btn-exteml").addEventListener("click", () => {
-	setColorVariant(0, "exteml");
+	setColorVariant(activeMesh, "exteml");
 });
 
 document.getElementById("btn-scar").addEventListener("click", () => {
-	setColorVariant(0, "scar");
+	setColorVariant(activeMesh, "scar");
 });
