@@ -10,6 +10,13 @@ Triangle::Triangle(const int vertices[3], int groupID) {
 	this->groupID = groupID;
 }
 
+Triangle::Triangle(int v0, int v1, int v2, int groupID) {
+	this->vertices[0] = v0;
+	this->vertices[1] = v1;
+	this->vertices[2] = v2;
+	this->groupID = groupID;
+}
+
 std::string Triangle::toString() {
 	std::ostringstream oss;
 	oss << "tri[" << vertices[0] << ", " << vertices[1] << ", " << vertices[2]

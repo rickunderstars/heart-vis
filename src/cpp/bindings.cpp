@@ -25,12 +25,18 @@ EMSCRIPTEN_BINDINGS(heart_module) {
 		.property("LAT", &Vertex::LAT)
 		.property("EML", &Vertex::EML)
 		.property("ExtEML", &Vertex::ExtEML)
-		.property("SCAR", &Vertex::SCAR);
+		.property("SCAR", &Vertex::SCAR)
+		.property("nUnipolar", &Vertex::nUnipolar)
+		.property("nBipolar", &Vertex::nBipolar)
+		.property("nLAT", &Vertex::nLAT)
+		.property("nEML", &Vertex::nEML)
+		.property("nExtEML", &Vertex::nExtEML)
+		.property("nSCAR", &Vertex::nSCAR);
 
 	emscripten::register_vector<Vertex>("VertexVector");
 
 	emscripten::class_<Triangle>("Triangle")
-		.constructor<const int *, int>()
+		.constructor<int, int, int, int>()
 		.property("groupID", &Triangle::groupID);
 
 	emscripten::register_vector<Triangle>("TriangleVector");
@@ -50,5 +56,6 @@ EMSCRIPTEN_BINDINGS(heart_module) {
 		.function("toString", &Mesh::toString)
 		.class_function("simpleShape", &Mesh::simpleShape)
 		.function("Float32ArrayOfVertices", &Mesh::Float32ArrayOfVertices)
+		.function("Float32ArrayOfTurboColors", &Mesh::Float32ArrayOfTurboColors)
 		.function("Uint32ArrayOfTriangles", &Mesh::Uint32ArrayOfTriangles);
 }

@@ -10,11 +10,13 @@ set(SRC
     src/cpp/utils.hpp
     src/cpp/vertex.hpp
     src/cpp/triangle.hpp
+    src/cpp/turbo_colormap.hpp
     src/cpp/main.cpp
     src/cpp/mesh.cpp
     src/cpp/utils.cpp
     src/cpp/triangle.cpp
     src/cpp/vertex.cpp
+    src/cpp/turbo_colormap.cpp
     src/cpp/bindings.cpp
 )
 

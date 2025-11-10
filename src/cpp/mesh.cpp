@@ -1,5 +1,6 @@
 #include "mesh.hpp"
 #include "triangle.hpp"
+#include "utils.hpp"
 #include "vertex.hpp"
 
 #include <boost/algorithm/string.hpp>
@@ -170,6 +171,82 @@ Mesh Mesh::simpleShape() {
 	return Mesh(vert, tri);
 }
 
+void Mesh::calcQualitiesMinMax() {
+	maxUnipolar = vertices[0].unipolar;
+	maxBipolar = vertices[0].bipolar;
+	maxLAT = vertices[0].LAT;
+	maxEML = vertices[0].EML;
+	maxExtEML = vertices[0].ExtEML;
+	maxSCAR = vertices[0].SCAR;
+
+	minUnipolar = vertices[0].unipolar;
+	minBipolar = vertices[0].bipolar;
+	minLAT = vertices[0].LAT;
+	minEML = vertices[0].EML;
+	minExtEML = vertices[0].ExtEML;
+	minSCAR = vertices[0].SCAR;
+	for (int i = 1; i < vertices.size(); i++) {
+		if (vertices[i].unipolar > maxUnipolar) {
+			maxUnipolar = vertices[i].unipolar;
+		}
+		if (vertices[i].bipolar > maxBipolar) {
+			maxBipolar = vertices[i].bipolar;
+		}
+		if (vertices[i].LAT > maxLAT) {
+			maxLAT = vertices[i].LAT;
+		}
+		if (vertices[i].EML > maxEML) {
+			maxEML = vertices[i].EML;
+		}
+		if (vertices[i].ExtEML > maxExtEML) {
+			maxExtEML = vertices[i].ExtEML;
+		}
+		if (vertices[i].SCAR > maxSCAR) {
+			maxSCAR = vertices[i].SCAR;
+		}
+
+		if (vertices[i].unipolar < minUnipolar) {
+			minUnipolar = vertices[i].unipolar;
+		}
+		if (vertices[i].bipolar < minBipolar) {
+			minBipolar = vertices[i].bipolar;
+		}
+		if (vertices[i].LAT < minLAT) {
+			minLAT = vertices[i].LAT;
+		}
+		if (vertices[i].EML < minEML) {
+			minEML = vertices[i].EML;
+		}
+		if (vertices[i].ExtEML < minExtEML) {
+			minExtEML = vertices[i].ExtEML;
+		}
+		if (vertices[i].SCAR < minSCAR) {
+			minSCAR = vertices[i].SCAR;
+		}
+	}
+}
+
+void Mesh::calcQualitiesNorm() {
+	float unipolarDelta =
+		maxUnipolar - minUnipolar != 0 ? maxUnipolar - minUnipolar : 1;
+	float bipolarDelta =
+		maxBipolar - minBipolar != 0 ? maxBipolar - minBipolar : 1;
+	float latDelta = maxLAT - minLAT != 0 ? maxLAT - minLAT : 1;
+	float emlDelta = maxEML - minEML != 0 ? maxEML - minEML : 1;
+	float extemlDelta = maxExtEML - minExtEML != 0 ? maxExtEML - minExtEML : 1;
+	float scarDelta = maxSCAR - minSCAR != 0 ? maxSCAR - minSCAR : 1;
+	for (int i = 0; i < vertices.size(); i++) {
+		vertices[i].nUnipolar =
+			(vertices[i].unipolar - minUnipolar) / unipolarDelta;
+		vertices[i].nBipolar =
+			(vertices[i].bipolar - minBipolar) / bipolarDelta;
+		vertices[i].nLAT = (vertices[i].LAT - minLAT) / latDelta;
+		vertices[i].nEML = (vertices[i].EML - minEML) / emlDelta;
+		vertices[i].nExtEML = (vertices[i].ExtEML - minExtEML) / extemlDelta;
+		vertices[i].nSCAR = (vertices[i].SCAR - minSCAR) / scarDelta;
+	}
+}
+
 emscripten::val Mesh::Float32ArrayOfVertices() const {
 	std::vector<float> positions;
 	positions.reserve(vertices.size() * 3);
@@ -208,4 +285,67 @@ emscripten::val Mesh::Uint32ArrayOfTriangles() const {
 									  indices.size(), indices.data())));
 
 	return uint32Array;
+}
+
+emscripten::val Mesh::Float32ArrayOfTurboColors(std::string quality) const {
+	std::vector<std::string> qualities = {"",	 "unipolar", "bipolar", "lat",
+										  "eml", "exteml",	 "scar"};
+	for (char &c : quality) {
+		c = std::tolower(static_cast<unsigned char>(c));
+	}
+	bool quality_found =
+		std::any_of(qualities.begin(), qualities.end(),
+					[&](const std::string &s) { return s == quality; });
+
+	if (!quality_found) {
+		std::cerr << "'" << quality << "' is not an attribute.\n";
+		exit(1);
+	}
+
+	std::vector<float> turboColors;
+	turboColors.reserve(vertices.size() * 3);
+
+	for (const auto &v : vertices) {
+		if (quality == "unipolar") {
+			std::array<float, 3> u = scalarToTurbo(v.nUnipolar);
+			turboColors.push_back(u[0]);
+			turboColors.push_back(u[1]);
+			turboColors.push_back(u[2]);
+		} else if (quality == "bipolar") {
+			std::array<float, 3> b = scalarToTurbo(v.nBipolar);
+			turboColors.push_back(b[0]);
+			turboColors.push_back(b[1]);
+			turboColors.push_back(b[2]);
+		} else if (quality == "lat") {
+			std::array<float, 3> l = scalarToTurbo(v.nLAT);
+			turboColors.push_back(l[0]);
+			turboColors.push_back(l[1]);
+			turboColors.push_back(l[2]);
+		} else if (quality == "eml") {
+			std::array<float, 3> e = scalarToTurbo(v.nEML);
+			turboColors.push_back(e[0]);
+			turboColors.push_back(e[1]);
+			turboColors.push_back(e[2]);
+		} else if (quality == "exteml") {
+			std::array<float, 3> ee = scalarToTurbo(v.nExtEML);
+			turboColors.push_back(ee[0]);
+			turboColors.push_back(ee[1]);
+			turboColors.push_back(ee[2]);
+		} else if (quality == "scar") {
+			std::array<float, 3> s = scalarToTurbo(v.nSCAR);
+			turboColors.push_back(s[0]);
+			turboColors.push_back(s[1]);
+			turboColors.push_back(s[2]);
+		}
+	}
+
+	emscripten::val float32Array =
+		emscripten::val::global("Float32Array").new_(turboColors.size());
+	emscripten::val memory = emscripten::val::module_property("HEAPF32");
+
+	float32Array.call<void>("set",
+							emscripten::val(emscripten::typed_memory_view(
+								turboColors.size(), turboColors.data())));
+
+	return float32Array;
 }

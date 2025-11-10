@@ -1,40 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="stylesheet" href="styles.css" />
+		<title>Heart</title>
+	</head>
 
-<head>
-	<meta charset="utf-8" />
-	<link rel="stylesheet" href="styles.css" />
-	<title>Heart</title>
-</head>
+	<body>
+		<h1>heart-vis</h1>
+		<div class="mesh-vis">
+			<div id="viewport"></div>
 
-<body>
-	<h1>Visualization Test</h1>
-	<div class="mesh-vis">
-		<div id="viewport"></div>
+			<input
+				type="file"
+				id="raw-mesh"
+				accept="text/*"
+				class="hidden-upload-button"
+			/>
 
-		<input type="file" id="raw-mesh" accept="text/*" class="hidden-upload-button">
+			<label for="raw-mesh" class="big-button">
+				LOAD RAW<br />MESH FILE
+			</label>
 
-		<label for="raw-mesh" class="upload-button">
-			LOAD RAW<br>MESH FILE
-		</label>
+			<span id="filename">No file selected</span>
+			<label id="camera-reset" class="small-button">camera reset</label>
+		</div>
+		<div class="options-container">
+			<div class="column">
+				<label id="btn-mesh-0" class="big-button">Toggle Mesh 1</label>
+				<label id="btn-unipolar-0" class="small-button">Unipolar</label>
+				<label id="btn-bipolar-0" class="small-button">Bipolar</label>
+				<label id="btn-lat-0" class="small-button">LAT</label>
+				<label id="btn-eml-0" class="small-button">EML</label>
+				<label id="btn-exteml-0" class="small-button">ExtEML</label>
+				<label id="btn-scar-0" class="small-button">Scar</label>
+			</div>
+			<div class="column">
+				<label id="btn-mesh-1" class="big-button">Toggle Mesh 2</label>
+				<label id="btn-unipolar-1" class="small-button">Unipolar</label>
+				<label id="btn-bipolar-1" class="small-button">Bipolar</label>
+				<label id="btn-lat-1" class="small-button">LAT</label>
+				<label id="btn-eml-1" class="small-button">EML</label>
+				<label id="btn-exteml-1" class="small-button">ExtEML</label>
+				<label id="btn-scar-1" class="small-button">Scar</label>
+			</div>
+		</div>
+		<div id="info" class="info"></div>
 
-		<span id="filename">No file selected</span>
-	</div>
-
-
-	<script type="importmap">
-		{
-		  "imports": {
-		    "three": "https://cdn.jsdelivr.net/npm/three@0.181.0/build/three.module.js",
-		    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.181.0/examples/jsm/"
-		  }
-		}
-	</script>
-	<script src="../../build/heart.out.js"></script>
-	<script type="module" src="main.js"></script>
-
-
-
-</body>
-
+		<script type="importmap">
+			{
+				"imports": {
+					"three": "https://cdn.jsdelivr.net/npm/three@0.181.0/build/three.module.js",
+					"three/addons/": "https://cdn.jsdelivr.net/npm/three@0.181.0/examples/jsm/"
+				}
+			}
+		</script>
+		<script src="../../build/heart.out.js"></script>
+		<script type="module" src="main.js"></script>
+	</body>
 </html>

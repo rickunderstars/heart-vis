@@ -6,10 +6,8 @@ import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 const scene = new THREE.Scene();
 const viewport = document.getElementById("viewport");
 const camera = new THREE.PerspectiveCamera(
-	75,
-	viewport.clientWidth / viewport.clientHeight,
-	0.1,
-	1000
+	50,
+	viewport.clientWidth / viewport.clientHeight
 );
 
 const renderer = new THREE.WebGLRenderer();
@@ -21,16 +19,16 @@ viewport.append(renderer.domElement);
 
 camera.position.z = 5;
 
-const light1 = new THREE.DirectionalLight(0xffdddd, 1);
-const light2 = new THREE.DirectionalLight(0xddddff, 1);
-const light3 = new THREE.DirectionalLight(0xddffdd, 1);
+const light1 = new THREE.DirectionalLight(0xffffff, 1);
+const light2 = new THREE.DirectionalLight(0xffffff, 1);
+const light3 = new THREE.DirectionalLight(0xffffff, 1);
+const light4 = new THREE.DirectionalLight(0xffffff, 1);
 light1.position.set(100, 100, 100);
-light2.position.set(-100, -100, 100);
-light2.position.set(0, -100, -100);
-scene.add(light1);
-scene.add(light2);
-scene.add(light3);
-scene.add(new THREE.AmbientLight(0x303030, 0.5));
+light2.position.set(-100, -100, -100);
+light3.position.set(100, -100, 100);
+light4.position.set(100, 100, -100);
+scene.add(light1, light2, light3, light4);
+scene.add(new THREE.AmbientLight(0xffffff, 1));
 
 function animate() {
 	controls.update();
@@ -38,6 +36,11 @@ function animate() {
 }
 
 /////// model upload ///////
+
+const meshesInfo = [];
+const meshesGroup = new THREE.Group();
+const qualities = ["unipolar", "bipolar", "lat", "eml", "exteml", "scar"];
+const meshesSetsOfColors = [];
 
 HeartModule().then((cpp) => {
 	const rawMeshElement = document.getElementById("raw-mesh");
@@ -48,17 +51,62 @@ HeartModule().then((cpp) => {
 			const file = event.target.files[0];
 			fileElement.textContent = file.name;
 
+			if (meshesInfo.some((item) => item.filename === file.name)) {
+				console.log("Mesh already uploaded");
+				return;
+			}
+
 			const reader = new FileReader();
 
 			reader.onload = function (e) {
 				const fileContent = e.target.result;
-				const mesh = cpp.importMesh(fileContent);
+				let mesh = cpp.importMesh(fileContent);
+
+				/// -- test meshes fixes -- ///
+
+				if (file.name === "2-LA.mesh") {
+					mesh.triangleFix(8703, 4559, 4538);
+					mesh.fixNMEdges();
+				} else if (file.name === "2-LA-FA.mesh") {
+					mesh.triangleFix(25180, 12810, 12813);
+					mesh.triangleFix(29108, 9930, 14703);
+					mesh.triangleFix(21420, 10857, 10941);
+					mesh.triangleFix(56, 38, 29);
+					mesh.triangleFix(30812, 15492, 15447);
+					mesh.triangleFix(30578, 14384, 14398);
+					let fixTri = new cpp.Triangle(15417, 14398, 14381, -1);
+					mesh.triangles.push_back(fixTri);
+					mesh.fixNMEdges();
+				}
+
+				// -- end fix -- //
 
 				const verticesView = mesh.Float32ArrayOfVertices();
 				const trianglesView = mesh.Uint32ArrayOfTriangles();
+				const unipolarView = mesh.Float32ArrayOfTurboColors(
+					qualities[0]
+				);
+				const bipolarView = mesh.Float32ArrayOfTurboColors(
+					qualities[1]
+				);
+				const latView = mesh.Float32ArrayOfTurboColors(qualities[2]);
+				const emlView = mesh.Float32ArrayOfTurboColors(qualities[3]);
+				const extemlView = mesh.Float32ArrayOfTurboColors(qualities[4]);
+				const scarView = mesh.Float32ArrayOfTurboColors(qualities[5]);
 
 				const vertices = new Float32Array(verticesView);
 				const triangles = new Uint32Array(trianglesView);
+
+				const turboSets = {
+					unipolar: new Float32Array(unipolarView),
+					bipolar: new Float32Array(bipolarView),
+					lat: new Float32Array(latView),
+					eml: new Float32Array(emlView),
+					exteml: new Float32Array(extemlView),
+					scar: new Float32Array(scarView),
+				};
+
+				meshesSetsOfColors.push(turboSets);
 
 				const geometry = new THREE.BufferGeometry();
 				geometry.setAttribute(
@@ -70,39 +118,145 @@ HeartModule().then((cpp) => {
 
 				geometry.computeVertexNormals();
 
+				geometry.setAttribute(
+					"color",
+					new THREE.BufferAttribute(turboSets.unipolar, 3)
+				);
+
 				const material = new THREE.MeshStandardMaterial({
-					color: 0xddcccc,
+					vertexColors: true,
 					flatShading: false,
 					side: THREE.DoubleSide,
+					roughness: 0.5,
 				});
 				const heart = new THREE.Mesh(geometry, material);
-				scene.add(heart);
 
-				geometry.computeBoundingSphere();
-				const center = geometry.boundingSphere.center;
-				const radius = geometry.boundingSphere.radius;
-				camera.position.set(
-					center.x,
-					center.y,
-					center.z + radius * 2.5
-				);
+				meshesGroup.add(heart);
+				scene.add(meshesGroup);
+
+				const box = new THREE.Box3();
+				box.setFromObject(meshesGroup);
+				const boundingSphere = new THREE.Sphere();
+				box.getBoundingSphere(boundingSphere);
+				const center = boundingSphere.center;
+				const radius = boundingSphere.radius;
+
+				camera.position.set(center.x, center.y, center.z + radius * 2);
 				controls.target.set(center.x, center.y, center.z);
 				controls.update();
 
-				//const cubegeometry = new THREE.BoxGeometry(30, 30, 30);
-				//const cube = new THREE.Mesh(cubegeometry, material);
-				//scene.add(cube);
-				//
-				//cubegeometry.computeBoundingSphere();
-				//const center = cubegeometry.boundingSphere.center;
-				//const radius = cubegeometry.boundingSphere.radius;
-				//camera.position.set(center.x, center.y, center.z + radius * 3);
-				//controls.target.set(center.x, center.y, center.z);
-				//controls.update();
+				meshesInfo.push({
+					mesh: heart,
+					filename: file.name,
+				});
+
+				console.log(
+					"Mesh loaded successfully. Meshes loaded:",
+					meshesInfo.length
+				);
+
+				document.getElementById(
+					"info"
+				).innerHTML = `Loaded Meshes: ${meshesInfo.length}`;
+
+				for (const m of meshesInfo) {
+					document.getElementById("info").innerHTML +=
+						"</br>- " + m.filename;
+				}
 			};
 			reader.readAsText(file);
 		} else {
 			fileElement.textContent = "No file selected";
 		}
 	});
+});
+
+function toggleMesh(index) {
+	if (meshesGroup.children[index]) {
+		meshesGroup.children[index].visible =
+			!meshesGroup.children[index].visible;
+	}
+}
+
+function setTurboVariant(meshIndex, turboSet) {
+	if (meshesGroup.children[meshIndex] && meshesSetsOfColors[meshIndex]) {
+		const mesh = meshesGroup.children[meshIndex];
+		const turboSets = meshesSetsOfColors[meshIndex];
+
+		mesh.geometry.setAttribute(
+			"color",
+			new THREE.BufferAttribute(turboSets[turboSet], 3)
+		);
+
+		mesh.geometry.attributes.color.needsUpdate = true;
+	}
+}
+
+document.getElementById("camera-reset").addEventListener("click", () => {
+	const box = new THREE.Box3();
+	box.setFromObject(meshesGroup);
+	const boundingSphere = new THREE.Sphere();
+	box.getBoundingSphere(boundingSphere);
+	const center = boundingSphere.center;
+	const radius = boundingSphere.radius;
+
+	camera.position.set(center.x, center.y, center.z + radius * 2);
+	controls.target.set(center.x, center.y, center.z);
+	controls.update();
+});
+
+document.getElementById("btn-mesh-0").addEventListener("click", () => {
+	toggleMesh(0);
+});
+
+document.getElementById("btn-mesh-1").addEventListener("click", () => {
+	toggleMesh(1);
+});
+
+document.getElementById("btn-unipolar-0").addEventListener("click", () => {
+	setTurboVariant(0, "unipolar");
+});
+
+document.getElementById("btn-unipolar-1").addEventListener("click", () => {
+	setTurboVariant(1, "unipolar");
+});
+
+document.getElementById("btn-bipolar-0").addEventListener("click", () => {
+	setTurboVariant(0, "bipolar");
+});
+
+document.getElementById("btn-bipolar-1").addEventListener("click", () => {
+	setTurboVariant(1, "bipolar");
+});
+
+document.getElementById("btn-lat-0").addEventListener("click", () => {
+	setTurboVariant(0, "lat");
+});
+
+document.getElementById("btn-lat-1").addEventListener("click", () => {
+	setTurboVariant(1, "lat");
+});
+
+document.getElementById("btn-eml-0").addEventListener("click", () => {
+	setTurboVariant(0, "eml");
+});
+
+document.getElementById("btn-eml-1").addEventListener("click", () => {
+	setTurboVariant(1, "eml");
+});
+
+document.getElementById("btn-exteml-0").addEventListener("click", () => {
+	setTurboVariant(0, "exteml");
+});
+
+document.getElementById("btn-exteml-1").addEventListener("click", () => {
+	setTurboVariant(1, "exteml");
+});
+
+document.getElementById("btn-scar-0").addEventListener("click", () => {
+	setTurboVariant(0, "scar");
+});
+
+document.getElementById("btn-scar-1").addEventListener("click", () => {
+	setTurboVariant(1, "scar");
 });
