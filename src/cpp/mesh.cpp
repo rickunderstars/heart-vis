@@ -46,8 +46,7 @@ std::string Mesh::toPlyString(std::string quality) {
 					[&](const std::string &s) { return s == quality; });
 
 	if (!quality_found) {
-		std::cerr << "'" << quality << "' is not an attribute.\n";
-		exit(1);
+		throw std::runtime_error("'" + quality + "' is not an attribute");
 	}
 
 	std::ostringstream oss;
@@ -75,8 +74,8 @@ std::string Mesh::toPlyString(std::string quality) {
 
 bool Mesh::triangleFix(int face, int oldVertex, int newVertex) {
 	if (face < 0 || face >= triangles.size()) {
-		std::cerr << "Face " << face << " out of bounds (0-"
-				  << triangles.size() - 1 << ")." << std::endl;
+		std::cout << "Face " << face << " out of bounds (0-"
+				  << triangles.size() - 1 << ")";
 		return false;
 	}
 	int v = -1;
@@ -86,15 +85,15 @@ bool Mesh::triangleFix(int face, int oldVertex, int newVertex) {
 		}
 	}
 	if (v < 0) {
-		std::cerr << "Vertex " << oldVertex << " is not in face " << face
+		std::cout << "Vertex " << oldVertex << " is not in face " << face
 				  << ": (" << triangles[face].vertices[0] << ", "
 				  << triangles[face].vertices[1] << ", "
-				  << triangles[face].vertices[2] << " )" << std::endl;
+				  << triangles[face].vertices[2] << " )";
 		return false;
 	}
 	if (newVertex < 0 || newVertex >= vertices.size()) {
-		std::cerr << "Vertex " << newVertex << " out of bounds (0-"
-				  << vertices.size() - 1 << ")." << std::endl;
+		std::cout << "Vertex " << newVertex << " out of bounds (0-"
+				  << vertices.size() - 1 << ")";
 		return false;
 	}
 
@@ -186,41 +185,41 @@ void Mesh::calcQualitiesMinMax() {
 	minExtEML = vertices[0].ExtEML;
 	minSCAR = vertices[0].SCAR;
 	for (int i = 1; i < vertices.size(); i++) {
-		if (vertices[i].unipolar > maxUnipolar) {
+		if (vertices[i].unipolar > maxUnipolar && vertices[i].unipolar != 0) {
 			maxUnipolar = vertices[i].unipolar;
 		}
-		if (vertices[i].bipolar > maxBipolar) {
+		if (vertices[i].bipolar > maxBipolar && vertices[i].bipolar != 0) {
 			maxBipolar = vertices[i].bipolar;
 		}
-		if (vertices[i].LAT > maxLAT) {
+		if (vertices[i].LAT > maxLAT && vertices[i].LAT != 0) {
 			maxLAT = vertices[i].LAT;
 		}
-		if (vertices[i].EML > maxEML) {
+		if (vertices[i].EML > maxEML && vertices[i].EML != 0) {
 			maxEML = vertices[i].EML;
 		}
-		if (vertices[i].ExtEML > maxExtEML) {
+		if (vertices[i].ExtEML > maxExtEML && vertices[i].ExtEML != 0) {
 			maxExtEML = vertices[i].ExtEML;
 		}
-		if (vertices[i].SCAR > maxSCAR) {
+		if (vertices[i].SCAR > maxSCAR && vertices[i].SCAR != 0) {
 			maxSCAR = vertices[i].SCAR;
 		}
 
-		if (vertices[i].unipolar < minUnipolar) {
+		if (vertices[i].unipolar < minUnipolar && vertices[i].unipolar != 0) {
 			minUnipolar = vertices[i].unipolar;
 		}
-		if (vertices[i].bipolar < minBipolar) {
+		if (vertices[i].bipolar < minBipolar && vertices[i].bipolar != 0) {
 			minBipolar = vertices[i].bipolar;
 		}
-		if (vertices[i].LAT < minLAT) {
+		if (vertices[i].LAT < minLAT && vertices[i].LAT != 0) {
 			minLAT = vertices[i].LAT;
 		}
-		if (vertices[i].EML < minEML) {
+		if (vertices[i].EML < minEML && vertices[i].EML != 0) {
 			minEML = vertices[i].EML;
 		}
-		if (vertices[i].ExtEML < minExtEML) {
+		if (vertices[i].ExtEML < minExtEML && vertices[i].ExtEML != 0) {
 			minExtEML = vertices[i].ExtEML;
 		}
-		if (vertices[i].SCAR < minSCAR) {
+		if (vertices[i].SCAR < minSCAR && vertices[i].SCAR != 0) {
 			minSCAR = vertices[i].SCAR;
 		}
 	}
@@ -298,8 +297,7 @@ emscripten::val Mesh::Float32ArrayOfTurboColors(std::string quality) const {
 					[&](const std::string &s) { return s == quality; });
 
 	if (!quality_found) {
-		std::cerr << "'" << quality << "' is not an attribute.\n";
-		exit(1);
+		throw std::runtime_error("'" + quality + "' is not an attribute");
 	}
 
 	std::vector<float> turboColors;

@@ -66,13 +66,13 @@ body {
 	background-color: #0056b3;
 }
 
-.btn-camera-reset {
+.btn-camera {
 	background-color: #8833ff;
 	width: 10vh;
 	box-shadow: 0.3vh 0.3vh 1vh rgba(0, 0, 0, 0.3);
 }
 
-.btn-camera-reset:hover {
+.btn-camera:hover {
 	background-color: #6656b3;
 }
 
@@ -82,12 +82,13 @@ body {
 
 .btn-upload,
 .qualities-container label,
-.btn-camera-reset {
+.meshes-container label,
+.btn-camera {
 	display: inline-block;
 	text-align: center;
 	border-radius: 10px;
 	padding: 1vh;
-	margin: 2vh 2vh 2vh 0vh;
+	margin: 2vh 1vh 1vh 0vh;
 	cursor: pointer;
 	font-size: 2vh;
 	font-weight: bold;
@@ -95,6 +96,7 @@ body {
 	transition: background-color 0.2s;
 }
 
+.meshes-container,
 .qualities-container {
 	display: flex;
 	flex-direction: column;
@@ -102,29 +104,47 @@ body {
 	border-radius: 10px;
 	gap: 0vh;
 	text-align: left;
-	padding: 0vh 2vh 0vh 0vh;
+	margin: 2vh 1vh 1vh 0vh;
 	width: 14vh;
 	box-shadow: 0.3vh 0.3vh 1vh rgba(0, 0, 0, 0.3);
 }
 
+.meshes-container label,
 .qualities-container label {
 	display: inline-block;
 	margin: 0vh 2vh 0vh 0vh;
 	border-radius: 0px;
 	text-align: left;
-	border-radius: 10px;
 	padding: 1vh;
-	width: 14vh;
+	width: 12vh;
 }
 
+.meshes-container input[type="radio"],
 .qualities-container input[type="radio"] {
 	display: none;
+}
+
+.meshes-container label.mesh-top,
+.qualities-container label.quality-top {
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
+}
+
+.meshes-container label.mesh-bottom,
+.qualities-container label.quality-bottom {
+	border-bottom-left-radius: 10px;
+	border-bottom-right-radius: 10px;
 }
 
 .qualities-container label:has(input:checked) {
 	background-color: black;
 }
 
+.meshes-container label:has(input:checked) {
+	background-color: black;
+}
+
+.meshes-container label:hover,
 .qualities-container label:hover {
 	background-color: rgba(0, 0, 0, 0.2);
 }

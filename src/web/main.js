@@ -40,7 +40,9 @@ function animate() {
 const meshes = [];
 const qualities = ["unipolar", "bipolar", "lat", "eml", "exteml", "scar"];
 let activeMesh = -1;
-let activeQuality = qualities[0];
+let activeQuality = document.querySelector(
+	'.qualities-container input[name="quality"]:checked'
+).value;
 
 HeartModule().then((cpp) => {
 	const rawMeshElement = document.getElementById("raw-mesh");
@@ -49,7 +51,6 @@ HeartModule().then((cpp) => {
 	rawMeshElement.addEventListener("change", function (event) {
 		if (event.target.files.length > 0) {
 			const file = event.target.files[0];
-			fileElement.textContent = "Last upload: " + file.name;
 
 			if (meshes.some((item) => item.filename === file.name)) {
 				console.log("Mesh already uploaded");
@@ -60,7 +61,15 @@ HeartModule().then((cpp) => {
 
 			reader.onload = function (e) {
 				const fileContent = e.target.result;
-				let mesh = cpp.importMesh(fileContent);
+				let mesh;
+				try {
+					mesh = cpp.importMesh(fileContent);
+				} catch (e) {
+					console.error("Error: ", e.message);
+					fileElement.innerHTML = "Could not load: <br/>" + file.name;
+					return;
+				}
+				fileElement.innerHTML = "Last upload: <br/>" + file.name;
 
 				/// -- test meshes fixes -- ///
 
@@ -151,28 +160,48 @@ HeartModule().then((cpp) => {
 					mesh: heart,
 					filename: file.name,
 					colorSets: turboSets,
+					center: center,
+					radius: radius,
 				});
 
 				activeMesh = meshes.length - 1;
-				console.log(activeMesh);
+
+				let meshValue = 0;
+				document.getElementById("loaded-meshes").innerHTML = "";
+				for (const m of meshes) {
+					let corners = "";
+					let checked = "";
+					if (activeMesh === 0 && meshes.length - 1 === 0) {
+						corners = " class='mesh-top mesh-bottom' ";
+						checked = "checked";
+					} else if (meshValue === 0) {
+						corners = " class='mesh-top' ";
+					} else if (activeMesh === meshes.length - 1) {
+						corners = " class='mesh-bottom' ";
+						checked = "checked";
+					}
+					document.getElementById("loaded-meshes").innerHTML +=
+						"<label" +
+						corners +
+						">" +
+						"<input type='radio' name='loaded-mesh' value='" +
+						meshValue +
+						"' " +
+						checked +
+						"/>" +
+						"<span>" +
+						m.filename +
+						"</span>" +
+						"</label¨>";
+					meshValue++;
+				}
 
 				console.log(
 					"Mesh loaded successfully. Meshes loaded:",
 					meshes.length
 				);
-
-				document.getElementById(
-					"info"
-				).innerHTML = `Loaded Meshes: ${meshes.length}`;
-
-				for (const m of meshes) {
-					document.getElementById("info").innerHTML +=
-						"</br>- " + m.filename;
-				}
 			};
 			reader.readAsText(file);
-		} else {
-			fileElement.textContent = "No file selected";
 		}
 	});
 });
@@ -181,7 +210,6 @@ function setColorVariant(meshIndex, colorSet) {
 	if (meshes[meshIndex]) {
 		const mesh = meshes[meshIndex].mesh;
 		const colorSets = meshes[meshIndex].colorSets;
-		activeQuality = colorSet;
 		mesh.geometry.setAttribute(
 			"color",
 			new THREE.BufferAttribute(colorSets[colorSet], 3)
@@ -206,6 +234,34 @@ document
 	.querySelector(".qualities-container")
 	.addEventListener("change", function (e) {
 		if (e.target.name === "quality") {
-			setColorVariant(activeMesh, e.target.value);
+			activeQuality = e.target.value;
+			setColorVariant(activeMesh, activeQuality);
+		}
+	});
+
+document
+	.querySelector(".meshes-container")
+	.addEventListener("change", function (e) {
+		if (e.target.name === "loaded-mesh") {
+			activeMesh = e.target.value;
+			setColorVariant(activeMesh, activeQuality);
+			for (let i = 0; i < meshes.length; i++) {
+				if (i != activeMesh) {
+					meshes[i].mesh.visible = false;
+				} else {
+					meshes[i].mesh.visible = true;
+				}
+			}
+			camera.position.set(
+				meshes[activeMesh].center.x,
+				meshes[activeMesh].center.y,
+				meshes[activeMesh].center.z + meshes[activeMesh].radius * 2.5
+			);
+			controls.target.set(
+				meshes[activeMesh].center.x,
+				meshes[activeMesh].center.y,
+				meshes[activeMesh].center.z
+			);
+			controls.update();
 		}
 	});
