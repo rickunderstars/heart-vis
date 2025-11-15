@@ -5,6 +5,8 @@
 #include <fstream>
 #include <ostream>
 #include <sstream>
+#include <stdexcept>
+#include <string>
 
 bool isWhitespace(const std::string &str) {
 	return all_of(str.begin(), str.end(),
@@ -102,9 +104,8 @@ void generalAttributesSection(std::stringstream &file, int &vertNum,
 		}
 	}
 	if (!found) {
-		std::cerr << "Could not find section '" << "[VerticesColorsSection]"
-				  << "'." << std::endl;
-		exit(1);
+		throw std::runtime_error(
+			"Could not find section '[VerticesColorsSection]'");
 	}
 	while (getCleanLine(file, line) && !isWhitespace(line)) {
 		std::vector<std::string> words;
@@ -132,9 +133,7 @@ void verticesSection(std::stringstream &file, std::vector<Vertex> &vertices) {
 		}
 	}
 	if (!found) {
-		std::cerr << "Could not find section '" << "[VerticesSection]"
-				  << "'." << std::endl;
-		exit(1);
+		throw std::runtime_error("Could not find section '[VerticesSection]'");
 	}
 	bool found_first = false;
 	int index = 0;
@@ -154,8 +153,8 @@ void verticesSection(std::stringstream &file, std::vector<Vertex> &vertices) {
 		}
 
 		if (index != stoi(words[0])) {
-			std::cerr << "Vertex " << index << " not found." << std::endl;
-			exit(1);
+			throw std::runtime_error("Vertex " + std::to_string(index) +
+									 " not found");
 		}
 		glm::vec3 pos(stof(words[1]), stof(words[2]), stof(words[3]));
 		glm::vec3 normal(stof(words[4]), stof(words[5]), stof(words[6]));
@@ -175,9 +174,7 @@ void trianglesSection(std::stringstream &file,
 		}
 	}
 	if (!found) {
-		std::cerr << "Could not find section '" << "[TrianglesSection]"
-				  << "'." << std::endl;
-		exit(1);
+		throw std::runtime_error("Could not find section '[TrianglesSection]'");
 	}
 
 	bool found_first = false;
@@ -198,8 +195,8 @@ void trianglesSection(std::stringstream &file,
 		}
 
 		if (index != stoi(words[0])) {
-			std::cerr << "Triangle " << index << " not found." << std::endl;
-			exit(1);
+			throw std::runtime_error("Triangle " + std::to_string(index) +
+									 " not found");
 		}
 		int tri[3] = {stoi(words[1]), stoi(words[2]), stoi(words[3])};
 		triangles[index] = Triangle(tri, stoi(words[7]));
@@ -218,9 +215,8 @@ void verticesColorsSection(std::stringstream &file,
 		}
 	}
 	if (!found) {
-		std::cerr << "Could not find section '" << "[VerticesColorsSection]"
-				  << "'." << std::endl;
-		exit(1);
+		throw std::runtime_error(
+			"Could not find section '[VerticesColorsSection]'");
 	}
 
 	bool found_first = false;
@@ -242,9 +238,8 @@ void verticesColorsSection(std::stringstream &file,
 		}
 
 		if (index != stoi(words[0])) {
-			std::cerr << "Vertex colors at index " << index << " not found."
-					  << std::endl;
-			exit(1);
+			throw std::runtime_error("Vertex colors at index " +
+									 std::to_string(index) + " not found");
 		}
 
 		vertices[index].unipolar = stof(words[1]);
@@ -265,10 +260,8 @@ void verticesAttributesSection(std::stringstream &file,
 		}
 	}
 	if (!found) {
-		std::cerr << "Could not find section '"
-				  << "[VerticesAttributesSection]"
-				  << "'." << std::endl;
-		exit(1);
+		throw std::runtime_error(
+			"Could not find section '[VerticesAttributesSection]'");
 	}
 
 	bool found_first = false;
@@ -289,9 +282,8 @@ void verticesAttributesSection(std::stringstream &file,
 		}
 
 		if (index != stoi(words[0])) {
-			std::cerr << "Vertex attributes at index " << index << " not found."
-					  << std::endl;
-			exit(1);
+			throw std::runtime_error("Vertex attributes at index " +
+									 std::to_string(index) + " not found");
 		}
 
 		vertices[index].EML = stoi(words[1]);
@@ -309,6 +301,10 @@ Mesh importMesh(std::string fileString) {
 }
 
 std::array<float, 3> scalarToTurbo(float scalar) {
+	if (scalar == 0) {
+		std::array<float, 3> turbo = {0.5, 0.5, 0.5};
+		return turbo;
+	}
 	float s256 = scalar * 255.0;
 	int sx = s256;
 	int dx = s256 + 1 <= 255.0 ? s256 + 1 : 255;
