@@ -3,19 +3,25 @@ import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 
 /////// three.js ///////
 
-const scene = new THREE.Scene();
-const viewport = document.getElementById("viewport");
-const camera = new THREE.PerspectiveCamera(
+var scene = new THREE.Scene();
+var viewport = document.getElementById("viewport");
+var camera = new THREE.PerspectiveCamera(
 	50,
 	viewport.clientWidth / viewport.clientHeight
 );
+var renderer = new THREE.WebGLRenderer({ alpha: true });
+var mouse = new THREE.Vector2();
+var raycaster = new THREE.Raycaster();
 
-const renderer = new THREE.WebGLRenderer({ alpha: true });
 renderer.setSize(viewport.clientWidth, viewport.clientHeight);
 const controls = new OrbitControls(camera, renderer.domElement);
 renderer.setAnimationLoop(animate);
 
 viewport.append(renderer.domElement);
+
+window.addEventListener("resize", onViewportResize);
+
+window.addEventListener("mousemove", onMouseMove, false);
 
 camera.position.z = 5;
 
@@ -29,11 +35,6 @@ light3.position.set(100, -100, 100);
 light4.position.set(100, 100, -100);
 scene.add(light1, light2, light3, light4);
 scene.add(new THREE.AmbientLight(0xffffff, 1));
-
-function animate() {
-	controls.update();
-	renderer.render(scene, camera);
-}
 
 /////// model upload ///////
 
@@ -205,6 +206,34 @@ HeartModule().then((cpp) => {
 		}
 	});
 });
+
+function animate() {
+	controls.update();
+	renderer.render(scene, camera);
+}
+
+function onViewportResize() {
+	camera.aspect = viewport.clientWidth / viewport.clientHeight;
+	camera.updateProjectionMatrix();
+	renderer.setSize(viewport.clientWidth, viewport.clientHeight);
+}
+
+function onMouseMove(event) {
+	const rect = renderer.domElement.getBoundingClientRect();
+	mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+	mouse.y = -(((event.clientY - rect.top) / rect.height) * 2 - 1);
+	vertexPicker();
+}
+
+function vertexPicker() {
+	raycaster.setFromCamera(mouse, camera);
+	const intersects = raycaster.intersectObjects(scene.children);
+	if (intersects.length > 0) {
+		const face = intersects[0].face;
+		const vertexIndices = [face.a, face.b, face.c];
+		console.log(vertexIndices);
+	}
+}
 
 function setColorVariant(meshIndex, colorSet) {
 	if (meshes[meshIndex]) {
