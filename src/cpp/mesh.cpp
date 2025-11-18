@@ -286,6 +286,117 @@ emscripten::val Mesh::Uint32ArrayOfTriangles() const {
 	return uint32Array;
 }
 
+emscripten::val Mesh::Float32ArrayOfUnipolar() const {
+	std::vector<float> valuesArray;
+	valuesArray.reserve(vertices.size());
+
+	for (const auto &v : vertices) {
+		valuesArray.push_back(v.unipolar);
+	}
+
+	emscripten::val float32Array =
+		emscripten::val::global("Float32Array").new_(valuesArray.size());
+	emscripten::val memory = emscripten::val::module_property("HEAPF32");
+
+	float32Array.call<void>("set",
+							emscripten::val(emscripten::typed_memory_view(
+								valuesArray.size(), valuesArray.data())));
+
+	return float32Array;
+}
+
+emscripten::val Mesh::Float32ArrayOfBipolar() const {
+	std::vector<float> valuesArray;
+	valuesArray.reserve(vertices.size());
+
+	for (const auto &v : vertices) {
+		valuesArray.push_back(v.bipolar);
+	}
+
+	emscripten::val float32Array =
+		emscripten::val::global("Float32Array").new_(valuesArray.size());
+	emscripten::val memory = emscripten::val::module_property("HEAPF32");
+
+	float32Array.call<void>("set",
+							emscripten::val(emscripten::typed_memory_view(
+								valuesArray.size(), valuesArray.data())));
+
+	return float32Array;
+}
+
+emscripten::val Mesh::Float32ArrayOfLAT() const {
+	std::vector<float> valuesArray;
+	valuesArray.reserve(vertices.size());
+
+	for (const auto &v : vertices) {
+		valuesArray.push_back(v.LAT);
+	}
+
+	emscripten::val float32Array =
+		emscripten::val::global("Float32Array").new_(valuesArray.size());
+	emscripten::val memory = emscripten::val::module_property("HEAPF32");
+
+	float32Array.call<void>("set",
+							emscripten::val(emscripten::typed_memory_view(
+								valuesArray.size(), valuesArray.data())));
+
+	return float32Array;
+}
+
+emscripten::val Mesh::Int32ArrayOfEML() const {
+	std::vector<float> valuesArray;
+	valuesArray.reserve(vertices.size());
+
+	for (const auto &v : vertices) {
+		valuesArray.push_back(v.EML);
+	}
+
+	emscripten::val int32Array =
+		emscripten::val::global("Int32Array").new_(valuesArray.size());
+	emscripten::val memory = emscripten::val::module_property("HEAPF32");
+
+	int32Array.call<void>("set", emscripten::val(emscripten::typed_memory_view(
+									 valuesArray.size(), valuesArray.data())));
+
+	return int32Array;
+}
+
+emscripten::val Mesh::Int32ArrayOfExtEML() const {
+	std::vector<float> valuesArray;
+	valuesArray.reserve(vertices.size());
+
+	for (const auto &v : vertices) {
+		valuesArray.push_back(v.ExtEML);
+	}
+
+	emscripten::val int32Array =
+		emscripten::val::global("Int32Array").new_(valuesArray.size());
+	emscripten::val memory = emscripten::val::module_property("HEAPF32");
+
+	int32Array.call<void>("set", emscripten::val(emscripten::typed_memory_view(
+									 valuesArray.size(), valuesArray.data())));
+
+	return int32Array;
+}
+
+emscripten::val Mesh::Int32ArrayOfSCAR() const {
+	std::vector<float> valuesArray;
+	valuesArray.reserve(vertices.size());
+
+	for (const auto &v : vertices) {
+		valuesArray.push_back(v.SCAR);
+	}
+
+	emscripten::val int32Array =
+		emscripten::val::global("Int32Array").new_(valuesArray.size());
+	emscripten::val memory = emscripten::val::module_property("HEAPF32");
+
+	int32Array.call<void>("set", emscripten::val(emscripten::typed_memory_view(
+									 valuesArray.size(), valuesArray.data())));
+
+	return int32Array;
+}
+
 emscripten::val Mesh::Float32ArrayOfTurboColors(std::string quality) const {
 	std::vector<std::string> qualities = {"",	 "unipolar", "bipolar", "lat",
 										  "eml", "exteml",	 "scar"};

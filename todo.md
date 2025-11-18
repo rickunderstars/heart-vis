@@ -54,3 +54,17 @@ TODO:
 - slider per passare da illuminato + ambientale a solo ambientale
 - visualizzazione di una singola mesh
 - eliminazione dei "non valori"
+
+# 2025-11-18
+
+TODO:
+
+- UI per picking (old)
+- color scale laterale (old)
+- slider per l'illuminazione (old)
+- rimuovere metodi, funzioni e parti di codice inutili (vari toString, rimuovere normali dei vertici dagli attributi)
+- implementare normalizzazione come funzione e non salvare i valori normalizzati
+- aggiungere tra le varie colorazioni anche quella del groupID delle facce e dei vertici
+- aggiungere la possibilità di invertire la scala colori
+- migliorare la ui e le classi css
+- dividere il file javascript in più file
