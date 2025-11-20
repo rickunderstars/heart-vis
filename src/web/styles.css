@@ -31,16 +31,19 @@ body {
 	height: 100vh;
 }
 
-.title-and-upload {
+.right-row {
 	display: flex;
 	flex-direction: row;
 	align-items: center;
 }
 
 .title {
+	display: flex;
+	align-items: center;
+	white-space: nowrap;
 	margin: 2vh 2vh 2vh 0vh;
 	font-size: 5vh;
-	vertical-align: middle;
+	gap: 1vh;
 	filter: drop-shadow(0.3vh 0.3vh 1vh rgba(0, 0, 0, 0.3));
 }
 
@@ -54,12 +57,6 @@ body {
 .btn-upload {
 	background-color: #007bff;
 	box-shadow: 0.3vh 0.3vh 1vh rgba(0, 0, 0, 0.3);
-}
-
-.text-upload {
-	font-size: 1.8vh;
-	font-weight: normal;
-	filter: drop-shadow(0.3vh 0.3vh 1vh rgba(0, 0, 0, 0.3));
 }
 
 .btn-upload:hover {
@@ -94,6 +91,16 @@ body {
 	font-weight: bold;
 	font-style: italic;
 	transition: background-color 0.2s;
+}
+
+.upload-info {
+	display: inline-block;
+	text-align: center;
+	padding: 1vh;
+	margin: 2vh 1vh 1vh 0vh;
+	font-size: 1.8vh;
+	font-weight: normal;
+	filter: drop-shadow(0.3vh 0.3vh 1vh rgba(0, 0, 0, 0.3));
 }
 
 .meshes-container,

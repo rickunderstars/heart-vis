@@ -99,12 +99,10 @@ function processFile(file) {
 				mesh = cpp.importMesh(fileContent);
 			} catch (e) {
 				console.error("Error: ", e.message);
-				fileElement.innerHTML =
-					"<div>Could not load: <br/>" + file.name + "</div>";
+				fileElement.innerHTML = "Could not load: " + file.name;
 				return;
 			}
-			fileElement.innerHTML =
-				"<div>Last upload: <br/>" + file.name + "</div>";
+			fileElement.innerHTML = "Last upload: " + file.name;
 
 			/// -- test meshes fixes -- ///
 
