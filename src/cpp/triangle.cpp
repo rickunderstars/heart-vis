@@ -17,13 +17,6 @@ Triangle::Triangle(int v0, int v1, int v2, int groupID) {
 	this->groupID = groupID;
 }
 
-std::string Triangle::toString() {
-	std::ostringstream oss;
-	oss << "tri[" << vertices[0] << ", " << vertices[1] << ", " << vertices[2]
-		<< "] ---- groupID(" << groupID << ")";
-	return oss.str();
-}
-
 std::string Triangle::toObj() {
 	std::ostringstream oss;
 	oss << "f  " << vertices[0] + 1 << "//" << vertices[0] + 1 << " "

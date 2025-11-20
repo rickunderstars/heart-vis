@@ -11,8 +11,6 @@ class Triangle {
 	Triangle(const int vertices[3], int groupID);
 	Triangle(int v0, int v1, int v2, int groupID);
 
-	std::string toString();
-
 	std::string toObj();
 
 	std::string toPly();

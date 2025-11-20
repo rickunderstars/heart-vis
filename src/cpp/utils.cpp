@@ -300,12 +300,18 @@ Mesh importMesh(std::string fileString) {
 	return h;
 }
 
-std::array<float, 3> scalarToTurbo(float scalar) {
-	if (scalar == 0) {
+std::array<float, 3> scalarToTurbo(float normalizedScalar) {
+	if (normalizedScalar == 0) {
 		std::array<float, 3> turbo = {0.5, 0.5, 0.5};
 		return turbo;
+	} else if (normalizedScalar > 1) {
+		std::array<float, 3> turbo = {1, 1, 1};
+		return turbo;
+	} else if (normalizedScalar < 0) {
+		std::array<float, 3> turbo = {0, 0, 0};
+		return turbo;
 	}
-	float s256 = scalar * 255.0;
+	float s256 = normalizedScalar * 255.0;
 	int sx = s256;
 	int dx = s256 + 1 <= 255.0 ? s256 + 1 : 255;
 	float t = s256 - sx;

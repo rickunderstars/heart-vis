@@ -40,12 +40,6 @@ class Mesh {
 
 	static Mesh simpleShape();
 
-	std::string verticesString();
-
-	std::string trianglesString();
-
-	std::string toString();
-
 	emscripten::val Float32ArrayOfVertices() const;
 
 	emscripten::val Uint32ArrayOfTriangles() const;

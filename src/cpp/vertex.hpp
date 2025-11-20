@@ -27,7 +27,6 @@ class Vertex {
 
 	Vertex();
 	Vertex(glm::vec3 &pos, glm::vec3 &normal, int id);
-	std::string toString();
 
 	std::string posToObj();
 

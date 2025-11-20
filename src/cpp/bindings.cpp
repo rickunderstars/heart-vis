@@ -46,14 +46,6 @@ EMSCRIPTEN_BINDINGS(heart_module) {
 		.property("triangles", &Mesh::triangles)
 		.function("triangleFix", &Mesh::triangleFix)
 		.function("fixNMEdges", &Mesh::fixNMEdges)
-		.function("toPlyString", emscripten::optional_override(
-									 [](Mesh &self, std::string quality) {
-										 return self.toPlyString(quality);
-									 }))
-		.function("toPlyStringDefault",
-				  emscripten::optional_override(
-					  [](Mesh &self) { return self.toPlyString(); }))
-		.function("toString", &Mesh::toString)
 		.class_function("simpleShape", &Mesh::simpleShape)
 		.function("Float32ArrayOfVertices", &Mesh::Float32ArrayOfVertices)
 		.function("Uint32ArrayOfTriangles", &Mesh::Uint32ArrayOfTriangles)

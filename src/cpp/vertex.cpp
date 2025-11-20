@@ -14,15 +14,6 @@ Vertex::Vertex(glm::vec3 &pos, glm::vec3 &normal, int id) {
 	this->normal = normal;
 	this->groupID = id;
 }
-std::string Vertex::toString() {
-	std::ostringstream oss;
-	oss << "pos(" << pos.x << ", " << pos.y << ", " << pos.z << ") / normal("
-		<< normal.x << ", " << normal.y << ", " << normal.z << ") ---- groupID("
-		<< groupID << ") / unipolar(" << unipolar << ") / bipolar(" << bipolar
-		<< ") / LAT(" << LAT << ") / EML(" << EML << ") / ExtEml(" << ExtEML
-		<< ") / SCAR(" << SCAR << ")";
-	return oss.str();
-}
 
 std::string Vertex::posToObj() {
 	std::ostringstream oss;

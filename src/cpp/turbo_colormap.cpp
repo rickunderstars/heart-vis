@@ -1,11 +1,11 @@
+#include "turbo_colormap.hpp"
+
 // Copyright 2019 Google LLC.
 // SPDX-License-Identifier: Apache-2.0
 
 // Author: Anton Mikhailov
 
 // The look-up tables contains 256 entries. Each entry is a an sRGB triplet.
-
-#include "turbo_colormap.hpp"
 
 const float turbo_srgb_floats[256][3] = {
 	{0.18995, 0.07176, 0.23217}, {0.19483, 0.08339, 0.26149},

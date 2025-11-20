@@ -122,33 +122,6 @@ void Mesh::fixNMEdges() {
 	triangles = newTris;
 }
 
-std::string Mesh::verticesString() {
-	std::ostringstream oss;
-	for (int i = 0; i < vertices.size(); i++) {
-		oss << i << ": " << vertices[i].toString() << std::endl;
-	}
-	return oss.str();
-}
-
-std::string Mesh::trianglesString() {
-	std::ostringstream oss;
-	for (int i = 0; i < triangles.size(); i++) {
-		oss << i << ": " << triangles[i].toString() << std::endl;
-	}
-	return oss.str();
-}
-
-std::string Mesh::toString() {
-	std::ostringstream oss;
-	oss << "- Vertices -\n"
-		<< "----------------------------------------------------\n"
-		<< verticesString()
-		<< "\n\n- Triangles -\n"
-		   "----------------------------------------------------\n"
-		<< trianglesString() << "\n";
-	return oss.str();
-}
-
 Mesh Mesh::simpleShape() {
 	std::vector<Triangle> tri(2);
 	int f0[3] = {0, 1, 2};
