@@ -15,7 +15,7 @@ bool isWhitespace(const std::string &str) {
 
 void printVector(std::vector<std::string> v) {
 	for (int i = 0; i < v.size(); i++) {
-		std::cout << v[i] << " // ";
+		std::cout << v.at(i) << " // ";
 	}
 }
 
@@ -28,6 +28,20 @@ std::istream &getCleanLine(std::stringstream &file, std::string &line) {
 	} else {
 		return file;
 	}
+}
+
+bool checkQuality(std::string quality) {
+	for (char &c : quality) {
+		c = std::tolower(static_cast<unsigned char>(c));
+	}
+	bool quality_found =
+		std::any_of(validQualities.begin(), validQualities.end(),
+					[&](const std::string &s) { return s == quality; });
+
+	if (!quality_found) {
+		return false;
+	}
+	return true;
 }
 
 std::string fileToString(std::string filepath) {
@@ -88,7 +102,6 @@ Mesh sectionsHandler(std::stringstream &file) {
 	Mesh heart(verts, tris);
 
 	heart.calcQualitiesMinMax();
-	heart.calcQualitiesNorm();
 
 	return heart;
 }
@@ -105,16 +118,14 @@ void generalAttributesSection(std::stringstream &file, int &vertNum,
 	}
 	if (!found) {
 		throw std::runtime_error(
-			"Could not find section '[VerticesColorsSection]'");
+			"Could not find section '[GeneralAttributes]'");
 	}
 	while (getCleanLine(file, line) && !isWhitespace(line)) {
 		std::vector<std::string> words;
 		boost::split(words, line, boost::is_any_of(" "),
 					 boost::token_compress_on);
 		if (words.size() == 3) {
-			if (words[0] == "MeshID") {
-				id = words[2];
-			} else if (words[0] == "NumVertex") {
+			if (words[0] == "NumVertex") {
 				vertNum = stoi(words[2]);
 			} else if (words[0] == "NumTriangle") {
 				triNum = stoi(words[2]);
@@ -151,14 +162,13 @@ void verticesSection(std::stringstream &file, std::vector<Vertex> &vertices) {
 		if (isWhitespace(line)) {
 			break;
 		}
-
 		if (index != stoi(words[0])) {
 			throw std::runtime_error("Vertex " + std::to_string(index) +
 									 " not found");
 		}
 		glm::vec3 pos(stof(words[1]), stof(words[2]), stof(words[3]));
-		glm::vec3 normal(stof(words[4]), stof(words[5]), stof(words[6]));
-		vertices[index] = Vertex(pos, normal, stoi(words[7]));
+		vertices.at(index) = Vertex(pos);
+		vertices.at(index).groupID = stoi(words[7]);
 		index++;
 	}
 }
@@ -198,8 +208,9 @@ void trianglesSection(std::stringstream &file,
 			throw std::runtime_error("Triangle " + std::to_string(index) +
 									 " not found");
 		}
-		int tri[3] = {stoi(words[1]), stoi(words[2]), stoi(words[3])};
-		triangles[index] = Triangle(tri, stoi(words[7]));
+		triangles.at(index) =
+			Triangle(stoi(words[1]), stoi(words[2]), stoi(words[3]));
+		triangles.at(index).groupID = stoi(words[7]);
 		index++;
 	}
 }
@@ -242,9 +253,9 @@ void verticesColorsSection(std::stringstream &file,
 									 std::to_string(index) + " not found");
 		}
 
-		vertices[index].unipolar = stof(words[1]);
-		vertices[index].bipolar = stof(words[2]);
-		vertices[index].LAT = stof(words[3]);
+		vertices.at(index).unipolar = stof(words[1]);
+		vertices.at(index).bipolar = stof(words[2]);
+		vertices.at(index).LAT = stof(words[3]);
 		index++;
 	}
 }
@@ -286,9 +297,9 @@ void verticesAttributesSection(std::stringstream &file,
 									 std::to_string(index) + " not found");
 		}
 
-		vertices[index].EML = stoi(words[1]);
-		vertices[index].ExtEML = stoi(words[2]);
-		vertices[index].SCAR = stoi(words[3]);
+		vertices.at(index).EML = stoi(words[1]);
+		vertices.at(index).ExtEML = stoi(words[2]);
+		vertices.at(index).SCAR = stoi(words[3]);
 		index++;
 	}
 }
@@ -300,12 +311,18 @@ Mesh importMesh(std::string fileString) {
 	return h;
 }
 
-std::array<float, 3> scalarToTurbo(float scalar) {
-	if (scalar == 0) {
+std::array<float, 3> scalarToTurbo(float normalizedScalar) {
+	if (normalizedScalar == 0) {
 		std::array<float, 3> turbo = {0.5, 0.5, 0.5};
 		return turbo;
+	} else if (normalizedScalar > 1) {
+		std::array<float, 3> turbo = {1, 1, 1};
+		return turbo;
+	} else if (normalizedScalar < 0) {
+		std::array<float, 3> turbo = {0, 0, 0};
+		return turbo;
 	}
-	float s256 = scalar * 255.0;
+	float s256 = normalizedScalar * 255.0;
 	int sx = s256;
 	int dx = s256 + 1 <= 255.0 ? s256 + 1 : 255;
 	float t = s256 - sx;

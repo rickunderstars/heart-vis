@@ -15,7 +15,12 @@ var raycaster = new THREE.Raycaster();
 
 renderer.setSize(viewport.clientWidth, viewport.clientHeight);
 const controls = new OrbitControls(camera, renderer.domElement);
-renderer.setAnimationLoop(animate);
+
+controls.addEventListener("change", () => {
+	renderer.render(scene, camera);
+});
+
+renderer.render(scene, camera);
 
 viewport.append(renderer.domElement);
 
@@ -116,7 +121,7 @@ function processFile(file) {
 				mesh.triangleFix(56, 38, 29);
 				mesh.triangleFix(30812, 15492, 15447);
 				mesh.triangleFix(30578, 14384, 14398);
-				let fixTri = new cpp.Triangle(15417, 14398, 14381, -1);
+				let fixTri = new cpp.Triangle(15417, 14398, 14381);
 				mesh.triangles.push_back(fixTri);
 				mesh.fixNMEdges();
 			}
@@ -246,11 +251,6 @@ function processFile(file) {
 	});
 }
 
-function animate() {
-	controls.update();
-	renderer.render(scene, camera);
-}
-
 function onViewportResize() {
 	camera.aspect = viewport.clientWidth / viewport.clientHeight;
 	camera.updateProjectionMatrix();
@@ -263,6 +263,7 @@ function onMouseMove(event) {
 	mouse.y = -(((event.clientY - rect.top) / rect.height) * 2 - 1);
 	vertexPicker();
 }
+
 function vertexPicker() {
 	if (activeMesh === -1 || !meshes[activeMesh]) {
 		document.getElementById("vertex-info").innerHTML = "no mesh loaded";
@@ -307,12 +308,12 @@ function vertexPicker() {
 		}
 
 		document.getElementById("vertex-info").innerHTML =
-			"<div>Unipolar: " +
-			meshes[activeMesh].valueSets.unipolar[closestVertex] +
+			"<div class='vertex-info'>Unipolar: " +
+			meshes[activeMesh].valueSets.unipolar[closestVertex].toFixed(3) +
 			"</br>Bipolar: " +
-			meshes[activeMesh].valueSets.bipolar[closestVertex] +
+			meshes[activeMesh].valueSets.bipolar[closestVertex].toFixed(3) +
 			"</br>LAT: " +
-			meshes[activeMesh].valueSets.lat[closestVertex] +
+			meshes[activeMesh].valueSets.lat[closestVertex].toFixed(3) +
 			"</br>EML: " +
 			meshes[activeMesh].valueSets.eml[closestVertex] +
 			"</br>ExtEML: " +
@@ -321,7 +322,7 @@ function vertexPicker() {
 			meshes[activeMesh].valueSets.scar[closestVertex] +
 			"</div>";
 	} else {
-		document.getElementById("vertex-info").innerHTML = "no value";
+		document.getElementById("vertex-info").innerHTML = "";
 	}
 }
 
@@ -333,8 +334,8 @@ function setColorVariant(meshIndex, colorSet) {
 			"color",
 			new THREE.BufferAttribute(colorSets[colorSet], 3)
 		);
-
 		mesh.geometry.attributes.color.needsUpdate = true;
+		renderer.render(scene, camera);
 	}
 }
 

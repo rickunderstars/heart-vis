@@ -18,25 +18,18 @@ EMSCRIPTEN_BINDINGS(heart_module) {
 
 	emscripten::class_<Vertex>("Vertex")
 		.property("pos", &Vertex::pos)
-		.property("normal", &Vertex::normal)
 		.property("groupID", &Vertex::groupID)
 		.property("unipolar", &Vertex::unipolar)
 		.property("bipolar", &Vertex::bipolar)
 		.property("LAT", &Vertex::LAT)
 		.property("EML", &Vertex::EML)
 		.property("ExtEML", &Vertex::ExtEML)
-		.property("SCAR", &Vertex::SCAR)
-		.property("nUnipolar", &Vertex::nUnipolar)
-		.property("nBipolar", &Vertex::nBipolar)
-		.property("nLAT", &Vertex::nLAT)
-		.property("nEML", &Vertex::nEML)
-		.property("nExtEML", &Vertex::nExtEML)
-		.property("nSCAR", &Vertex::nSCAR);
+		.property("SCAR", &Vertex::SCAR);
 
 	emscripten::register_vector<Vertex>("VertexVector");
 
 	emscripten::class_<Triangle>("Triangle")
-		.constructor<int, int, int, int>()
+		.constructor<int, int, int>()
 		.property("groupID", &Triangle::groupID);
 
 	emscripten::register_vector<Triangle>("TriangleVector");
@@ -46,14 +39,6 @@ EMSCRIPTEN_BINDINGS(heart_module) {
 		.property("triangles", &Mesh::triangles)
 		.function("triangleFix", &Mesh::triangleFix)
 		.function("fixNMEdges", &Mesh::fixNMEdges)
-		.function("toPlyString", emscripten::optional_override(
-									 [](Mesh &self, std::string quality) {
-										 return self.toPlyString(quality);
-									 }))
-		.function("toPlyStringDefault",
-				  emscripten::optional_override(
-					  [](Mesh &self) { return self.toPlyString(); }))
-		.function("toString", &Mesh::toString)
 		.class_function("simpleShape", &Mesh::simpleShape)
 		.function("Float32ArrayOfVertices", &Mesh::Float32ArrayOfVertices)
 		.function("Uint32ArrayOfTriangles", &Mesh::Uint32ArrayOfTriangles)

@@ -7,38 +7,19 @@
 #include <string>
 
 Vertex::Vertex()
-	: pos(glm::vec3(0, 0, 0)), normal(glm::vec3(0, 0, 0)), groupID(-1),
-	  unipolar(0), bipolar(0), LAT(0), EML(-1), ExtEML(-1), SCAR(-1) {}
-Vertex::Vertex(glm::vec3 &pos, glm::vec3 &normal, int id) {
-	this->pos = pos;
-	this->normal = normal;
-	this->groupID = id;
-}
-std::string Vertex::toString() {
-	std::ostringstream oss;
-	oss << "pos(" << pos.x << ", " << pos.y << ", " << pos.z << ") / normal("
-		<< normal.x << ", " << normal.y << ", " << normal.z << ") ---- groupID("
-		<< groupID << ") / unipolar(" << unipolar << ") / bipolar(" << bipolar
-		<< ") / LAT(" << LAT << ") / EML(" << EML << ") / ExtEml(" << ExtEML
-		<< ") / SCAR(" << SCAR << ")";
-	return oss.str();
-}
+	: pos(glm::vec3(0, 0, 0)), groupID(-666), unipolar(-666), bipolar(-666),
+	  LAT(-666), EML(-666), ExtEML(-666), SCAR(-666) {}
+Vertex::Vertex(glm::vec3 &pos) { this->pos = pos; }
 
-std::string Vertex::posToObj() {
+std::string Vertex::toObj() {
 	std::ostringstream oss;
 	oss << "v  " << pos.x << " " << pos.y << " " << pos.z;
 	return oss.str();
 }
 
-std::string Vertex::normalToObj() {
-	std::ostringstream oss;
-	oss << "vn " << normal.x << " " << normal.y << " " << normal.z;
-	return oss.str();
-}
-
 std::string Vertex::toPly(std::string quality) {
 
-	std::string q = "-1";
+	std::string q;
 
 	if (quality == "unipolar") {
 		q = std::to_string(this->unipolar);
@@ -52,10 +33,11 @@ std::string Vertex::toPly(std::string quality) {
 		q = std::to_string(this->ExtEML);
 	} else if (quality == "scar") {
 		q = std::to_string(this->SCAR);
+	} else {
+		q = "-1";
 	}
 
 	std::ostringstream oss;
-	oss << pos.x << " " << pos.y << " " << pos.z << " " << normal.x << " "
-		<< normal.y << " " << normal.z << " " << q;
+	oss << pos.x << " " << pos.y << " " << pos.z << " " << q;
 	return oss.str();
 }
