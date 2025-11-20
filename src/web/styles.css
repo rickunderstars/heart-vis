@@ -93,6 +93,7 @@ body {
 	transition: background-color 0.2s;
 }
 
+.vertex-info,
 .upload-info {
 	display: inline-block;
 	text-align: center;

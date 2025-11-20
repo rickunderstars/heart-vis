@@ -119,16 +119,14 @@ void generalAttributesSection(std::stringstream &file, int &vertNum,
 	}
 	if (!found) {
 		throw std::runtime_error(
-			"Could not find section '[VerticesColorsSection]'");
+			"Could not find section '[GeneralAttributes]'");
 	}
 	while (getCleanLine(file, line) && !isWhitespace(line)) {
 		std::vector<std::string> words;
 		boost::split(words, line, boost::is_any_of(" "),
 					 boost::token_compress_on);
 		if (words.size() == 3) {
-			if (words[0] == "MeshID") {
-				id = words[2];
-			} else if (words[0] == "NumVertex") {
+			if (words[0] == "NumVertex") {
 				vertNum = stoi(words[2]);
 			} else if (words[0] == "NumTriangle") {
 				triNum = stoi(words[2]);
@@ -165,14 +163,13 @@ void verticesSection(std::stringstream &file, std::vector<Vertex> &vertices) {
 		if (isWhitespace(line)) {
 			break;
 		}
-
 		if (index != stoi(words[0])) {
 			throw std::runtime_error("Vertex " + std::to_string(index) +
 									 " not found");
 		}
 		glm::vec3 pos(stof(words[1]), stof(words[2]), stof(words[3]));
-		glm::vec3 normal(stof(words[4]), stof(words[5]), stof(words[6]));
-		vertices[index] = Vertex(pos, normal, stoi(words[7]));
+		vertices[index] = Vertex(pos);
+		vertices[index].groupID = stoi(words[7]);
 		index++;
 	}
 }
@@ -213,7 +210,8 @@ void trianglesSection(std::stringstream &file,
 									 " not found");
 		}
 		int tri[3] = {stoi(words[1]), stoi(words[2]), stoi(words[3])};
-		triangles[index] = Triangle(tri, stoi(words[7]));
+		triangles[index] = Triangle(tri);
+		triangles[index].groupID = stoi(words[7]);
 		index++;
 	}
 }

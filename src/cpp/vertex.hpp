@@ -8,7 +8,7 @@
 class Vertex {
   public:
 	glm::vec3 pos = glm::vec3();
-	glm::vec3 normal = glm::vec3();
+
 	int groupID = -666;
 
 	float unipolar = -666;
@@ -26,11 +26,9 @@ class Vertex {
 	float nSCAR = -666;
 
 	Vertex();
-	Vertex(glm::vec3 &pos, glm::vec3 &normal, int id);
+	Vertex(glm::vec3 &pos);
 
-	std::string posToObj();
-
-	std::string normalToObj();
+	std::string toObj();
 
 	std::string toPly(std::string quality);
 };

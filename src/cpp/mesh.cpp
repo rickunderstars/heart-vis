@@ -22,11 +22,7 @@ std::string Mesh::toObjString() {
 	oss << "# Obj file converted from proprietary mesh format";
 	oss << "\n\n############\n# vertices #\n############\n\n";
 	for (int i = 0; i < vertices.size(); i++) {
-		oss << vertices[i].posToObj() << "\n";
-	}
-	oss << "\n\n\n############\n# vertices normals #\n############\n\n";
-	for (int i = 0; i < vertices.size(); i++) {
-		oss << vertices[i].normalToObj() << "\n";
+		oss << vertices[i].toObj() << "\n";
 	}
 	oss << "\n\n\n############\n# triangles #\n############\n\n";
 	for (int i = 0; i < triangles.size(); i++) {
@@ -42,8 +38,7 @@ std::string Mesh::toPlyString(std::string quality) {
 	oss << "comment Ply file converted from proprietary mesh format\n";
 	oss << "element vertex " << vertices.size() << "\n";
 	oss << "property float x\nproperty float y\nproperty float "
-		   "z\nproperty float nx\nproperty float ny\nproperty "
-		   "float nz\n";
+		   "z\n";
 	oss << "property float quality\n";
 	oss << "element face " << triangles.size() << "\n";
 	oss << "property list uchar int vertex_indices\n";
@@ -101,7 +96,8 @@ void Mesh::fixNMEdges() {
 
 	for (int i = 0, k = 0; i < triangles.size(); i++) {
 		if (triangles[i].groupID != -1000000) {
-			newTris[k] = Triangle(triangles[i].vertices, triangles[i].groupID);
+			newTris[k] = Triangle(triangles[i].vertices);
+			newTris[k].groupID = triangles[i].groupID;
 			k++;
 		}
 	}
@@ -113,19 +109,18 @@ Mesh Mesh::simpleShape() {
 	std::vector<Triangle> tri(2);
 	int f0[3] = {0, 1, 2};
 	int f1[3] = {0, 2, 3};
-	tri[0] = Triangle(f0, -1);
-	tri[1] = Triangle(f1, -1);
+	tri[0] = Triangle(f0);
+	tri[1] = Triangle(f1);
 
 	std::vector<Vertex> vert(4);
-	glm::vec3 nrm(0, 0, 1);
 	glm::vec3 v0(0, 0, 0);
 	glm::vec3 v1(0, 2, 0);
 	glm::vec3 v2(2, 2, 0);
 	glm::vec3 v3(2, 0, 0);
-	vert[0] = Vertex(v0, nrm, -1);
-	vert[1] = Vertex(v1, nrm, -1);
-	vert[2] = Vertex(v2, nrm, -1);
-	vert[3] = Vertex(v3, nrm, -1);
+	vert[0] = Vertex(v0);
+	vert[1] = Vertex(v1);
+	vert[2] = Vertex(v2);
+	vert[3] = Vertex(v3);
 
 	return Mesh(vert, tri);
 }

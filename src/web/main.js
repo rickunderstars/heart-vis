@@ -116,7 +116,7 @@ function processFile(file) {
 				mesh.triangleFix(56, 38, 29);
 				mesh.triangleFix(30812, 15492, 15447);
 				mesh.triangleFix(30578, 14384, 14398);
-				let fixTri = new cpp.Triangle(15417, 14398, 14381, -1);
+				let fixTri = new cpp.Triangle(15417, 14398, 14381);
 				mesh.triangles.push_back(fixTri);
 				mesh.fixNMEdges();
 			}
@@ -307,12 +307,12 @@ function vertexPicker() {
 		}
 
 		document.getElementById("vertex-info").innerHTML =
-			"<div>Unipolar: " +
-			meshes[activeMesh].valueSets.unipolar[closestVertex] +
+			"<div class='vertex-info'>Unipolar: " +
+			meshes[activeMesh].valueSets.unipolar[closestVertex].toFixed(3) +
 			"</br>Bipolar: " +
-			meshes[activeMesh].valueSets.bipolar[closestVertex] +
+			meshes[activeMesh].valueSets.bipolar[closestVertex].toFixed(3) +
 			"</br>LAT: " +
-			meshes[activeMesh].valueSets.lat[closestVertex] +
+			meshes[activeMesh].valueSets.lat[closestVertex].toFixed(3) +
 			"</br>EML: " +
 			meshes[activeMesh].valueSets.eml[closestVertex] +
 			"</br>ExtEML: " +
@@ -321,7 +321,7 @@ function vertexPicker() {
 			meshes[activeMesh].valueSets.scar[closestVertex] +
 			"</div>";
 	} else {
-		document.getElementById("vertex-info").innerHTML = "no value";
+		document.getElementById("vertex-info").innerHTML = "";
 	}
 }
 

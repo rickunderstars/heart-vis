@@ -18,7 +18,6 @@ EMSCRIPTEN_BINDINGS(heart_module) {
 
 	emscripten::class_<Vertex>("Vertex")
 		.property("pos", &Vertex::pos)
-		.property("normal", &Vertex::normal)
 		.property("groupID", &Vertex::groupID)
 		.property("unipolar", &Vertex::unipolar)
 		.property("bipolar", &Vertex::bipolar)
@@ -36,7 +35,7 @@ EMSCRIPTEN_BINDINGS(heart_module) {
 	emscripten::register_vector<Vertex>("VertexVector");
 
 	emscripten::class_<Triangle>("Triangle")
-		.constructor<int, int, int, int>()
+		.constructor<int, int, int>()
 		.property("groupID", &Triangle::groupID);
 
 	emscripten::register_vector<Triangle>("TriangleVector");
