@@ -15,7 +15,12 @@ var raycaster = new THREE.Raycaster();
 
 renderer.setSize(viewport.clientWidth, viewport.clientHeight);
 const controls = new OrbitControls(camera, renderer.domElement);
-renderer.setAnimationLoop(animate);
+
+controls.addEventListener("change", () => {
+	renderer.render(scene, camera);
+});
+
+renderer.render(scene, camera);
 
 viewport.append(renderer.domElement);
 
@@ -246,11 +251,6 @@ function processFile(file) {
 	});
 }
 
-function animate() {
-	controls.update();
-	renderer.render(scene, camera);
-}
-
 function onViewportResize() {
 	camera.aspect = viewport.clientWidth / viewport.clientHeight;
 	camera.updateProjectionMatrix();
@@ -263,6 +263,7 @@ function onMouseMove(event) {
 	mouse.y = -(((event.clientY - rect.top) / rect.height) * 2 - 1);
 	vertexPicker();
 }
+
 function vertexPicker() {
 	if (activeMesh === -1 || !meshes[activeMesh]) {
 		document.getElementById("vertex-info").innerHTML = "no mesh loaded";
