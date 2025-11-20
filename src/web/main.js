@@ -264,8 +264,12 @@ function onMouseMove(event) {
 	vertexPicker();
 }
 function vertexPicker() {
+	if (activeMesh === -1 || !meshes[activeMesh]) {
+		document.getElementById("vertex-info").innerHTML = "no mesh loaded";
+		return;
+	}
 	raycaster.setFromCamera(mouse, camera);
-	const intersects = raycaster.intersectObjects(scene.children);
+	const intersects = raycaster.intersectObject(meshes[activeMesh].mesh);
 
 	if (intersects.length > 0) {
 		const firstHit = intersects[0];
