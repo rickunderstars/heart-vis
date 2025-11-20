@@ -15,7 +15,7 @@ bool isWhitespace(const std::string &str) {
 
 void printVector(std::vector<std::string> v) {
 	for (int i = 0; i < v.size(); i++) {
-		std::cout << v[i] << " // ";
+		std::cout << v.at(i) << " // ";
 	}
 }
 
@@ -168,8 +168,8 @@ void verticesSection(std::stringstream &file, std::vector<Vertex> &vertices) {
 									 " not found");
 		}
 		glm::vec3 pos(stof(words[1]), stof(words[2]), stof(words[3]));
-		vertices[index] = Vertex(pos);
-		vertices[index].groupID = stoi(words[7]);
+		vertices.at(index) = Vertex(pos);
+		vertices.at(index).groupID = stoi(words[7]);
 		index++;
 	}
 }
@@ -209,9 +209,9 @@ void trianglesSection(std::stringstream &file,
 			throw std::runtime_error("Triangle " + std::to_string(index) +
 									 " not found");
 		}
-		int tri[3] = {stoi(words[1]), stoi(words[2]), stoi(words[3])};
-		triangles[index] = Triangle(tri);
-		triangles[index].groupID = stoi(words[7]);
+		triangles.at(index) =
+			Triangle(stoi(words[1]), stoi(words[2]), stoi(words[3]));
+		triangles.at(index).groupID = stoi(words[7]);
 		index++;
 	}
 }
@@ -254,9 +254,9 @@ void verticesColorsSection(std::stringstream &file,
 									 std::to_string(index) + " not found");
 		}
 
-		vertices[index].unipolar = stof(words[1]);
-		vertices[index].bipolar = stof(words[2]);
-		vertices[index].LAT = stof(words[3]);
+		vertices.at(index).unipolar = stof(words[1]);
+		vertices.at(index).bipolar = stof(words[2]);
+		vertices.at(index).LAT = stof(words[3]);
 		index++;
 	}
 }
@@ -298,9 +298,9 @@ void verticesAttributesSection(std::stringstream &file,
 									 std::to_string(index) + " not found");
 		}
 
-		vertices[index].EML = stoi(words[1]);
-		vertices[index].ExtEML = stoi(words[2]);
-		vertices[index].SCAR = stoi(words[3]);
+		vertices.at(index).EML = stoi(words[1]);
+		vertices.at(index).ExtEML = stoi(words[2]);
+		vertices.at(index).SCAR = stoi(words[3]);
 		index++;
 	}
 }
