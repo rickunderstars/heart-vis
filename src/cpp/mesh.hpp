@@ -10,19 +10,19 @@ class Mesh {
 	std::vector<Vertex> vertices;
 	std::vector<Triangle> triangles;
 
-	float maxUnipolar = -1;
-	float maxBipolar = -1;
-	float maxLAT = -1;
-	int maxEML = -1;
-	int maxExtEML = -1;
-	int maxSCAR = -1;
+	float maxUnipolar = -666;
+	float maxBipolar = -666;
+	float maxLAT = -666;
+	int maxEML = -666;
+	int maxExtEML = -666;
+	int maxSCAR = -666;
 
-	float minUnipolar = -1;
-	float minBipolar = -1;
-	float minLAT = -1;
-	int minEML = -1;
-	int minExtEML = -1;
-	int minSCAR = -1;
+	float minUnipolar = -666;
+	float minBipolar = -666;
+	float minLAT = -666;
+	int minEML = -666;
+	int minExtEML = -666;
+	int minSCAR = -666;
 
 	Mesh(std::vector<Vertex> &vertices, std::vector<Triangle> &triangles);
 
@@ -31,8 +31,9 @@ class Mesh {
 	void fixNMEdges();
 
 	void calcQualitiesMinMax();
+	void calcQualitiesNorm(); // to remove
 
-	void calcQualitiesNorm();
+	float standardize(int vIndex, std::string quality);
 
 	std::string toObjString();
 

@@ -29,7 +29,7 @@ std::string Vertex::normalToObj() {
 
 std::string Vertex::toPly(std::string quality) {
 
-	std::string q = "-1";
+	std::string q;
 
 	if (quality == "unipolar") {
 		q = std::to_string(this->unipolar);
@@ -43,6 +43,8 @@ std::string Vertex::toPly(std::string quality) {
 		q = std::to_string(this->ExtEML);
 	} else if (quality == "scar") {
 		q = std::to_string(this->SCAR);
+	} else {
+		q = "-1";
 	}
 
 	std::ostringstream oss;

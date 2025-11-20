@@ -30,6 +30,20 @@ std::istream &getCleanLine(std::stringstream &file, std::string &line) {
 	}
 }
 
+bool checkQuality(std::string quality) {
+	for (char &c : quality) {
+		c = std::tolower(static_cast<unsigned char>(c));
+	}
+	bool quality_found =
+		std::any_of(validQualities.begin(), validQualities.end(),
+					[&](const std::string &s) { return s == quality; });
+
+	if (!quality_found) {
+		return false;
+	}
+	return true;
+}
+
 std::string fileToString(std::string filepath) {
 	std::ifstream file(filepath);
 	if (!file.is_open()) {

@@ -36,19 +36,6 @@ std::string Mesh::toObjString() {
 }
 
 std::string Mesh::toPlyString(std::string quality) {
-	std::vector<std::string> qualities = {"",	 "unipolar", "bipolar", "lat",
-										  "eml", "exteml",	 "scar"};
-	for (char &c : quality) {
-		c = std::tolower(static_cast<unsigned char>(c));
-	}
-	bool quality_found =
-		std::any_of(qualities.begin(), qualities.end(),
-					[&](const std::string &s) { return s == quality; });
-
-	if (!quality_found) {
-		throw std::runtime_error("'" + quality + "' is not an attribute");
-	}
-
 	std::ostringstream oss;
 
 	oss << "ply\nformat ascii 1.0\n";
@@ -198,6 +185,9 @@ void Mesh::calcQualitiesMinMax() {
 	}
 }
 
+float standardize(int vIndex, std::string quality) { return 0; }
+
+// to remove
 void Mesh::calcQualitiesNorm() {
 	float unipolarDelta =
 		maxUnipolar - minUnipolar != 0 ? maxUnipolar - minUnipolar : 1;
@@ -371,16 +361,7 @@ emscripten::val Mesh::Int32ArrayOfSCAR() const {
 }
 
 emscripten::val Mesh::Float32ArrayOfTurboColors(std::string quality) const {
-	std::vector<std::string> qualities = {"",	 "unipolar", "bipolar", "lat",
-										  "eml", "exteml",	 "scar"};
-	for (char &c : quality) {
-		c = std::tolower(static_cast<unsigned char>(c));
-	}
-	bool quality_found =
-		std::any_of(qualities.begin(), qualities.end(),
-					[&](const std::string &s) { return s == quality; });
-
-	if (!quality_found) {
+	if (!checkQuality(quality)) {
 		throw std::runtime_error("'" + quality + "' is not an attribute");
 	}
 

@@ -4,6 +4,11 @@
 #include <iostream>
 #include <vector>
 
+inline std::vector<std::string> validQualities = {
+	"unipolar", "bipolar", "lat", "eml", "exteml", "scar"};
+
+bool checkQuality(std::string quality);
+
 bool isWhitespace(const std::string &str);
 
 void printVector(std::vector<std::string> v);
