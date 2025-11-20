@@ -31,9 +31,8 @@ class Mesh {
 	void fixNMEdges();
 
 	void calcQualitiesMinMax();
-	void calcQualitiesNorm(); // to remove
 
-	float standardize(int vIndex, std::string quality);
+	float normalizedVertexQuality(int vIndex, std::string quality) const;
 
 	std::string toObjString();
 

@@ -18,13 +18,6 @@ class Vertex {
 	int ExtEML = -666;
 	int SCAR = -666;
 
-	float nUnipolar = -666;
-	float nBipolar = -666;
-	float nLAT = -666;
-	float nEML = -666;
-	float nExtEML = -666;
-	float nSCAR = -666;
-
 	Vertex();
 	Vertex(glm::vec3 &pos);
 

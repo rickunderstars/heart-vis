@@ -102,7 +102,6 @@ Mesh sectionsHandler(std::stringstream &file) {
 	Mesh heart(verts, tris);
 
 	heart.calcQualitiesMinMax();
-	heart.calcQualitiesNorm();
 
 	return heart;
 }

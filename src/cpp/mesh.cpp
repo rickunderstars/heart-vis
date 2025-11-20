@@ -182,29 +182,47 @@ void Mesh::calcQualitiesMinMax() {
 	}
 }
 
-float standardize(int vIndex, std::string quality) { return 0; }
-
-// to remove
-void Mesh::calcQualitiesNorm() {
-	float unipolarDelta =
-		maxUnipolar - minUnipolar != 0 ? maxUnipolar - minUnipolar : 1;
-	float bipolarDelta =
-		maxBipolar - minBipolar != 0 ? maxBipolar - minBipolar : 1;
-	float latDelta = maxLAT - minLAT != 0 ? maxLAT - minLAT : 1;
-	float emlDelta = maxEML - minEML != 0 ? maxEML - minEML : 1;
-	float extemlDelta = maxExtEML - minExtEML != 0 ? maxExtEML - minExtEML : 1;
-	float scarDelta = maxSCAR - minSCAR != 0 ? maxSCAR - minSCAR : 1;
-	for (int i = 0; i < vertices.size(); i++) {
-		vertices.at(i).nUnipolar =
-			(vertices.at(i).unipolar - minUnipolar) / unipolarDelta;
-		vertices.at(i).nBipolar =
-			(vertices.at(i).bipolar - minBipolar) / bipolarDelta;
-		vertices.at(i).nLAT = (vertices.at(i).LAT - minLAT) / latDelta;
-		vertices.at(i).nEML = (vertices.at(i).EML - minEML) / emlDelta;
-		vertices.at(i).nExtEML =
-			(vertices.at(i).ExtEML - minExtEML) / extemlDelta;
-		vertices.at(i).nSCAR = (vertices.at(i).SCAR - minSCAR) / scarDelta;
+float Mesh::normalizedVertexQuality(int vIndex, std::string quality) const {
+	if (!checkQuality(quality)) {
+		throw std::runtime_error("'" + quality + "' is not an attribute");
 	}
+	float delta;
+	float min;
+	float max;
+
+	if (quality == "unipolar") {
+		max = maxUnipolar;
+		min = minUnipolar;
+		delta = max - min != 0 ? max - min : 1;
+		return (vertices.at(vIndex).unipolar - min) / delta;
+	} else if (quality == "bipolar") {
+		max = maxBipolar;
+		min = minBipolar;
+		delta = max - min != 0 ? max - min : 1;
+		return (vertices.at(vIndex).bipolar - min) / delta;
+	} else if (quality == "lat") {
+		max = maxLAT;
+		min = minLAT;
+		delta = max - min != 0 ? max - min : 1;
+		return (vertices.at(vIndex).LAT - min) / delta;
+	} else if (quality == "eml") {
+		max = maxEML;
+		min = minEML;
+		delta = max - min != 0 ? max - min : 1;
+		return (vertices.at(vIndex).EML - min) / delta;
+	} else if (quality == "exteml") {
+		max = maxExtEML;
+		min = minExtEML;
+		delta = max - min != 0 ? max - min : 1;
+		return (vertices.at(vIndex).ExtEML - min) / delta;
+	} else if (quality == "scar") {
+		max = maxSCAR;
+		min = minSCAR;
+		delta = max - min != 0 ? max - min : 1;
+		return (vertices.at(vIndex).SCAR - min) / delta;
+	}
+
+	return 0;
 }
 
 emscripten::val Mesh::Float32ArrayOfVertices() const {
@@ -366,38 +384,12 @@ emscripten::val Mesh::Float32ArrayOfTurboColors(std::string quality) const {
 	std::vector<float> turboColors;
 	turboColors.reserve(vertices.size() * 3);
 
-	for (const auto &v : vertices) {
-		if (quality == "unipolar") {
-			std::array<float, 3> u = scalarToTurbo(v.nUnipolar);
-			turboColors.push_back(u.at(0));
-			turboColors.push_back(u.at(1));
-			turboColors.push_back(u.at(2));
-		} else if (quality == "bipolar") {
-			std::array<float, 3> b = scalarToTurbo(v.nBipolar);
-			turboColors.push_back(b.at(0));
-			turboColors.push_back(b.at(1));
-			turboColors.push_back(b.at(2));
-		} else if (quality == "lat") {
-			std::array<float, 3> l = scalarToTurbo(v.nLAT);
-			turboColors.push_back(l.at(0));
-			turboColors.push_back(l.at(1));
-			turboColors.push_back(l.at(2));
-		} else if (quality == "eml") {
-			std::array<float, 3> e = scalarToTurbo(v.nEML);
-			turboColors.push_back(e.at(0));
-			turboColors.push_back(e.at(1));
-			turboColors.push_back(e.at(2));
-		} else if (quality == "exteml") {
-			std::array<float, 3> ee = scalarToTurbo(v.nExtEML);
-			turboColors.push_back(ee.at(0));
-			turboColors.push_back(ee.at(1));
-			turboColors.push_back(ee.at(2));
-		} else if (quality == "scar") {
-			std::array<float, 3> s = scalarToTurbo(v.nSCAR);
-			turboColors.push_back(s.at(0));
-			turboColors.push_back(s.at(1));
-			turboColors.push_back(s.at(2));
-		}
+	for (int i = 0; i < vertices.size(); i++) {
+		std::array<float, 3> n =
+			scalarToTurbo(normalizedVertexQuality(i, quality));
+		turboColors.push_back(n.at(0));
+		turboColors.push_back(n.at(1));
+		turboColors.push_back(n.at(2));
 	}
 
 	emscripten::val float32Array =

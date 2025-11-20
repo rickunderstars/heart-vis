@@ -334,8 +334,8 @@ function setColorVariant(meshIndex, colorSet) {
 			"color",
 			new THREE.BufferAttribute(colorSets[colorSet], 3)
 		);
-
 		mesh.geometry.attributes.color.needsUpdate = true;
+		renderer.render(scene, camera);
 	}
 }
 
