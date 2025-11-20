@@ -255,6 +255,7 @@ function onViewportResize() {
 	camera.aspect = viewport.clientWidth / viewport.clientHeight;
 	camera.updateProjectionMatrix();
 	renderer.setSize(viewport.clientWidth, viewport.clientHeight);
+	renderer.render(scene, camera);
 }
 
 function onMouseMove(event) {
