@@ -325,6 +325,8 @@ function vertexPicker() {
 			meshes[activeMesh].valueSets.exteml[closestVertex] +
 			"</br>SCAR: " +
 			meshes[activeMesh].valueSets.scar[closestVertex] +
+			"</br>groupID: " +
+			meshes[activeMesh].valueSets.groupid[closestVertex] +
 			"</div>";
 	} else {
 		document.getElementById("vertex-info").innerHTML = "";

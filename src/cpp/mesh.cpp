@@ -9,6 +9,8 @@
 #include <emscripten/val.h>
 #include <glm/ext/vector_float3.hpp>
 #include <iostream>
+#include <map>
+#include <set>
 #include <sstream>
 #include <vector>
 
@@ -391,6 +393,44 @@ emscripten::val Mesh::Int32ArrayOfGroupID() const {
 									 valuesArray.size(), valuesArray.data())));
 
 	return int32Array;
+}
+
+emscripten::val Mesh::Float32ArrayOfGroupIDTurboColors() const {
+	std::set<int> uniqueIDs;
+	for (const auto &v : vertices) {
+		uniqueIDs.insert(v.groupID);
+	}
+
+	std::map<int, int> idToRank;
+	int rank = 0;
+	for (int id : uniqueIDs) {
+		idToRank[id] = rank;
+		rank++;
+	}
+
+	std::vector<float> turboColors;
+
+	turboColors.reserve(vertices.size() * 3);
+
+	float totalGroups = static_cast<float>(uniqueIDs.size());
+
+	for (const auto &v : vertices) {
+		int rank = idToRank[v.groupID];
+		float normalizedValue = (rank + 1.0f) / totalGroups;
+		std::array<float, 3> t = scalarToTurbo(normalizedValue);
+		turboColors.push_back(t.at(0));
+		turboColors.push_back(t.at(1));
+		turboColors.push_back(t.at(2));
+	}
+
+	emscripten::val float32Array =
+		emscripten::val::global("Float32Array").new_(turboColors.size());
+
+	float32Array.call<void>("set",
+							emscripten::val(emscripten::typed_memory_view(
+								turboColors.size(), turboColors.data())));
+
+	return float32Array;
 }
 
 emscripten::val Mesh::Float32ArrayOfTurboColors(std::string quality) const {

@@ -53,5 +53,6 @@ class Mesh {
 	emscripten::val Int32ArrayOfExtEML() const;
 	emscripten::val Int32ArrayOfSCAR() const;
 
+	emscripten::val Float32ArrayOfGroupIDTurboColors() const;
 	emscripten::val Float32ArrayOfTurboColors(std::string quality) const;
 };
