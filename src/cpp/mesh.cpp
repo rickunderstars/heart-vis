@@ -323,7 +323,7 @@ emscripten::val Mesh::Float32ArrayOfLAT() const {
 }
 
 emscripten::val Mesh::Int32ArrayOfEML() const {
-	std::vector<float> valuesArray;
+	std::vector<int> valuesArray;
 	valuesArray.reserve(vertices.size());
 
 	for (const auto &v : vertices) {
@@ -341,7 +341,7 @@ emscripten::val Mesh::Int32ArrayOfEML() const {
 }
 
 emscripten::val Mesh::Int32ArrayOfExtEML() const {
-	std::vector<float> valuesArray;
+	std::vector<int> valuesArray;
 	valuesArray.reserve(vertices.size());
 
 	for (const auto &v : vertices) {
@@ -359,11 +359,28 @@ emscripten::val Mesh::Int32ArrayOfExtEML() const {
 }
 
 emscripten::val Mesh::Int32ArrayOfSCAR() const {
-	std::vector<float> valuesArray;
+	std::vector<int> valuesArray;
 	valuesArray.reserve(vertices.size());
 
 	for (const auto &v : vertices) {
 		valuesArray.push_back(v.SCAR);
+	}
+
+	emscripten::val int32Array =
+		emscripten::val::global("Int32Array").new_(valuesArray.size());
+	emscripten::val memory = emscripten::val::module_property("HEAPF32");
+
+	int32Array.call<void>("set", emscripten::val(emscripten::typed_memory_view(
+									 valuesArray.size(), valuesArray.data())));
+
+	return int32Array;
+}
+emscripten::val Mesh::Int32ArrayOfGroupID() const {
+	std::vector<int> valuesArray;
+	valuesArray.reserve(vertices.size());
+
+	for (const auto &v : vertices) {
+		valuesArray.push_back(v.groupID);
 	}
 
 	emscripten::val int32Array =

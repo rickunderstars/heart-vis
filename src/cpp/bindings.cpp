@@ -43,6 +43,7 @@ EMSCRIPTEN_BINDINGS(heart_module) {
 		.function("Float32ArrayOfVertices", &Mesh::Float32ArrayOfVertices)
 		.function("Uint32ArrayOfTriangles", &Mesh::Uint32ArrayOfTriangles)
 		.function("Float32ArrayOfTurboColors", &Mesh::Float32ArrayOfTurboColors)
+		.function("Int32ArrayOfGroupID", &Mesh::Int32ArrayOfGroupID)
 		.function("Float32ArrayOfUnipolar", &Mesh::Float32ArrayOfUnipolar)
 		.function("Float32ArrayOfBipolar", &Mesh::Float32ArrayOfBipolar)
 		.function("Float32ArrayOfLAT", &Mesh::Float32ArrayOfLAT)

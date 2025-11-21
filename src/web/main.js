@@ -136,6 +136,8 @@ function processFile(file) {
 			const emlView = mesh.Float32ArrayOfTurboColors(qualities[3]);
 			const extemlView = mesh.Float32ArrayOfTurboColors(qualities[4]);
 			const scarView = mesh.Float32ArrayOfTurboColors(qualities[5]);
+			const groupidView = mesh.Float32ArrayOfGroupIDTurboColors();
+			const groupidValues = mesh.Int32ArrayOfGroupID();
 			const unipolarValues = mesh.Float32ArrayOfUnipolar();
 			const bipolarValues = mesh.Float32ArrayOfBipolar();
 			const latValues = mesh.Float32ArrayOfLAT();
@@ -147,6 +149,7 @@ function processFile(file) {
 			const triangles = new Uint32Array(trianglesView);
 
 			const turboSets = {
+				groupid: new Float32Array(groupidView),
 				unipolar: new Float32Array(unipolarView),
 				bipolar: new Float32Array(bipolarView),
 				lat: new Float32Array(latView),
@@ -156,6 +159,7 @@ function processFile(file) {
 			};
 
 			const valueSets = {
+				groupid: new Int32Array(groupidValues),
 				unipolar: new Float32Array(unipolarValues),
 				bipolar: new Float32Array(bipolarValues),
 				lat: new Float32Array(latValues),
