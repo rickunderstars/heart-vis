@@ -1,6 +1,31 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 
+/////// load shaders ///////
+let vShader = null;
+let fShader = null;
+
+try {
+	document.getElementById("viewport").innerHTML = "Loading shaders...";
+	console.log("Loading shaders...");
+	[vShader, fShader] = await Promise.all([
+		fetch("../glsl/vertex.glsl").then((r) => {
+			if (!r.ok) throw new Error("Shader vertex.glsl not found");
+			return r.text();
+		}),
+		fetch("../glsl/fragment.glsl").then((r) => {
+			if (!r.ok) throw new Error("Shader fragment.glsl not found");
+			return r.text();
+		}),
+	]);
+	console.log("Shaders loaded successfully");
+	document.getElementById("viewport").innerHTML = "";
+} catch (err) {
+	console.error("Error encountered while loading shaders: ", err);
+	document.getElementById("viewport").innerHTML =
+		"Error encountered while loading shaders: " + err;
+}
+
 /////// three.js ///////
 
 var scene = new THREE.Scene();
@@ -128,44 +153,19 @@ function processFile(file) {
 
 			// -- end fix -- //
 
-			const verticesView = mesh.Float32ArrayOfVertices();
-			const trianglesView = mesh.Uint32ArrayOfTriangles();
-			const unipolarView = mesh.Float32ArrayOfTurboColors(qualities[0]);
-			const bipolarView = mesh.Float32ArrayOfTurboColors(qualities[1]);
-			const latView = mesh.Float32ArrayOfTurboColors(qualities[2]);
-			const emlView = mesh.Float32ArrayOfTurboColors(qualities[3]);
-			const extemlView = mesh.Float32ArrayOfTurboColors(qualities[4]);
-			const scarView = mesh.Float32ArrayOfTurboColors(qualities[5]);
-			const groupidView = mesh.Float32ArrayOfGroupIDTurboColors();
-			const groupidValues = mesh.Int32ArrayOfGroupID();
-			const unipolarValues = mesh.Float32ArrayOfUnipolar();
-			const bipolarValues = mesh.Float32ArrayOfBipolar();
-			const latValues = mesh.Float32ArrayOfLAT();
-			const emlValues = mesh.Int32ArrayOfEML();
-			const extemlValues = mesh.Int32ArrayOfExtEML();
-			const scarValues = mesh.Int32ArrayOfSCAR();
-
-			const vertices = new Float32Array(verticesView);
-			const triangles = new Uint32Array(trianglesView);
-
-			const turboSets = {
-				groupid: new Float32Array(groupidView),
-				unipolar: new Float32Array(unipolarView),
-				bipolar: new Float32Array(bipolarView),
-				lat: new Float32Array(latView),
-				eml: new Float32Array(emlView),
-				exteml: new Float32Array(extemlView),
-				scar: new Float32Array(scarView),
-			};
+			const vertices = mesh.Float32ArrayOfVertices();
+			const triangles = mesh.Uint32ArrayOfTriangles();
 
 			const valueSets = {
-				groupid: new Int32Array(groupidValues),
-				unipolar: new Float32Array(unipolarValues),
-				bipolar: new Float32Array(bipolarValues),
-				lat: new Float32Array(latValues),
-				eml: new Int32Array(emlValues),
-				exteml: new Int32Array(extemlValues),
-				scar: new Int32Array(scarValues),
+				unipolar: mesh.Float32ArrayOfUnipolar(),
+				bipolar: mesh.Float32ArrayOfBipolar(),
+				lat: mesh.Float32ArrayOfLAT(),
+
+				// todo: convert from Int32Array to Float32Array
+				groupid: mesh.Int32ArrayOfGroupID(),
+				eml: mesh.Int32ArrayOfEML(),
+				exteml: mesh.Int32ArrayOfExtEML(),
+				scar: mesh.Int32ArrayOfSCAR(),
 			};
 
 			const geometry = new THREE.BufferGeometry();
@@ -175,16 +175,26 @@ function processFile(file) {
 			);
 			geometry.setIndex(new THREE.BufferAttribute(triangles, 1));
 			geometry.computeVertexNormals();
+
 			geometry.setAttribute(
-				"color",
-				new THREE.BufferAttribute(turboSets[activeQuality], 3)
+				"value",
+				new THREE.BufferAttribute(valueSets[activeQuality], 1)
 			);
 
-			const material = new THREE.MeshStandardMaterial({
-				vertexColors: true,
-				flatShading: false,
+			const material = new THREE.ShaderMaterial({
+				uniforms: {
+					uMin: {
+						value: getMin(valueSets[activeQuality]),
+					},
+					uMax: {
+						value: getMax(valueSets[activeQuality]),
+					},
+					uColorLow: { value: new THREE.Color(0x0000ff) },
+					uColorHigh: { value: new THREE.Color(0x00ff00) },
+				},
+				vertexShader: vShader,
+				fragmentShader: fShader,
 				side: THREE.DoubleSide,
-				roughness: 1,
 			});
 
 			const heart = new THREE.Mesh(geometry, material);
@@ -192,7 +202,6 @@ function processFile(file) {
 			meshes.forEach((meshData) => {
 				meshData.mesh.visible = false;
 			});
-
 			scene.add(heart);
 
 			const box = new THREE.Box3().setFromObject(heart);
@@ -208,7 +217,6 @@ function processFile(file) {
 			meshes.push({
 				mesh: heart,
 				filename: file.name,
-				colorSets: turboSets,
 				valueSets: valueSets,
 				center: center,
 				radius: radius,
@@ -333,15 +341,46 @@ function vertexPicker() {
 	}
 }
 
-function setColorVariant(meshIndex, colorSet) {
+function getMax(array) {
+	const len = array.length;
+	if (len === 0) {
+		return -Infinity;
+	}
+
+	let max = array[0];
+
+	for (let i = 1; i < len; i++) {
+		if (array[i] > max) {
+			max = array[i];
+		}
+	}
+	return max;
+}
+
+function getMin(array) {
+	const len = array.length;
+	if (len === 0) {
+		return Infinity;
+	}
+
+	let min = array[0];
+
+	for (let i = 1; i < len; i++) {
+		if (array[i] < min) {
+			min = array[i];
+		}
+	}
+	return min;
+}
+
+function setData(meshIndex, dataSet) {
 	if (meshes[meshIndex]) {
 		const mesh = meshes[meshIndex].mesh;
-		const colorSets = meshes[meshIndex].colorSets;
+		const valueSets = meshes[meshIndex].valueSets;
 		mesh.geometry.setAttribute(
-			"color",
-			new THREE.BufferAttribute(colorSets[colorSet], 3)
+			"value",
+			new THREE.BufferAttribute(valueSets[dataSet], 1)
 		);
-		mesh.geometry.attributes.color.needsUpdate = true;
 		renderer.render(scene, camera);
 	}
 }
@@ -362,7 +401,7 @@ document
 	.addEventListener("change", function (e) {
 		if (e.target.name === "quality") {
 			activeQuality = e.target.value;
-			setColorVariant(activeMesh, activeQuality);
+			setData(activeMesh, activeQuality);
 		}
 	});
 
@@ -371,7 +410,7 @@ document
 	.addEventListener("change", function (e) {
 		if (e.target.name === "loaded-mesh") {
 			activeMesh = e.target.value;
-			setColorVariant(activeMesh, activeQuality);
+			setData(activeMesh, activeQuality);
 			for (let i = 0; i < meshes.length; i++) {
 				if (i != activeMesh) {
 					meshes[i].mesh.visible = false;
