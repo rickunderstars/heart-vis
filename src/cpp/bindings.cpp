@@ -51,5 +51,18 @@ EMSCRIPTEN_BINDINGS(heart_module) {
 		.function("Float32ArrayOfLAT", &Mesh::Float32ArrayOfLAT)
 		.function("Int32ArrayOfEML", &Mesh::Int32ArrayOfEML)
 		.function("Int32ArrayOfExtEML", &Mesh::Int32ArrayOfExtEML)
-		.function("Int32ArrayOfSCAR", &Mesh::Int32ArrayOfSCAR);
+		.function("Int32ArrayOfSCAR", &Mesh::Int32ArrayOfSCAR)
+		.property("maxUnipolar", &Mesh::maxUnipolar)
+		.property("maxBipolar", &Mesh::maxBipolar)
+		.property("maxLAT", &Mesh::maxLAT)
+		.property("maxEML", &Mesh::maxEML)
+		.property("maxExtEML", &Mesh::maxExtEML)
+		.property("maxSCAR", &Mesh::maxSCAR)
+		.property("minUnipolar", &Mesh::minUnipolar)
+		.property("minBipolar", &Mesh::minBipolar)
+		.property("minLAT", &Mesh::minLAT)
+		.property("minEML", &Mesh::minEML)
+		.property("minExtEML", &Mesh::minExtEML)
+		.property("minSCAR", &Mesh::minSCAR);
+	;
 }

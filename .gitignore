@@ -5,7 +5,6 @@ build/*
 !build/heart.out.wasm
 
 .vite/
-.vscode/
 node_modules/
 package-lock.json
 .cache/

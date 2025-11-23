@@ -1,6 +1,31 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 
+/////// load shaders ///////
+let vShader = null;
+let fShader = null;
+
+try {
+	document.getElementById("viewport").innerHTML = "Loading shaders...";
+	console.log("Loading shaders...");
+	[vShader, fShader] = await Promise.all([
+		fetch("../glsl/vertex.glsl").then((r) => {
+			if (!r.ok) throw new Error("Shader vertex.glsl not found");
+			return r.text();
+		}),
+		fetch("../glsl/fragment.glsl").then((r) => {
+			if (!r.ok) throw new Error("Shader fragment.glsl not found");
+			return r.text();
+		}),
+	]);
+	console.log("Shaders loaded successfully");
+	document.getElementById("viewport").innerHTML = "";
+} catch (err) {
+	console.error("Error encountered while loading shaders: ", err);
+	document.getElementById("viewport").innerHTML =
+		"Error encountered while loading shaders: " + err;
+}
+
 /////// three.js ///////
 
 var scene = new THREE.Scene();
@@ -175,17 +200,42 @@ function processFile(file) {
 			);
 			geometry.setIndex(new THREE.BufferAttribute(triangles, 1));
 			geometry.computeVertexNormals();
+
+			/*
 			geometry.setAttribute(
 				"color",
 				new THREE.BufferAttribute(turboSets[activeQuality], 3)
 			);
+			*/
 
+			geometry.setAttribute(
+				"value",
+				new THREE.BufferAttribute(unipolarValues, 1)
+			);
+
+			console.log("maxUnipolar: ", mesh.maxUnipolar);
+			console.log("first unipolar: ", unipolarValues[0]);
+
+			const material = new THREE.ShaderMaterial({
+				uniforms: {
+					uMin: { value: mesh.minUnipolar },
+					uMax: { value: mesh.maxUnipolar },
+					uColorLow: { value: new THREE.Color(0x0000ff) },
+					uColorHigh: { value: new THREE.Color(0xff0000) },
+				},
+				vertexShader: vShader,
+				fragmentShader: fShader,
+				side: THREE.DoubleSide,
+			});
+
+			/*
 			const material = new THREE.MeshStandardMaterial({
 				vertexColors: true,
 				flatShading: false,
 				side: THREE.DoubleSide,
 				roughness: 1,
 			});
+			*/
 
 			const heart = new THREE.Mesh(geometry, material);
 
