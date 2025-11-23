@@ -96,7 +96,7 @@ body {
 .vertex-info,
 .upload-info {
 	display: inline-block;
-	text-align: center;
+	text-align: left;
 	padding: 1vh;
 	margin: 2vh 1vh 1vh 0vh;
 	font-size: 1.8vh;
