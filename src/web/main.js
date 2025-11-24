@@ -298,54 +298,66 @@ function vertexPicker() {
 
 	if (intersects.length > 0) {
 		const firstHit = intersects[0];
-		const { point, faceIndex, object } = firstHit;
-
-		const geometry = object.geometry;
+		const face = firstHit.face;
+		const geometry = firstHit.object.geometry;
 		const positions = geometry.attributes.position;
-		const index = geometry.index;
+		const object = firstHit.object;
 
-		const a = index.array[faceIndex * 3];
-		const b = index.array[faceIndex * 3 + 1];
-		const c = index.array[faceIndex * 3 + 2];
+		const v0 = new THREE.Vector3().fromBufferAttribute(positions, face.a);
+		const v1 = new THREE.Vector3().fromBufferAttribute(positions, face.b);
+		const v2 = new THREE.Vector3().fromBufferAttribute(positions, face.c);
 
-		const vA = new THREE.Vector3().fromBufferAttribute(positions, a);
-		const vB = new THREE.Vector3().fromBufferAttribute(positions, b);
-		const vC = new THREE.Vector3().fromBufferAttribute(positions, c);
+		v0.applyMatrix4(object.matrixWorld);
+		v1.applyMatrix4(object.matrixWorld);
+		v2.applyMatrix4(object.matrixWorld);
 
-		vA.applyMatrix4(object.matrixWorld);
-		vB.applyMatrix4(object.matrixWorld);
-		vC.applyMatrix4(object.matrixWorld);
+		const bary = new THREE.Vector3();
+		THREE.Triangle.getBarycoord(firstHit.point, v0, v1, v2, bary);
 
-		const distA = vA.distanceTo(point);
-		const distB = vB.distanceTo(point);
-		const distC = vC.distanceTo(point);
+		const active = meshes[activeMesh].valueSets;
 
-		let closestVertex = a;
-		let minDist = distA;
+		const unipolar =
+			active.unipolar[face.a] * bary.x +
+			active.unipolar[face.b] * bary.y +
+			active.unipolar[face.c] * bary.z;
 
-		if (distB < minDist) {
-			closestVertex = b;
-			minDist = distB;
+		const bipolar =
+			active.bipolar[face.a] * bary.x +
+			active.bipolar[face.b] * bary.y +
+			active.bipolar[face.c] * bary.z;
+
+		const lat =
+			active.lat[face.a] * bary.x +
+			active.lat[face.b] * bary.y +
+			active.lat[face.c] * bary.z;
+
+		let intValuesIndex = face.a;
+		if (bary.y > bary.x && bary.y > bary.z) {
+			intValuesIndex = face.b;
+		} else if (bary.z > bary.x && bary.z > bary.y) {
+			intValuesIndex = face.c;
 		}
-		if (distC < minDist) {
-			closestVertex = c;
-		}
+
+		const eml = active.eml[intValuesIndex];
+		const exteml = active.exteml[intValuesIndex];
+		const scar = active.scar[intValuesIndex];
+		const groupid = active.groupid[intValuesIndex];
 
 		document.getElementById("vertex-info").innerHTML =
 			"<div class='vertex-info'>Unipolar: " +
-			meshes[activeMesh].valueSets.unipolar[closestVertex].toFixed(3) +
+			unipolar.toFixed(3) +
 			"</br>Bipolar: " +
-			meshes[activeMesh].valueSets.bipolar[closestVertex].toFixed(3) +
+			bipolar.toFixed(3) +
 			"</br>LAT: " +
-			meshes[activeMesh].valueSets.lat[closestVertex].toFixed(3) +
+			lat.toFixed(3) +
 			"</br>EML: " +
-			meshes[activeMesh].valueSets.eml[closestVertex] +
+			eml +
 			"</br>ExtEML: " +
-			meshes[activeMesh].valueSets.exteml[closestVertex] +
+			exteml +
 			"</br>SCAR: " +
-			meshes[activeMesh].valueSets.scar[closestVertex] +
+			scar +
 			"</br>groupID: " +
-			meshes[activeMesh].valueSets.groupid[closestVertex] +
+			groupid +
 			"</div>";
 	} else {
 		document.getElementById("vertex-info").innerHTML = "";

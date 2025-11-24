@@ -22,17 +22,26 @@ vec3 TurboColormap(in float x) {
 
 void main() {
 
-	vec3 nullColor = vec3(0.45, 0.45, 0.45);
+	vec3 nullColor = vec3(0.45, 0.45, 0.45); // grey
 
-	vec3 color = TurboColormap(vNormalized);
-
-	/*
+	/* checker
 		vec2 checker = floor(gl_FragCoord.xy / 3.0);
 		float pattern = mod(checker.x + checker.y, 2.0);
 		vec3 nullColor = mix(vec3(0.4), vec3(0.6), pattern);
 	*/
 
+	vec3 color = TurboColormap(vNormalized);
+
 	vec3 finalColor = mix(color, nullColor, vIsNull);
 
 	gl_FragColor = vec4(finalColor, 1.0);
+
+	/* deletes fragment
+	if (vIsNull > 0.5) {
+		discard;
+	}
+
+	vec3 color = TurboColormap(vNormalized);
+	gl_FragColor = vec4(color, 1.0);
+	*/
 }
