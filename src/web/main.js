@@ -161,11 +161,10 @@ function processFile(file) {
 				bipolar: mesh.Float32ArrayOfBipolar(),
 				lat: mesh.Float32ArrayOfLAT(),
 
-				// todo: convert from Int32Array to Float32Array
-				groupid: mesh.Int32ArrayOfGroupID(),
-				eml: mesh.Int32ArrayOfEML(),
-				exteml: mesh.Int32ArrayOfExtEML(),
-				scar: mesh.Int32ArrayOfSCAR(),
+				groupid: mesh.Float32ArrayOfGroupID(),
+				eml: mesh.Float32ArrayOfEML(),
+				exteml: mesh.Float32ArrayOfExtEML(),
+				scar: mesh.Float32ArrayOfSCAR(),
 			};
 
 			const geometry = new THREE.BufferGeometry();

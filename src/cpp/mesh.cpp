@@ -324,75 +324,79 @@ emscripten::val Mesh::Float32ArrayOfLAT() const {
 	return float32Array;
 }
 
-emscripten::val Mesh::Int32ArrayOfEML() const {
-	std::vector<int> valuesArray;
+emscripten::val Mesh::Float32ArrayOfEML() const {
+	std::vector<float> valuesArray;
 	valuesArray.reserve(vertices.size());
 
 	for (const auto &v : vertices) {
-		valuesArray.push_back(v.EML);
+		valuesArray.push_back(static_cast<float>(v.EML));
 	}
 
-	emscripten::val int32Array =
-		emscripten::val::global("Int32Array").new_(valuesArray.size());
+	emscripten::val float32Array =
+		emscripten::val::global("Float32Array").new_(valuesArray.size());
 	emscripten::val memory = emscripten::val::module_property("HEAPF32");
 
-	int32Array.call<void>("set", emscripten::val(emscripten::typed_memory_view(
-									 valuesArray.size(), valuesArray.data())));
+	float32Array.call<void>("set",
+							emscripten::val(emscripten::typed_memory_view(
+								valuesArray.size(), valuesArray.data())));
 
-	return int32Array;
+	return float32Array;
 }
 
-emscripten::val Mesh::Int32ArrayOfExtEML() const {
-	std::vector<int> valuesArray;
+emscripten::val Mesh::Float32ArrayOfExtEML() const {
+	std::vector<float> valuesArray;
 	valuesArray.reserve(vertices.size());
 
 	for (const auto &v : vertices) {
-		valuesArray.push_back(v.ExtEML);
+		valuesArray.push_back(static_cast<float>(v.ExtEML));
 	}
 
-	emscripten::val int32Array =
-		emscripten::val::global("Int32Array").new_(valuesArray.size());
+	emscripten::val float32Array =
+		emscripten::val::global("Float32Array").new_(valuesArray.size());
 	emscripten::val memory = emscripten::val::module_property("HEAPF32");
 
-	int32Array.call<void>("set", emscripten::val(emscripten::typed_memory_view(
-									 valuesArray.size(), valuesArray.data())));
+	float32Array.call<void>("set",
+							emscripten::val(emscripten::typed_memory_view(
+								valuesArray.size(), valuesArray.data())));
 
-	return int32Array;
+	return float32Array;
 }
 
-emscripten::val Mesh::Int32ArrayOfSCAR() const {
-	std::vector<int> valuesArray;
+emscripten::val Mesh::Float32ArrayOfSCAR() const {
+	std::vector<float> valuesArray;
 	valuesArray.reserve(vertices.size());
 
 	for (const auto &v : vertices) {
-		valuesArray.push_back(v.SCAR);
+		valuesArray.push_back(static_cast<float>(v.SCAR));
 	}
 
-	emscripten::val int32Array =
-		emscripten::val::global("Int32Array").new_(valuesArray.size());
+	emscripten::val float32Array =
+		emscripten::val::global("Float32Array").new_(valuesArray.size());
 	emscripten::val memory = emscripten::val::module_property("HEAPF32");
 
-	int32Array.call<void>("set", emscripten::val(emscripten::typed_memory_view(
-									 valuesArray.size(), valuesArray.data())));
+	float32Array.call<void>("set",
+							emscripten::val(emscripten::typed_memory_view(
+								valuesArray.size(), valuesArray.data())));
 
-	return int32Array;
+	return float32Array;
 }
-emscripten::val Mesh::Int32ArrayOfGroupID() const {
-	std::vector<int> valuesArray;
+emscripten::val Mesh::Float32ArrayOfGroupID() const {
+	std::vector<float> valuesArray;
 	valuesArray.reserve(vertices.size());
 
 	for (const auto &v : vertices) {
-		valuesArray.push_back(v.groupID);
+		valuesArray.push_back(static_cast<float>(v.groupID));
 	}
 
-	emscripten::val int32Array =
-		emscripten::val::global("Int32Array").new_(valuesArray.size());
+	emscripten::val float32Array =
+		emscripten::val::global("Float32Array").new_(valuesArray.size());
 	emscripten::val memory = emscripten::val::module_property("HEAPF32");
 
-	int32Array.call<void>("set", emscripten::val(emscripten::typed_memory_view(
-									 valuesArray.size(), valuesArray.data())));
+	float32Array.call<void>("set",
+							emscripten::val(emscripten::typed_memory_view(
+								valuesArray.size(), valuesArray.data())));
 
-	return int32Array;
+	return float32Array;
 }
 
 emscripten::val Mesh::Float32ArrayOfGroupIDTurboColors() const {

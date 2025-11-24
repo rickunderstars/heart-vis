@@ -44,14 +44,14 @@ class Mesh {
 
 	emscripten::val Uint32ArrayOfTriangles() const;
 
-	emscripten::val Int32ArrayOfGroupID() const;
+	emscripten::val Float32ArrayOfGroupID() const;
 
 	emscripten::val Float32ArrayOfUnipolar() const;
 	emscripten::val Float32ArrayOfBipolar() const;
 	emscripten::val Float32ArrayOfLAT() const;
-	emscripten::val Int32ArrayOfEML() const;
-	emscripten::val Int32ArrayOfExtEML() const;
-	emscripten::val Int32ArrayOfSCAR() const;
+	emscripten::val Float32ArrayOfEML() const;
+	emscripten::val Float32ArrayOfExtEML() const;
+	emscripten::val Float32ArrayOfSCAR() const;
 
 	emscripten::val Float32ArrayOfGroupIDTurboColors() const;
 	emscripten::val Float32ArrayOfTurboColors(std::string quality) const;
