@@ -1,5 +1,7 @@
 #pragma once
 
+#include "globals.hpp"
+
 #include <glm/detail/qualifier.hpp>
 #include <glm/ext/vector_float3.hpp>
 #include <glm/vec3.hpp>
@@ -9,14 +11,14 @@ class Vertex {
   public:
 	glm::vec3 pos = glm::vec3();
 
-	int groupID = -666;
+	int groupID = NULL_VALUE;
 
-	float unipolar = -666;
-	float bipolar = -666;
-	float LAT = -666;
-	int EML = -666;
-	int ExtEML = -666;
-	int SCAR = -666;
+	float unipolar = NULL_VALUE;
+	float bipolar = NULL_VALUE;
+	float LAT = NULL_VALUE;
+	int EML = NULL_VALUE;
+	int ExtEML = NULL_VALUE;
+	int SCAR = NULL_VALUE;
 
 	Vertex();
 	Vertex(glm::vec3 &pos);

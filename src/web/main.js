@@ -69,7 +69,15 @@ scene.add(new THREE.AmbientLight(0xffffff, 3));
 /////// model upload ///////
 
 const meshes = [];
-const qualities = ["unipolar", "bipolar", "lat", "eml", "exteml", "scar"];
+const qualities = [
+	"unipolar",
+	"bipolar",
+	"lat",
+	"eml",
+	"exteml",
+	"scar",
+	"groupid",
+];
 let activeMesh = -1;
 let activeQuality = document.querySelector(
 	'.qualities-container input[name="quality"]:checked'
@@ -78,9 +86,9 @@ let activeQuality = document.querySelector(
 const rawMeshElement = document.getElementById("raw-mesh");
 const fileElement = document.getElementById("filename");
 
-rawMeshElement.addEventListener("change", function (event) {
-	if (event.target.files.length > 0) {
-		const file = event.target.files[0];
+rawMeshElement.addEventListener("change", function (e) {
+	if (e.target.files.length > 0) {
+		const file = e.target.files[0];
 		processFile(file);
 	}
 });
@@ -160,12 +168,10 @@ function processFile(file) {
 				unipolar: mesh.Float32ArrayOfUnipolar(),
 				bipolar: mesh.Float32ArrayOfBipolar(),
 				lat: mesh.Float32ArrayOfLAT(),
-
-				// todo: convert from Int32Array to Float32Array
-				groupid: mesh.Int32ArrayOfGroupID(),
-				eml: mesh.Int32ArrayOfEML(),
-				exteml: mesh.Int32ArrayOfExtEML(),
-				scar: mesh.Int32ArrayOfSCAR(),
+				groupid: mesh.Float32ArrayOfGroupID(),
+				eml: mesh.Float32ArrayOfEML(),
+				exteml: mesh.Float32ArrayOfExtEML(),
+				scar: mesh.Float32ArrayOfSCAR(),
 			};
 
 			const geometry = new THREE.BufferGeometry();
@@ -181,16 +187,21 @@ function processFile(file) {
 				new THREE.BufferAttribute(valueSets[activeQuality], 1)
 			);
 
+			const [absMin, min] = get2Min(valueSets[activeQuality]);
 			const material = new THREE.ShaderMaterial({
 				uniforms: {
+					uOnlyTwo: {
+						value: absMin - min == 0 ? 1.0 : 0.0,
+					},
+					uAbsMin: {
+						value: absMin,
+					},
 					uMin: {
-						value: getMin(valueSets[activeQuality]),
+						value: min,
 					},
 					uMax: {
 						value: getMax(valueSets[activeQuality]),
 					},
-					uColorLow: { value: new THREE.Color(0x0000ff) },
-					uColorHigh: { value: new THREE.Color(0x00ff00) },
 				},
 				vertexShader: vShader,
 				fragmentShader: fShader,
@@ -270,10 +281,10 @@ function onViewportResize() {
 	renderer.render(scene, camera);
 }
 
-function onMouseMove(event) {
+function onMouseMove(e) {
 	const rect = renderer.domElement.getBoundingClientRect();
-	mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
-	mouse.y = -(((event.clientY - rect.top) / rect.height) * 2 - 1);
+	mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+	mouse.y = -(((e.clientY - rect.top) / rect.height) * 2 - 1);
 	vertexPicker();
 }
 
@@ -342,14 +353,9 @@ function vertexPicker() {
 }
 
 function getMax(array) {
-	const len = array.length;
-	if (len === 0) {
-		return -Infinity;
-	}
+	let max = -Infinity;
 
-	let max = array[0];
-
-	for (let i = 1; i < len; i++) {
+	for (let i = 0; i < array.length; i++) {
 		if (array[i] > max) {
 			max = array[i];
 		}
@@ -357,43 +363,66 @@ function getMax(array) {
 	return max;
 }
 
-function getMin(array) {
-	const len = array.length;
-	if (len === 0) {
-		return Infinity;
-	}
+function get2Min(array) {
+	let absMin = Infinity;
+	let min = Infinity;
 
-	let min = array[0];
+	const valSet = new Set(array);
+	const moreThan2 = valSet.size > 2;
 
-	for (let i = 1; i < len; i++) {
-		if (array[i] < min) {
+	for (let i = 0; i < array.length; i++) {
+		if (array[i] < absMin) {
+			min = absMin;
+			absMin = array[i];
+		} else if (array[i] < min && array[i] > absMin) {
 			min = array[i];
 		}
 	}
-	return min;
+
+	if (!moreThan2) {
+		min = absMin;
+	}
+
+	return [absMin, min];
 }
 
 function setData(meshIndex, dataSet) {
 	if (meshes[meshIndex]) {
 		const mesh = meshes[meshIndex].mesh;
 		const valueSets = meshes[meshIndex].valueSets;
+		const [absMin, min] = get2Min(valueSets[dataSet]);
+
+		mesh.material.uniforms.uOnlyTwo.value = absMin - min == 0 ? 1.0 : 0.0;
+		mesh.material.uniforms.uAbsMin.value = absMin;
+		mesh.material.uniforms.uMin.value = min;
+		mesh.material.uniforms.uMax.value = getMax(valueSets[dataSet]);
+
+		mesh.geometry.deleteAttribute("value");
 		mesh.geometry.setAttribute(
 			"value",
 			new THREE.BufferAttribute(valueSets[dataSet], 1)
 		);
+
 		renderer.render(scene, camera);
 	}
 }
 
-document.getElementById("camera-reset").addEventListener("click", () => {
-	const box = new THREE.Box3().setFromObject(meshes[activeMesh].mesh);
-	const boundingSphere = new THREE.Sphere();
-	box.getBoundingSphere(boundingSphere);
-	const center = boundingSphere.center;
-	const radius = boundingSphere.radius;
+function cameraReset() {
+	const center = meshes[activeMesh].center;
+	const radius = meshes[activeMesh].radius;
 	camera.position.set(center.x, center.y, center.z + radius * 2.5);
 	controls.target.set(center.x, center.y, center.z);
 	controls.update();
+}
+
+document.getElementById("camera-reset").addEventListener("click", () => {
+	cameraReset();
+});
+
+document.addEventListener("keydown", (k) => {
+	if (k.key === "r") {
+		cameraReset();
+	}
 });
 
 document

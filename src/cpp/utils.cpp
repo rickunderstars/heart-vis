@@ -1,5 +1,6 @@
 #include "utils.hpp"
-#include "turbo_colormap.hpp"
+#include "mesh.hpp"
+#include "triangle.hpp"
 
 #include <boost/algorithm/string.hpp>
 #include <fstream>
@@ -100,8 +101,6 @@ Mesh sectionsHandler(std::stringstream &file) {
 	verticesAttributesSection(file, verts);
 
 	Mesh heart(verts, tris);
-
-	heart.calcQualitiesMinMax();
 
 	return heart;
 }
@@ -309,28 +308,4 @@ Mesh importMesh(std::string fileString) {
 
 	Mesh h = sectionsHandler(file);
 	return h;
-}
-
-std::array<float, 3> scalarToTurbo(float normalizedScalar) {
-	if (normalizedScalar == 0) {
-		std::array<float, 3> turbo = {0.5, 0.5, 0.5};
-		return turbo;
-	} else if (normalizedScalar > 1) {
-		std::array<float, 3> turbo = {1, 1, 1};
-		return turbo;
-	} else if (normalizedScalar < 0) {
-		std::array<float, 3> turbo = {0, 0, 0};
-		return turbo;
-	}
-	float s256 = normalizedScalar * 255.0;
-	int sx = s256;
-	int dx = s256 + 1 <= 255.0 ? s256 + 1 : 255;
-	float t = s256 - sx;
-
-	float r = turbo_srgb_floats[sx][0] * (1 - t) + turbo_srgb_floats[dx][0] * t;
-	float g = turbo_srgb_floats[sx][1] * (1 - t) + turbo_srgb_floats[dx][1] * t;
-	float b = turbo_srgb_floats[sx][2] * (1 - t) + turbo_srgb_floats[dx][2] * t;
-
-	std::array<float, 3> turbo = {r, g, b};
-	return turbo;
 }

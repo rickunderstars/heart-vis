@@ -107,126 +107,6 @@ void Mesh::fixNMEdges() {
 	triangles = newTris;
 }
 
-Mesh Mesh::simpleShape() {
-	std::vector<Triangle> tri(2);
-	tri.at(0) = Triangle(0, 1, 2);
-	tri.at(1) = Triangle(0, 2, 3);
-
-	std::vector<Vertex> vert(4);
-	glm::vec3 v0(0, 0, 0);
-	glm::vec3 v1(0, 2, 0);
-	glm::vec3 v2(2, 2, 0);
-	glm::vec3 v3(2, 0, 0);
-	vert.at(0) = Vertex(v0);
-	vert.at(1) = Vertex(v1);
-	vert.at(2) = Vertex(v2);
-	vert.at(3) = Vertex(v3);
-
-	return Mesh(vert, tri);
-}
-
-void Mesh::calcQualitiesMinMax() {
-	maxUnipolar = vertices.at(0).unipolar;
-	maxBipolar = vertices.at(0).bipolar;
-	maxLAT = vertices.at(0).LAT;
-	maxEML = vertices.at(0).EML;
-	maxExtEML = vertices.at(0).ExtEML;
-	maxSCAR = vertices.at(0).SCAR;
-
-	minUnipolar = vertices.at(0).unipolar;
-	minBipolar = vertices.at(0).bipolar;
-	minLAT = vertices.at(0).LAT;
-	minEML = vertices.at(0).EML;
-	minExtEML = vertices.at(0).ExtEML;
-	minSCAR = vertices.at(0).SCAR;
-	for (int i = 1; i < vertices.size(); i++) {
-		if (vertices.at(i).unipolar > maxUnipolar &&
-			vertices.at(i).unipolar != 0) {
-			maxUnipolar = vertices.at(i).unipolar;
-		}
-		if (vertices.at(i).bipolar > maxBipolar &&
-			vertices.at(i).bipolar != 0) {
-			maxBipolar = vertices.at(i).bipolar;
-		}
-		if (vertices.at(i).LAT > maxLAT && vertices.at(i).LAT != 0) {
-			maxLAT = vertices.at(i).LAT;
-		}
-		if (vertices.at(i).EML > maxEML && vertices.at(i).EML != 0) {
-			maxEML = vertices.at(i).EML;
-		}
-		if (vertices.at(i).ExtEML > maxExtEML && vertices.at(i).ExtEML != 0) {
-			maxExtEML = vertices.at(i).ExtEML;
-		}
-		if (vertices.at(i).SCAR > maxSCAR && vertices.at(i).SCAR != 0) {
-			maxSCAR = vertices.at(i).SCAR;
-		}
-
-		if (vertices.at(i).unipolar < minUnipolar &&
-			vertices.at(i).unipolar != 0) {
-			minUnipolar = vertices.at(i).unipolar;
-		}
-		if (vertices.at(i).bipolar < minBipolar &&
-			vertices.at(i).bipolar != 0) {
-			minBipolar = vertices.at(i).bipolar;
-		}
-		if (vertices.at(i).LAT < minLAT && vertices.at(i).LAT != 0) {
-			minLAT = vertices.at(i).LAT;
-		}
-		if (vertices.at(i).EML < minEML && vertices.at(i).EML != 0) {
-			minEML = vertices.at(i).EML;
-		}
-		if (vertices.at(i).ExtEML < minExtEML && vertices.at(i).ExtEML != 0) {
-			minExtEML = vertices.at(i).ExtEML;
-		}
-		if (vertices.at(i).SCAR < minSCAR && vertices.at(i).SCAR != 0) {
-			minSCAR = vertices.at(i).SCAR;
-		}
-	}
-}
-
-float Mesh::normalizedVertexQuality(int vIndex, std::string quality) const {
-	if (!checkQuality(quality)) {
-		throw std::runtime_error("'" + quality + "' is not an attribute");
-	}
-	float delta;
-	float min;
-	float max;
-
-	if (quality == "unipolar") {
-		max = maxUnipolar;
-		min = minUnipolar;
-		delta = max - min != 0 ? max - min : 1;
-		return (vertices.at(vIndex).unipolar - min) / delta;
-	} else if (quality == "bipolar") {
-		max = maxBipolar;
-		min = minBipolar;
-		delta = max - min != 0 ? max - min : 1;
-		return (vertices.at(vIndex).bipolar - min) / delta;
-	} else if (quality == "lat") {
-		max = maxLAT;
-		min = minLAT;
-		delta = max - min != 0 ? max - min : 1;
-		return (vertices.at(vIndex).LAT - min) / delta;
-	} else if (quality == "eml") {
-		max = maxEML;
-		min = minEML;
-		delta = max - min != 0 ? max - min : 1;
-		return (vertices.at(vIndex).EML - min) / delta;
-	} else if (quality == "exteml") {
-		max = maxExtEML;
-		min = minExtEML;
-		delta = max - min != 0 ? max - min : 1;
-		return (vertices.at(vIndex).ExtEML - min) / delta;
-	} else if (quality == "scar") {
-		max = maxSCAR;
-		min = minSCAR;
-		delta = max - min != 0 ? max - min : 1;
-		return (vertices.at(vIndex).SCAR - min) / delta;
-	}
-
-	return 0;
-}
-
 emscripten::val Mesh::Float32ArrayOfVertices() const {
 	std::vector<float> positions;
 	positions.reserve(vertices.size() * 3);
@@ -324,138 +204,77 @@ emscripten::val Mesh::Float32ArrayOfLAT() const {
 	return float32Array;
 }
 
-emscripten::val Mesh::Int32ArrayOfEML() const {
-	std::vector<int> valuesArray;
+emscripten::val Mesh::Float32ArrayOfEML() const {
+	std::vector<float> valuesArray;
 	valuesArray.reserve(vertices.size());
 
 	for (const auto &v : vertices) {
-		valuesArray.push_back(v.EML);
-	}
-
-	emscripten::val int32Array =
-		emscripten::val::global("Int32Array").new_(valuesArray.size());
-	emscripten::val memory = emscripten::val::module_property("HEAPF32");
-
-	int32Array.call<void>("set", emscripten::val(emscripten::typed_memory_view(
-									 valuesArray.size(), valuesArray.data())));
-
-	return int32Array;
-}
-
-emscripten::val Mesh::Int32ArrayOfExtEML() const {
-	std::vector<int> valuesArray;
-	valuesArray.reserve(vertices.size());
-
-	for (const auto &v : vertices) {
-		valuesArray.push_back(v.ExtEML);
-	}
-
-	emscripten::val int32Array =
-		emscripten::val::global("Int32Array").new_(valuesArray.size());
-	emscripten::val memory = emscripten::val::module_property("HEAPF32");
-
-	int32Array.call<void>("set", emscripten::val(emscripten::typed_memory_view(
-									 valuesArray.size(), valuesArray.data())));
-
-	return int32Array;
-}
-
-emscripten::val Mesh::Int32ArrayOfSCAR() const {
-	std::vector<int> valuesArray;
-	valuesArray.reserve(vertices.size());
-
-	for (const auto &v : vertices) {
-		valuesArray.push_back(v.SCAR);
-	}
-
-	emscripten::val int32Array =
-		emscripten::val::global("Int32Array").new_(valuesArray.size());
-	emscripten::val memory = emscripten::val::module_property("HEAPF32");
-
-	int32Array.call<void>("set", emscripten::val(emscripten::typed_memory_view(
-									 valuesArray.size(), valuesArray.data())));
-
-	return int32Array;
-}
-emscripten::val Mesh::Int32ArrayOfGroupID() const {
-	std::vector<int> valuesArray;
-	valuesArray.reserve(vertices.size());
-
-	for (const auto &v : vertices) {
-		valuesArray.push_back(v.groupID);
-	}
-
-	emscripten::val int32Array =
-		emscripten::val::global("Int32Array").new_(valuesArray.size());
-	emscripten::val memory = emscripten::val::module_property("HEAPF32");
-
-	int32Array.call<void>("set", emscripten::val(emscripten::typed_memory_view(
-									 valuesArray.size(), valuesArray.data())));
-
-	return int32Array;
-}
-
-emscripten::val Mesh::Float32ArrayOfGroupIDTurboColors() const {
-	std::set<int> uniqueIDs;
-	for (const auto &v : vertices) {
-		uniqueIDs.insert(v.groupID);
-	}
-
-	std::map<int, int> idToRank;
-	int rank = 0;
-	for (int id : uniqueIDs) {
-		idToRank[id] = rank;
-		rank++;
-	}
-
-	std::vector<float> turboColors;
-
-	turboColors.reserve(vertices.size() * 3);
-
-	float totalGroups = static_cast<float>(uniqueIDs.size());
-
-	for (const auto &v : vertices) {
-		int rank = idToRank[v.groupID];
-		float normalizedValue = (rank + 1.0f) / totalGroups;
-		std::array<float, 3> t = scalarToTurbo(normalizedValue);
-		turboColors.push_back(t.at(0));
-		turboColors.push_back(t.at(1));
-		turboColors.push_back(t.at(2));
+		valuesArray.push_back(static_cast<float>(v.EML));
 	}
 
 	emscripten::val float32Array =
-		emscripten::val::global("Float32Array").new_(turboColors.size());
+		emscripten::val::global("Float32Array").new_(valuesArray.size());
+	emscripten::val memory = emscripten::val::module_property("HEAPF32");
 
 	float32Array.call<void>("set",
 							emscripten::val(emscripten::typed_memory_view(
-								turboColors.size(), turboColors.data())));
+								valuesArray.size(), valuesArray.data())));
 
 	return float32Array;
 }
 
-emscripten::val Mesh::Float32ArrayOfTurboColors(std::string quality) const {
-	if (!checkQuality(quality)) {
-		throw std::runtime_error("'" + quality + "' is not an attribute");
-	}
+emscripten::val Mesh::Float32ArrayOfExtEML() const {
+	std::vector<float> valuesArray;
+	valuesArray.reserve(vertices.size());
 
-	std::vector<float> turboColors;
-	turboColors.reserve(vertices.size() * 3);
-
-	for (int i = 0; i < vertices.size(); i++) {
-		std::array<float, 3> n =
-			scalarToTurbo(normalizedVertexQuality(i, quality));
-		turboColors.push_back(n.at(0));
-		turboColors.push_back(n.at(1));
-		turboColors.push_back(n.at(2));
+	for (const auto &v : vertices) {
+		valuesArray.push_back(static_cast<float>(v.ExtEML));
 	}
 
 	emscripten::val float32Array =
-		emscripten::val::global("Float32Array").new_(turboColors.size());
+		emscripten::val::global("Float32Array").new_(valuesArray.size());
 	emscripten::val memory = emscripten::val::module_property("HEAPF32");
 
 	float32Array.call<void>("set",
 							emscripten::val(emscripten::typed_memory_view(
-								turboColors.size(), turboColors.data())));
+								valuesArray.size(), valuesArray.data())));
+
+	return float32Array;
+}
+
+emscripten::val Mesh::Float32ArrayOfSCAR() const {
+	std::vector<float> valuesArray;
+	valuesArray.reserve(vertices.size());
+
+	for (const auto &v : vertices) {
+		valuesArray.push_back(static_cast<float>(v.SCAR));
+	}
+
+	emscripten::val float32Array =
+		emscripten::val::global("Float32Array").new_(valuesArray.size());
+	emscripten::val memory = emscripten::val::module_property("HEAPF32");
+
+	float32Array.call<void>("set",
+							emscripten::val(emscripten::typed_memory_view(
+								valuesArray.size(), valuesArray.data())));
+
+	return float32Array;
+}
+emscripten::val Mesh::Float32ArrayOfGroupID() const {
+	std::vector<float> valuesArray;
+	valuesArray.reserve(vertices.size());
+
+	for (const auto &v : vertices) {
+		valuesArray.push_back(static_cast<float>(v.groupID));
+	}
+
+	emscripten::val float32Array =
+		emscripten::val::global("Float32Array").new_(valuesArray.size());
+	emscripten::val memory = emscripten::val::module_property("HEAPF32");
+
+	float32Array.call<void>("set",
+							emscripten::val(emscripten::typed_memory_view(
+								valuesArray.size(), valuesArray.data())));
 
 	return float32Array;
 }

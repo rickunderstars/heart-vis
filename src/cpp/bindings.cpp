@@ -1,3 +1,4 @@
+#include "globals.hpp"
 #include "mesh.hpp"
 #include "triangle.hpp"
 #include "utils.hpp"
@@ -8,6 +9,8 @@
 #include <vector>
 
 EMSCRIPTEN_BINDINGS(heart_module) {
+
+	emscripten::constant("NULL_VALUE", NULL_VALUE);
 
 	emscripten::function("importMesh", &importMesh);
 
@@ -39,30 +42,14 @@ EMSCRIPTEN_BINDINGS(heart_module) {
 		.property("triangles", &Mesh::triangles)
 		.function("triangleFix", &Mesh::triangleFix)
 		.function("fixNMEdges", &Mesh::fixNMEdges)
-		.class_function("simpleShape", &Mesh::simpleShape)
 		.function("Float32ArrayOfVertices", &Mesh::Float32ArrayOfVertices)
 		.function("Uint32ArrayOfTriangles", &Mesh::Uint32ArrayOfTriangles)
-		.function("Float32ArrayOfTurboColors", &Mesh::Float32ArrayOfTurboColors)
-		.function("Int32ArrayOfGroupID", &Mesh::Int32ArrayOfGroupID)
-		.function("Float32ArrayOfGroupIDTurboColors",
-				  &Mesh::Float32ArrayOfGroupIDTurboColors)
+		.function("Float32ArrayOfGroupID", &Mesh::Float32ArrayOfGroupID)
 		.function("Float32ArrayOfUnipolar", &Mesh::Float32ArrayOfUnipolar)
 		.function("Float32ArrayOfBipolar", &Mesh::Float32ArrayOfBipolar)
 		.function("Float32ArrayOfLAT", &Mesh::Float32ArrayOfLAT)
-		.function("Int32ArrayOfEML", &Mesh::Int32ArrayOfEML)
-		.function("Int32ArrayOfExtEML", &Mesh::Int32ArrayOfExtEML)
-		.function("Int32ArrayOfSCAR", &Mesh::Int32ArrayOfSCAR)
-		.property("maxUnipolar", &Mesh::maxUnipolar)
-		.property("maxBipolar", &Mesh::maxBipolar)
-		.property("maxLAT", &Mesh::maxLAT)
-		.property("maxEML", &Mesh::maxEML)
-		.property("maxExtEML", &Mesh::maxExtEML)
-		.property("maxSCAR", &Mesh::maxSCAR)
-		.property("minUnipolar", &Mesh::minUnipolar)
-		.property("minBipolar", &Mesh::minBipolar)
-		.property("minLAT", &Mesh::minLAT)
-		.property("minEML", &Mesh::minEML)
-		.property("minExtEML", &Mesh::minExtEML)
-		.property("minSCAR", &Mesh::minSCAR);
+		.function("Float32ArrayOfEML", &Mesh::Float32ArrayOfEML)
+		.function("Float32ArrayOfExtEML", &Mesh::Float32ArrayOfExtEML)
+		.function("Float32ArrayOfSCAR", &Mesh::Float32ArrayOfSCAR);
 	;
 }

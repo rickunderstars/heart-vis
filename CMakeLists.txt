@@ -6,17 +6,16 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 project(heart VERSION 1.0)
 
 set(SRC
+    src/cpp/globals.hpp
     src/cpp/mesh.hpp
     src/cpp/utils.hpp
     src/cpp/vertex.hpp
     src/cpp/triangle.hpp
-    src/cpp/turbo_colormap.hpp
     src/cpp/main.cpp
     src/cpp/mesh.cpp
     src/cpp/utils.cpp
     src/cpp/triangle.cpp
     src/cpp/vertex.cpp
-    src/cpp/turbo_colormap.cpp
     src/cpp/bindings.cpp
 )
 
