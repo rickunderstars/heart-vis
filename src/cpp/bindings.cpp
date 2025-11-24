@@ -1,3 +1,4 @@
+#include "globals.hpp"
 #include "mesh.hpp"
 #include "triangle.hpp"
 #include "utils.hpp"
@@ -8,6 +9,8 @@
 #include <vector>
 
 EMSCRIPTEN_BINDINGS(heart_module) {
+
+	emscripten::constant("NULL_VALUE", NULL_VALUE);
 
 	emscripten::function("importMesh", &importMesh);
 

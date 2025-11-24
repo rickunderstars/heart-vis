@@ -2566,6 +2566,16 @@ async function createWasm() {
     };
 
   
+  var __embind_register_constant = (name, type, value) => {
+      name = AsciiToString(name);
+      whenDependentTypesAreResolved([], [type], (type) => {
+        type = type[0];
+        Module[name] = type.fromWireType(value);
+        return [];
+      });
+    };
+
+  
   var emval_freelist = [];
   
   var emval_handles = [0,1,,1,null,1,true,1,false,1];
@@ -6940,6 +6950,8 @@ var wasmImports = {
   _embind_register_class_function: __embind_register_class_function,
   /** @export */
   _embind_register_class_property: __embind_register_class_property,
+  /** @export */
+  _embind_register_constant: __embind_register_constant,
   /** @export */
   _embind_register_emval: __embind_register_emval,
   /** @export */
