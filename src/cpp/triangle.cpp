@@ -1,7 +1,7 @@
 #include "triangle.hpp"
 #include <sstream>
 
-Triangle::Triangle() : vertices{0, 0, 0}, groupID(-666) {}
+Triangle::Triangle() : vertices{0, 0, 0}, groupID(NULL_VALUE) {}
 Triangle::Triangle(std::array<int, 3> &vertices) { this->vertices = vertices; }
 Triangle::Triangle(int v0, int v1, int v2) {
 	vertices.at(0) = v0;

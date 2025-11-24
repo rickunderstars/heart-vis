@@ -2196,6 +2196,18 @@ async function createWasm() {
       );
     };
 
+  var heap32VectorToArray = (count, firstElement) => {
+      var array = [];
+      for (var i = 0; i < count; i++) {
+        // TODO(https://github.com/emscripten-core/emscripten/issues/17310):
+        // Find a way to hoist the `>> 2` or `>> 3` out of this loop.
+        array.push(HEAPU32[(((firstElement)+(i * 4))>>2)]);
+      }
+      return array;
+    };
+  
+  
+  
   
   
   
@@ -2349,97 +2361,6 @@ async function createWasm() {
       var invokerFn = invokerFactory(...closureArgs);
       return createNamedFunction(humanName, invokerFn);
     }
-  
-  
-  var heap32VectorToArray = (count, firstElement) => {
-      var array = [];
-      for (var i = 0; i < count; i++) {
-        // TODO(https://github.com/emscripten-core/emscripten/issues/17310):
-        // Find a way to hoist the `>> 2` or `>> 3` out of this loop.
-        array.push(HEAPU32[(((firstElement)+(i * 4))>>2)]);
-      }
-      return array;
-    };
-  
-  
-  
-  
-  
-  var getFunctionName = (signature) => {
-      signature = signature.trim();
-      const argsIndex = signature.indexOf("(");
-      if (argsIndex === -1) return signature;
-      assert(signature.endsWith(")"), "Parentheses for argument names should match.");
-      return signature.slice(0, argsIndex);
-    };
-  var __embind_register_class_class_function = (rawClassType,
-                                            methodName,
-                                            argCount,
-                                            rawArgTypesAddr,
-                                            invokerSignature,
-                                            rawInvoker,
-                                            fn,
-                                            isAsync,
-                                            isNonnullReturn) => {
-      var rawArgTypes = heap32VectorToArray(argCount, rawArgTypesAddr);
-      methodName = AsciiToString(methodName);
-      methodName = getFunctionName(methodName);
-      rawInvoker = embind__requireFunction(invokerSignature, rawInvoker, isAsync);
-      whenDependentTypesAreResolved([], [rawClassType], (classType) => {
-        classType = classType[0];
-        var humanName = `${classType.name}.${methodName}`;
-  
-        function unboundTypesHandler() {
-          throwUnboundTypeError(`Cannot call ${humanName} due to unbound types`, rawArgTypes);
-        }
-  
-        if (methodName.startsWith('@@')) {
-          methodName = Symbol[methodName.substring(2)];
-        }
-  
-        var proto = classType.registeredClass.constructor;
-        if (undefined === proto[methodName]) {
-          // This is the first function to be registered with this name.
-          unboundTypesHandler.argCount = argCount-1;
-          proto[methodName] = unboundTypesHandler;
-        } else {
-          // There was an existing function with the same name registered. Set up
-          // a function overload routing table.
-          ensureOverloadTable(proto, methodName, humanName);
-          proto[methodName].overloadTable[argCount-1] = unboundTypesHandler;
-        }
-  
-        whenDependentTypesAreResolved([], rawArgTypes, (argTypes) => {
-          // Replace the initial unbound-types-handler stub with the proper
-          // function. If multiple overloads are registered, the function handlers
-          // go into an overload table.
-          var invokerArgsArray = [argTypes[0] /* return value */, null /* no class 'this'*/].concat(argTypes.slice(1) /* actual params */);
-          var func = craftInvokerFunction(humanName, invokerArgsArray, null /* no class 'this'*/, rawInvoker, fn, isAsync);
-          if (undefined === proto[methodName].overloadTable) {
-            func.argCount = argCount-1;
-            proto[methodName] = func;
-          } else {
-            proto[methodName].overloadTable[argCount-1] = func;
-          }
-  
-          if (classType.registeredClass.__derivedClasses) {
-            for (const derivedClass of classType.registeredClass.__derivedClasses) {
-              if (!derivedClass.constructor.hasOwnProperty(methodName)) {
-                // TODO: Add support for overloads
-                derivedClass.constructor[methodName] = func;
-              }
-            }
-          }
-  
-          return [];
-        });
-        return [];
-      });
-    };
-
-  
-  
-  
   var __embind_register_class_constructor = (
       rawClassType,
       argCount,
@@ -2484,6 +2405,13 @@ async function createWasm() {
   
   
   
+  var getFunctionName = (signature) => {
+      signature = signature.trim();
+      const argsIndex = signature.indexOf("(");
+      if (argsIndex === -1) return signature;
+      assert(signature.endsWith(")"), "Parentheses for argument names should match.");
+      return signature.slice(0, argsIndex);
+    };
   var __embind_register_class_function = (rawClassType,
                                       methodName,
                                       argCount,
@@ -7006,8 +6934,6 @@ var wasmImports = {
   _embind_register_bool: __embind_register_bool,
   /** @export */
   _embind_register_class: __embind_register_class,
-  /** @export */
-  _embind_register_class_class_function: __embind_register_class_class_function,
   /** @export */
   _embind_register_class_constructor: __embind_register_class_constructor,
   /** @export */

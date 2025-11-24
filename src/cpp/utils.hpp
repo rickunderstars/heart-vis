@@ -1,11 +1,11 @@
 #pragma once
 
-#include "mesh.hpp"
 #include <iostream>
 #include <vector>
 
-inline std::vector<std::string> validQualities = {
-	"unipolar", "bipolar", "lat", "eml", "exteml", "scar"};
+class Mesh;
+class Vertex;
+class Triangle;
 
 bool checkQuality(std::string quality);
 
@@ -36,5 +36,3 @@ void verticesAttributesSection(std::stringstream &file,
 							   std::vector<Vertex> &vertices);
 
 Mesh importMesh(std::string fileString);
-
-std::array<float, 3> scalarToTurbo(float scalar);

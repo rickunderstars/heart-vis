@@ -1,12 +1,14 @@
 #pragma once
 
+#include "globals.hpp"
+
 #include <array>
 #include <string>
 
 class Triangle {
   public:
 	std::array<int, 3> vertices = {0, 0, 0};
-	int groupID = -666;
+	int groupID = NULL_VALUE;
 
 	Triangle();
 	Triangle(std::array<int, 3> &vertices);
