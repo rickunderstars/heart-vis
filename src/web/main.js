@@ -160,7 +160,6 @@ function processFile(file) {
 				unipolar: mesh.Float32ArrayOfUnipolar(),
 				bipolar: mesh.Float32ArrayOfBipolar(),
 				lat: mesh.Float32ArrayOfLAT(),
-
 				groupid: mesh.Float32ArrayOfGroupID(),
 				eml: mesh.Float32ArrayOfEML(),
 				exteml: mesh.Float32ArrayOfExtEML(),
@@ -188,8 +187,6 @@ function processFile(file) {
 					uMax: {
 						value: getMax(valueSets[activeQuality]),
 					},
-					uColorLow: { value: new THREE.Color(0x0000ff) },
-					uColorHigh: { value: new THREE.Color(0x00ff00) },
 				},
 				vertexShader: vShader,
 				fragmentShader: fShader,
@@ -376,10 +373,16 @@ function setData(meshIndex, dataSet) {
 	if (meshes[meshIndex]) {
 		const mesh = meshes[meshIndex].mesh;
 		const valueSets = meshes[meshIndex].valueSets;
+
+		mesh.material.uniforms.uMin.value = getMin(valueSets[dataSet]);
+		mesh.material.uniforms.uMax.value = getMax(valueSets[dataSet]);
+
+		mesh.geometry.deleteAttribute("value");
 		mesh.geometry.setAttribute(
 			"value",
 			new THREE.BufferAttribute(valueSets[dataSet], 1)
 		);
+
 		renderer.render(scene, camera);
 	}
 }
