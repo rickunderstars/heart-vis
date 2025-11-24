@@ -190,6 +190,9 @@ function processFile(file) {
 			const [absMin, min] = get2Min(valueSets[activeQuality]);
 			const material = new THREE.ShaderMaterial({
 				uniforms: {
+					uOnlyTwo: {
+						value: absMin - min == 0 ? 1.0 : 0.0,
+					},
 					uAbsMin: {
 						value: absMin,
 					},
@@ -389,6 +392,7 @@ function setData(meshIndex, dataSet) {
 		const valueSets = meshes[meshIndex].valueSets;
 		const [absMin, min] = get2Min(valueSets[dataSet]);
 
+		mesh.material.uniforms.uOnlyTwo.value = absMin - min == 0 ? 1.0 : 0.0;
 		mesh.material.uniforms.uAbsMin.value = absMin;
 		mesh.material.uniforms.uMin.value = min;
 		mesh.material.uniforms.uMax.value = getMax(valueSets[dataSet]);
