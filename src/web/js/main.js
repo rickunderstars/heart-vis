@@ -9,11 +9,11 @@ try {
 	document.getElementById("viewport").innerHTML = "Loading shaders...";
 	console.log("Loading shaders...");
 	[vShader, fShader] = await Promise.all([
-		fetch("../glsl/vertex.glsl").then((r) => {
+		fetch("../../glsl/vertex.glsl").then((r) => {
 			if (!r.ok) throw new Error("Shader vertex.glsl not found");
 			return r.text();
 		}),
-		fetch("../glsl/fragment.glsl").then((r) => {
+		fetch("../../glsl/fragment.glsl").then((r) => {
 			if (!r.ok) throw new Error("Shader fragment.glsl not found");
 			return r.text();
 		}),
