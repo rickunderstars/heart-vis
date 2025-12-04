@@ -73,6 +73,16 @@ body {
 	background-color: #6656b3;
 }
 
+.btn-lat {
+	background-color: lightgreen;
+	width: 10vh;
+	box-shadow: 0.3vh 0.3vh 1vh rgba(0, 0, 0, 0.3);
+}
+
+.btn-lat:hover {
+	background-color: greenyellow;
+}
+
 .hidden-btn-upload {
 	display: none;
 }
@@ -80,7 +90,8 @@ body {
 .btn-upload,
 .qualities-container label,
 .meshes-container label,
-.btn-camera {
+.btn-camera,
+.btn-lat {
 	display: inline-block;
 	text-align: center;
 	border-radius: 10px;
