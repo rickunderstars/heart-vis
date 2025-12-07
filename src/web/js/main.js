@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-
+import { getMax, get2Min } from "./utils/mathUtils.js";
 /////// load shaders ///////
 let vShader = null;
 let fShader = null;
@@ -416,40 +416,6 @@ function vertexPicker() {
 	} else {
 		document.getElementById("vertex-info").innerHTML = "";
 	}
-}
-
-function getMax(array) {
-	let max = -Infinity;
-
-	for (let i = 0; i < array.length; i++) {
-		if (array[i] > max) {
-			max = array[i];
-		}
-	}
-	return max;
-}
-
-function get2Min(array) {
-	let absMin = Infinity;
-	let min = Infinity;
-
-	const valSet = new Set(array);
-	const moreThan2 = valSet.size > 2;
-
-	for (let i = 0; i < array.length; i++) {
-		if (array[i] < absMin) {
-			min = absMin;
-			absMin = array[i];
-		} else if (array[i] < min && array[i] > absMin) {
-			min = array[i];
-		}
-	}
-
-	if (!moreThan2) {
-		min = absMin;
-	}
-
-	return [absMin, min];
 }
 
 function setData(meshIndex, dataSet) {
