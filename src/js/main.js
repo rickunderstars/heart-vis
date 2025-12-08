@@ -11,20 +11,20 @@ try {
 	document.getElementById("viewport").innerHTML = "Loading shaders...";
 	console.log("Loading shaders...");
 	[vShader, fShader, dyn_vShader, dyn_fShader] = await Promise.all([
-		fetch("../../glsl/static-vertex.glsl").then((r) => {
+		fetch("../glsl/static-vertex.glsl").then((r) => {
 			if (!r.ok) throw new Error("Shader static-vertex.glsl not found");
 			return r.text();
 		}),
-		fetch("../../glsl/static-fragment.glsl").then((r) => {
+		fetch("../glsl/static-fragment.glsl").then((r) => {
 			if (!r.ok) throw new Error("Shader static-fragment.glsl not found");
 			return r.text();
 		}),
-		fetch("../../glsl/dynamic-lat-vertex.glsl").then((r) => {
+		fetch("../glsl/dynamic-lat-vertex.glsl").then((r) => {
 			if (!r.ok)
 				throw new Error("Shader dynamic-lat-vertex.glsl not found");
 			return r.text();
 		}),
-		fetch("../../glsl/dynamic-lat-fragment.glsl").then((r) => {
+		fetch("../glsl/dynamic-lat-fragment.glsl").then((r) => {
 			if (!r.ok)
 				throw new Error("Shader dynamic-lat-fragment.glsl not found");
 			return r.text();
