@@ -3,8 +3,17 @@ import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { getMax, get2Min } from "./utils/math-utils.js";
 import { initScene } from "./core/scene.js";
 import { createRenderer } from "./core/renderer.js";
-import { state } from "./state/state.js";
+import {
+	state,
+	getActiveMesh,
+	setActiveMesh,
+	setActiveQuality,
+} from "./state/state.js";
 import { processFile } from "./loaders/mesh-processing.js";
+import {
+	setupBrowseFile,
+	setupDragAndDrop,
+} from "./interaction/file-handler.js";
 
 /////// load shaders ///////
 export let vShader = null;
@@ -93,52 +102,19 @@ const qualities = [
 	"groupid",
 ];
 
-state.activeMesh = -1;
+setActiveMesh(-1);
 
 if (state.timeMode) {
 	dynamicAnimate();
 }
 
-state.activeQuality = document.querySelector(
-	'.qualities-container input[name="quality"]:checked',
-).value;
+setActiveQuality(
+	document.querySelector('.qualities-container input[name="quality"]:checked')
+		.value,
+);
 
-const rawMeshElement = document.getElementById("raw-mesh");
-
-rawMeshElement.addEventListener("change", function (e) {
-	if (e.target.files.length > 0) {
-		const file = e.target.files[0];
-		processFile(file);
-	}
-});
-
-["dragenter", "dragover", "dragleave", "drop"].forEach((eventName) => {
-	viewport.addEventListener(eventName, (e) => {
-		e.preventDefault();
-		e.stopPropagation();
-	});
-});
-
-["dragenter", "dragover"].forEach((eventName) => {
-	viewport.addEventListener(eventName, () => {
-		viewport.style.opacity = "0.7";
-	});
-});
-
-["dragleave", "drop"].forEach((eventName) => {
-	viewport.addEventListener(eventName, () => {
-		viewport.style.opacity = "1";
-	});
-});
-
-viewport.addEventListener("drop", (e) => {
-	const files = e.dataTransfer.files;
-	if (files.length > 0) {
-		Array.from(files).forEach((file) => {
-			processFile(file);
-		});
-	}
-});
+setupBrowseFile(processFile);
+setupDragAndDrop(processFile, viewport);
 
 let then = 0;
 const fps = 120;
@@ -158,8 +134,8 @@ function dynamicAnimate(timeStamp) {
 	if (delta > interval) {
 		then = timeStamp - (delta % interval);
 
-		if (state.activeMesh !== -1 && state.meshes[state.activeMesh]) {
-			state.meshes[state.activeMesh].mesh.material.uniforms.uTime.value =
+		if (state.activeMesh !== -1 && getActiveMesh()) {
+			getActiveMesh().mesh.material.uniforms.uTime.value =
 				clock.getElapsedTime();
 		}
 
@@ -184,14 +160,12 @@ function onMouseMove(e) {
 }
 
 function vertexPicker() {
-	if (state.activeMesh === -1 || !state.meshes[state.activeMesh]) {
+	if (state.activeMesh === -1 || !getActiveMesh()) {
 		document.getElementById("vertex-info").innerHTML = "no mesh loaded";
 		return;
 	}
 	raycaster.setFromCamera(mouse, camera);
-	const intersects = raycaster.intersectObject(
-		state.meshes[state.activeMesh].mesh,
-	);
+	const intersects = raycaster.intersectObject(getActiveMesh().mesh);
 
 	if (intersects.length > 0) {
 		const firstHit = intersects[0];
@@ -211,7 +185,7 @@ function vertexPicker() {
 		const bary = new THREE.Vector3();
 		THREE.Triangle.getBarycoord(firstHit.point, v0, v1, v2, bary);
 
-		const active = state.meshes[state.activeMesh].valueSets;
+		const active = getActiveMesh().valueSets;
 
 		const unipolar =
 			active.unipolar[face.a] * bary.x +
@@ -280,7 +254,7 @@ function setData(meshIndex, dataSet) {
 
 		renderer.render(scene, camera);
 	} else {
-		const meshData = state.meshes[state.activeMesh];
+		const meshData = getActiveMesh();
 		const currentMesh = meshData.mesh;
 		const valueSets = meshData.valueSets;
 		state.timeMode = false;
@@ -304,8 +278,8 @@ function setData(meshIndex, dataSet) {
 }
 
 function cameraReset() {
-	const center = state.meshes[state.activeMesh].center;
-	const radius = state.meshes[state.activeMesh].radius;
+	const center = getActiveMesh().center;
+	const radius = getActiveMesh().radius;
 	camera.position.set(center.x, center.y, center.z + radius * 2.5);
 	controls.target.set(center.x, center.y, center.z);
 	controls.update();
@@ -322,9 +296,9 @@ document.addEventListener("keydown", (k) => {
 });
 
 document.getElementById("dynamic-animation").addEventListener("click", () => {
-	if (state.activeMesh === -1 || !state.meshes[state.activeMesh]) return;
+	if (state.activeMesh === -1 || !getActiveMesh()) return;
 
-	const meshData = state.meshes[state.activeMesh];
+	const meshData = getActiveMesh();
 	const currentMesh = meshData.mesh;
 	const valueSets = meshData.valueSets;
 	const lat = valueSets[state.activeQuality];
@@ -387,7 +361,7 @@ document
 	.querySelector(".qualities-container")
 	.addEventListener("change", function (e) {
 		if (e.target.name === "quality") {
-			state.activeQuality = e.target.value;
+			setActiveQuality(e.target.value);
 			setData(state.activeMesh, state.activeQuality);
 		}
 	});
@@ -396,11 +370,11 @@ document
 	.querySelector(".meshes-container")
 	.addEventListener("change", function (e) {
 		if (e.target.name === "loaded-mesh") {
-			state.activeMesh = e.target.value;
+			setActiveMesh(e.target.value);
 			if (!state.timeMode) {
 				setData(state.activeMesh, state.activeQuality);
 			} else {
-				const meshData = state.meshes[state.activeMesh];
+				const meshData = getActiveMesh();
 				const currentMesh = meshData.mesh;
 				const valueSets = meshData.valueSets;
 				const lat = valueSets[state.activeQuality];
@@ -438,16 +412,17 @@ document
 					state.meshes[i].mesh.visible = true;
 				}
 			}
+			const activeMesh = getActiveMesh();
+
 			camera.position.set(
-				state.meshes[state.activeMesh].center.x,
-				state.meshes[state.activeMesh].center.y,
-				state.meshes[state.activeMesh].center.z +
-					state.meshes[state.activeMesh].radius * 2.5,
+				activeMesh.center.x,
+				activeMesh.center.y,
+				activeMesh.center.z + activeMesh.radius * 2.5,
 			);
 			controls.target.set(
-				state.meshes[state.activeMesh].center.x,
-				state.meshes[state.activeMesh].center.y,
-				state.meshes[state.activeMesh].center.z,
+				activeMesh.center.x,
+				activeMesh.center.y,
+				activeMesh.center.z,
 			);
 			controls.update();
 		}

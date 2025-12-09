@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { state } from "../state/state.js";
+import { setActiveMesh, state } from "../state/state.js";
 import { get2Min, getMax } from "../utils/math-utils.js";
 import { vShader, fShader, dyn_vShader, dyn_fShader } from "../main.js";
 import { scene, camera, controls } from "../main.js";
@@ -117,7 +117,7 @@ export function processFile(file) {
 				radius: radius,
 			});
 
-			state.activeMesh = state.meshes.length - 1;
+			setActiveMesh(state.meshes.length - 1);
 
 			let meshValue = 0;
 			document.getElementById("loaded-meshes").innerHTML = "";
