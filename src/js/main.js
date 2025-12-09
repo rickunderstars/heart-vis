@@ -2,6 +2,7 @@ import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { getMax, get2Min } from "./utils/math-utils.js";
 import { initScene } from "./core/scene.js";
+import { createRenderer } from "./core/renderer.js";
 /////// load shaders ///////
 let vShader = null;
 let fShader = null;
@@ -47,11 +48,10 @@ var camera = new THREE.PerspectiveCamera(
 	50,
 	viewport.clientWidth / viewport.clientHeight,
 );
-var renderer = new THREE.WebGLRenderer({ alpha: true });
+var renderer = createRenderer(viewport);
 var mouse = new THREE.Vector2();
 var raycaster = new THREE.Raycaster();
 
-renderer.setSize(viewport.clientWidth, viewport.clientHeight);
 const controls = new OrbitControls(camera, renderer.domElement);
 
 let timeMode = false;
