@@ -1,6 +1,8 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-
+import { getMax, get2Min } from "./utils/math-utils.js";
+import { initScene } from "./core/scene.js";
+import { createRenderer } from "./core/renderer.js";
 /////// load shaders ///////
 let vShader = null;
 let fShader = null;
@@ -11,20 +13,20 @@ try {
 	document.getElementById("viewport").innerHTML = "Loading shaders...";
 	console.log("Loading shaders...");
 	[vShader, fShader, dyn_vShader, dyn_fShader] = await Promise.all([
-		fetch("../../glsl/static-vertex.glsl").then((r) => {
+		fetch("../glsl/static-vertex.glsl").then((r) => {
 			if (!r.ok) throw new Error("Shader static-vertex.glsl not found");
 			return r.text();
 		}),
-		fetch("../../glsl/static-fragment.glsl").then((r) => {
+		fetch("../glsl/static-fragment.glsl").then((r) => {
 			if (!r.ok) throw new Error("Shader static-fragment.glsl not found");
 			return r.text();
 		}),
-		fetch("../../glsl/dynamic-lat-vertex.glsl").then((r) => {
+		fetch("../glsl/dynamic-lat-vertex.glsl").then((r) => {
 			if (!r.ok)
 				throw new Error("Shader dynamic-lat-vertex.glsl not found");
 			return r.text();
 		}),
-		fetch("../../glsl/dynamic-lat-fragment.glsl").then((r) => {
+		fetch("../glsl/dynamic-lat-fragment.glsl").then((r) => {
 			if (!r.ok)
 				throw new Error("Shader dynamic-lat-fragment.glsl not found");
 			return r.text();
@@ -40,17 +42,16 @@ try {
 
 /////// three.js ///////
 
-var scene = new THREE.Scene();
+var scene = initScene();
 var viewport = document.getElementById("viewport");
 var camera = new THREE.PerspectiveCamera(
 	50,
 	viewport.clientWidth / viewport.clientHeight,
 );
-var renderer = new THREE.WebGLRenderer({ alpha: true });
+var renderer = createRenderer(viewport);
 var mouse = new THREE.Vector2();
 var raycaster = new THREE.Raycaster();
 
-renderer.setSize(viewport.clientWidth, viewport.clientHeight);
 const controls = new OrbitControls(camera, renderer.domElement);
 
 let timeMode = false;
@@ -72,17 +73,6 @@ window.addEventListener("resize", onViewportResize);
 window.addEventListener("mousemove", onMouseMove, false);
 
 camera.position.z = 5;
-
-const light1 = new THREE.DirectionalLight(0xffffff, 1);
-const light2 = new THREE.DirectionalLight(0xffffff, 1);
-const light3 = new THREE.DirectionalLight(0xffffff, 1);
-const light4 = new THREE.DirectionalLight(0xffffff, 1);
-light1.position.set(100, 100, 100);
-light2.position.set(-100, -100, -100);
-light3.position.set(100, -100, 100);
-light4.position.set(100, 100, -100);
-scene.add(light1, light2, light3, light4);
-scene.add(new THREE.AmbientLight(0xffffff, 3));
 
 const clock = new THREE.Clock();
 
@@ -416,40 +406,6 @@ function vertexPicker() {
 	} else {
 		document.getElementById("vertex-info").innerHTML = "";
 	}
-}
-
-function getMax(array) {
-	let max = -Infinity;
-
-	for (let i = 0; i < array.length; i++) {
-		if (array[i] > max) {
-			max = array[i];
-		}
-	}
-	return max;
-}
-
-function get2Min(array) {
-	let absMin = Infinity;
-	let min = Infinity;
-
-	const valSet = new Set(array);
-	const moreThan2 = valSet.size > 2;
-
-	for (let i = 0; i < array.length; i++) {
-		if (array[i] < absMin) {
-			min = absMin;
-			absMin = array[i];
-		} else if (array[i] < min && array[i] > absMin) {
-			min = array[i];
-		}
-	}
-
-	if (!moreThan2) {
-		min = absMin;
-	}
-
-	return [absMin, min];
 }
 
 function setData(meshIndex, dataSet) {

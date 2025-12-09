@@ -7,6 +7,6 @@ else
     cmake --build build
 end
 and begin
-    cp build/heart.out.js src/web/js
-    cp build/heart.out.wasm src/web/js
+    cp build/heart.out.js src/js/emscripten
+    cp build/heart.out.wasm src/js/emscripten
 end
