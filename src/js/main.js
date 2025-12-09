@@ -4,11 +4,13 @@ import { getMax, get2Min } from "./utils/math-utils.js";
 import { initScene } from "./core/scene.js";
 import { createRenderer } from "./core/renderer.js";
 import { state } from "./state/state.js";
+import { processFile } from "./loaders/mesh-processing.js";
+
 /////// load shaders ///////
-let vShader = null;
-let fShader = null;
-let dyn_vShader = null;
-let dyn_fShader = null;
+export let vShader = null;
+export let fShader = null;
+export let dyn_vShader = null;
+export let dyn_fShader = null;
 
 try {
 	document.getElementById("viewport").innerHTML = "Loading shaders...";
@@ -22,14 +24,18 @@ try {
 			if (!r.ok) throw new Error("Shader static-fragment.glsl not found");
 			return r.text();
 		}),
-		fetch("../glsl/dynamic-lat-vertex.glsl").then((r) => {
+		fetch("../glsl/dynamic-animation-vertex.glsl").then((r) => {
 			if (!r.ok)
-				throw new Error("Shader dynamic-lat-vertex.glsl not found");
+				throw new Error(
+					"Shader dynamic-animation-vertex.glsl not found",
+				);
 			return r.text();
 		}),
-		fetch("../glsl/dynamic-lat-fragment.glsl").then((r) => {
+		fetch("../glsl/dynamic-animation-fragment.glsl").then((r) => {
 			if (!r.ok)
-				throw new Error("Shader dynamic-lat-fragment.glsl not found");
+				throw new Error(
+					"Shader dynamic-animation-fragment.glsl not found",
+				);
 			return r.text();
 		}),
 	]);
@@ -43,22 +49,21 @@ try {
 
 /////// three.js ///////
 
-var scene = initScene();
-var viewport = document.getElementById("viewport");
-var camera = new THREE.PerspectiveCamera(
+export const scene = initScene();
+const viewport = document.getElementById("viewport");
+export const camera = new THREE.PerspectiveCamera(
 	50,
 	viewport.clientWidth / viewport.clientHeight,
 );
 camera.position.z = 5;
 
-var renderer = createRenderer(viewport);
-var mouse = new THREE.Vector2();
-var raycaster = new THREE.Raycaster();
+const renderer = createRenderer(viewport);
+viewport.append(renderer.domElement);
 
-const controls = new OrbitControls(camera, renderer.domElement);
+const mouse = new THREE.Vector2();
+const raycaster = new THREE.Raycaster();
 
-state.timeMode = false;
-
+export const controls = new OrbitControls(camera, renderer.domElement);
 controls.addEventListener("change", () => {
 	if (!state.timeMode) {
 		renderer.render(scene, camera);
@@ -68,8 +73,6 @@ controls.addEventListener("change", () => {
 if (!state.timeMode) {
 	renderer.render(scene, camera);
 }
-
-viewport.append(renderer.domElement);
 
 window.addEventListener("resize", onViewportResize);
 
@@ -90,10 +93,10 @@ const qualities = [
 	"groupid",
 ];
 
-let activeMesh = -1;
+state.activeMesh = -1;
 
 if (state.timeMode) {
-	latAnimate();
+	dynamicAnimate();
 }
 
 state.activeQuality = document.querySelector(
@@ -101,7 +104,6 @@ state.activeQuality = document.querySelector(
 ).value;
 
 const rawMeshElement = document.getElementById("raw-mesh");
-const fileElement = document.getElementById("filename");
 
 rawMeshElement.addEventListener("change", function (e) {
 	if (e.target.files.length > 0) {
@@ -142,12 +144,12 @@ let then = 0;
 const fps = 120;
 const interval = 1000 / fps;
 
-function latAnimate(timeStamp) {
+function dynamicAnimate(timeStamp) {
 	if (!state.timeMode) {
 		return;
 	}
 
-	requestAnimationFrame(latAnimate);
+	requestAnimationFrame(dynamicAnimate);
 
 	if (!then) then = timeStamp;
 
@@ -156,165 +158,13 @@ function latAnimate(timeStamp) {
 	if (delta > interval) {
 		then = timeStamp - (delta % interval);
 
-		if (activeMesh !== -1 && state.meshes[activeMesh]) {
-			state.meshes[activeMesh].mesh.material.uniforms.uTime.value =
+		if (state.activeMesh !== -1 && state.meshes[state.activeMesh]) {
+			state.meshes[state.activeMesh].mesh.material.uniforms.uTime.value =
 				clock.getElapsedTime();
 		}
 
 		renderer.render(scene, camera);
 	}
-}
-function processFile(file) {
-	HeartModule().then((cpp) => {
-		if (state.meshes.some((item) => item.filename === file.name)) {
-			console.log("Mesh already uploaded");
-			return;
-		}
-
-		const reader = new FileReader();
-
-		reader.onload = function (e) {
-			const fileContent = e.target.result;
-			let mesh;
-			try {
-				mesh = cpp.importMesh(fileContent);
-			} catch (e) {
-				console.error("Error: ", e.message);
-				fileElement.innerHTML = "Could not load: " + file.name;
-				return;
-			}
-			fileElement.innerHTML = "Last upload: " + file.name;
-
-			/// -- test state.meshes fixes -- ///
-
-			if (file.name === "2-LA.mesh") {
-				mesh.triangleFix(8703, 4559, 4538);
-				mesh.fixNMEdges();
-			} else if (file.name === "2-LA-FA.mesh") {
-				mesh.triangleFix(25180, 12810, 12813);
-				mesh.triangleFix(29108, 9930, 14703);
-				mesh.triangleFix(21420, 10857, 10941);
-				mesh.triangleFix(56, 38, 29);
-				mesh.triangleFix(30812, 15492, 15447);
-				mesh.triangleFix(30578, 14384, 14398);
-				let fixTri = new cpp.Triangle(15417, 14398, 14381);
-				mesh.triangles.push_back(fixTri);
-				mesh.fixNMEdges();
-			}
-
-			// -- end fix -- //
-
-			const vertices = mesh.Float32ArrayOfVertices();
-			const triangles = mesh.Uint32ArrayOfTriangles();
-
-			const valueSets = {
-				unipolar: mesh.Float32ArrayOfUnipolar(),
-				bipolar: mesh.Float32ArrayOfBipolar(),
-				lat: mesh.Float32ArrayOfLAT(),
-				groupid: mesh.Float32ArrayOfGroupID(),
-				eml: mesh.Float32ArrayOfEML(),
-				exteml: mesh.Float32ArrayOfExtEML(),
-				scar: mesh.Float32ArrayOfSCAR(),
-			};
-
-			const geometry = new THREE.BufferGeometry();
-			geometry.setAttribute(
-				"position",
-				new THREE.BufferAttribute(vertices, 3),
-			);
-			geometry.setIndex(new THREE.BufferAttribute(triangles, 1));
-			geometry.computeVertexNormals();
-
-			geometry.setAttribute(
-				"value",
-				new THREE.BufferAttribute(valueSets[state.activeQuality], 1),
-			);
-
-			const [absMin, min] = get2Min(valueSets[state.activeQuality]);
-			const material = new THREE.ShaderMaterial({
-				uniforms: {
-					uOnlyTwo: {
-						value: absMin - min == 0 ? 1.0 : 0.0,
-					},
-					uAbsMin: {
-						value: absMin,
-					},
-					uMin: {
-						value: min,
-					},
-					uMax: {
-						value: getMax(valueSets[state.activeQuality]),
-					},
-				},
-				vertexShader: vShader,
-				fragmentShader: fShader,
-				side: THREE.DoubleSide,
-			});
-
-			const heart = new THREE.Mesh(geometry, material);
-
-			state.meshes.forEach((meshData) => {
-				meshData.mesh.visible = false;
-			});
-			scene.add(heart);
-
-			const box = new THREE.Box3().setFromObject(heart);
-			const boundingSphere = new THREE.Sphere();
-			box.getBoundingSphere(boundingSphere);
-			const center = boundingSphere.center;
-			const radius = boundingSphere.radius;
-
-			camera.position.set(center.x, center.y, center.z + radius * 2.5);
-			controls.target.set(center.x, center.y, center.z);
-			controls.update();
-
-			state.meshes.push({
-				mesh: heart,
-				filename: file.name,
-				valueSets: valueSets,
-				center: center,
-				radius: radius,
-			});
-
-			activeMesh = state.meshes.length - 1;
-
-			let meshValue = 0;
-			document.getElementById("loaded-meshes").innerHTML = "";
-			for (const m of state.meshes) {
-				let corners = "";
-				let checked = "";
-				if (activeMesh === 0 && state.meshes.length - 1 === 0) {
-					corners = " class='mesh-top mesh-bottom' ";
-					checked = "checked";
-				} else if (meshValue === 0) {
-					corners = " class='mesh-top' ";
-				} else if (activeMesh === state.meshes.length - 1) {
-					corners = " class='mesh-bottom' ";
-					checked = "checked";
-				}
-				document.getElementById("loaded-meshes").innerHTML +=
-					"<label" +
-					corners +
-					">" +
-					"<input type='radio' name='loaded-mesh' value='" +
-					meshValue +
-					"' " +
-					checked +
-					"/>" +
-					"<span>" +
-					m.filename +
-					"</span>" +
-					"</label¨>";
-				meshValue++;
-			}
-
-			console.log(
-				"Mesh loaded successfully. state.meshes loaded:",
-				state.meshes.length,
-			);
-		};
-		reader.readAsText(file);
-	});
 }
 
 function onViewportResize() {
@@ -334,12 +184,14 @@ function onMouseMove(e) {
 }
 
 function vertexPicker() {
-	if (activeMesh === -1 || !state.meshes[activeMesh]) {
+	if (state.activeMesh === -1 || !state.meshes[state.activeMesh]) {
 		document.getElementById("vertex-info").innerHTML = "no mesh loaded";
 		return;
 	}
 	raycaster.setFromCamera(mouse, camera);
-	const intersects = raycaster.intersectObject(state.meshes[activeMesh].mesh);
+	const intersects = raycaster.intersectObject(
+		state.meshes[state.activeMesh].mesh,
+	);
 
 	if (intersects.length > 0) {
 		const firstHit = intersects[0];
@@ -359,7 +211,7 @@ function vertexPicker() {
 		const bary = new THREE.Vector3();
 		THREE.Triangle.getBarycoord(firstHit.point, v0, v1, v2, bary);
 
-		const active = state.meshes[activeMesh].valueSets;
+		const active = state.meshes[state.activeMesh].valueSets;
 
 		const unipolar =
 			active.unipolar[face.a] * bary.x +
@@ -428,7 +280,7 @@ function setData(meshIndex, dataSet) {
 
 		renderer.render(scene, camera);
 	} else {
-		const meshData = state.meshes[activeMesh];
+		const meshData = state.meshes[state.activeMesh];
 		const currentMesh = meshData.mesh;
 		const valueSets = meshData.valueSets;
 		state.timeMode = false;
@@ -447,13 +299,13 @@ function setData(meshIndex, dataSet) {
 			side: THREE.DoubleSide,
 		});
 
-		setData(activeMesh, state.activeQuality);
+		setData(state.activeMesh, state.activeQuality);
 	}
 }
 
 function cameraReset() {
-	const center = state.meshes[activeMesh].center;
-	const radius = state.meshes[activeMesh].radius;
+	const center = state.meshes[state.activeMesh].center;
+	const radius = state.meshes[state.activeMesh].radius;
 	camera.position.set(center.x, center.y, center.z + radius * 2.5);
 	controls.target.set(center.x, center.y, center.z);
 	controls.update();
@@ -469,13 +321,13 @@ document.addEventListener("keydown", (k) => {
 	}
 });
 
-document.getElementById("dynamic-lat").addEventListener("click", () => {
-	if (activeMesh === -1 || !state.meshes[activeMesh]) return;
+document.getElementById("dynamic-animation").addEventListener("click", () => {
+	if (state.activeMesh === -1 || !state.meshes[state.activeMesh]) return;
 
-	const meshData = state.meshes[activeMesh];
+	const meshData = state.meshes[state.activeMesh];
 	const currentMesh = meshData.mesh;
 	const valueSets = meshData.valueSets;
-	const lat = valueSets["lat"];
+	const lat = valueSets[state.activeQuality];
 
 	if (currentMesh.material) {
 		currentMesh.material.dispose();
@@ -489,7 +341,7 @@ document.getElementById("dynamic-lat").addEventListener("click", () => {
 
 		then = 0;
 
-		latAnimate();
+		dynamicAnimate();
 
 		currentMesh.geometry.deleteAttribute("value");
 		currentMesh.geometry.setAttribute(
@@ -527,7 +379,7 @@ document.getElementById("dynamic-lat").addEventListener("click", () => {
 			side: THREE.DoubleSide,
 		});
 
-		setData(activeMesh, state.activeQuality);
+		setData(state.activeMesh, state.activeQuality);
 	}
 });
 
@@ -536,7 +388,7 @@ document
 	.addEventListener("change", function (e) {
 		if (e.target.name === "quality") {
 			state.activeQuality = e.target.value;
-			setData(activeMesh, state.activeQuality);
+			setData(state.activeMesh, state.activeQuality);
 		}
 	});
 
@@ -544,20 +396,20 @@ document
 	.querySelector(".meshes-container")
 	.addEventListener("change", function (e) {
 		if (e.target.name === "loaded-mesh") {
-			activeMesh = e.target.value;
+			state.activeMesh = e.target.value;
 			if (!state.timeMode) {
-				setData(activeMesh, state.activeQuality);
+				setData(state.activeMesh, state.activeQuality);
 			} else {
-				const meshData = state.meshes[activeMesh];
+				const meshData = state.meshes[state.activeMesh];
 				const currentMesh = meshData.mesh;
 				const valueSets = meshData.valueSets;
-				const lat = valueSets["lat"];
+				const lat = valueSets[state.activeQuality];
 				clock.start();
 				then = 0;
 
 				then = 0;
 
-				latAnimate();
+				dynamicAnimate();
 
 				currentMesh.geometry.deleteAttribute("value");
 				currentMesh.geometry.setAttribute(
@@ -580,22 +432,22 @@ document
 				});
 			}
 			for (let i = 0; i < state.meshes.length; i++) {
-				if (i != activeMesh) {
+				if (i != state.activeMesh) {
 					state.meshes[i].mesh.visible = false;
 				} else {
 					state.meshes[i].mesh.visible = true;
 				}
 			}
 			camera.position.set(
-				state.meshes[activeMesh].center.x,
-				state.meshes[activeMesh].center.y,
-				state.meshes[activeMesh].center.z +
-					state.meshes[activeMesh].radius * 2.5,
+				state.meshes[state.activeMesh].center.x,
+				state.meshes[state.activeMesh].center.y,
+				state.meshes[state.activeMesh].center.z +
+					state.meshes[state.activeMesh].radius * 2.5,
 			);
 			controls.target.set(
-				state.meshes[activeMesh].center.x,
-				state.meshes[activeMesh].center.y,
-				state.meshes[activeMesh].center.z,
+				state.meshes[state.activeMesh].center.x,
+				state.meshes[state.activeMesh].center.y,
+				state.meshes[state.activeMesh].center.z,
 			);
 			controls.update();
 		}
