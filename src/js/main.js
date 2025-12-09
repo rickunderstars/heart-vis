@@ -3,6 +3,7 @@ import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { getMax, get2Min } from "./utils/math-utils.js";
 import { initScene } from "./core/scene.js";
 import { createRenderer } from "./core/renderer.js";
+import { state } from "./state/state.js";
 /////// load shaders ///////
 let vShader = null;
 let fShader = null;
@@ -48,21 +49,23 @@ var camera = new THREE.PerspectiveCamera(
 	50,
 	viewport.clientWidth / viewport.clientHeight,
 );
+camera.position.z = 5;
+
 var renderer = createRenderer(viewport);
 var mouse = new THREE.Vector2();
 var raycaster = new THREE.Raycaster();
 
 const controls = new OrbitControls(camera, renderer.domElement);
 
-let timeMode = false;
+state.timeMode = false;
 
 controls.addEventListener("change", () => {
-	if (!timeMode) {
+	if (!state.timeMode) {
 		renderer.render(scene, camera);
 	}
 });
 
-if (!timeMode) {
+if (!state.timeMode) {
 	renderer.render(scene, camera);
 }
 
@@ -72,13 +75,11 @@ window.addEventListener("resize", onViewportResize);
 
 window.addEventListener("mousemove", onMouseMove, false);
 
-camera.position.z = 5;
-
 const clock = new THREE.Clock();
 
 /////// model upload ///////
 
-const meshes = [];
+state.meshes = [];
 const qualities = [
 	"unipolar",
 	"bipolar",
@@ -91,11 +92,11 @@ const qualities = [
 
 let activeMesh = -1;
 
-if (timeMode) {
+if (state.timeMode) {
 	latAnimate();
 }
 
-let activeQuality = document.querySelector(
+state.activeQuality = document.querySelector(
 	'.qualities-container input[name="quality"]:checked',
 ).value;
 
@@ -142,7 +143,7 @@ const fps = 120;
 const interval = 1000 / fps;
 
 function latAnimate(timeStamp) {
-	if (!timeMode) {
+	if (!state.timeMode) {
 		return;
 	}
 
@@ -155,8 +156,8 @@ function latAnimate(timeStamp) {
 	if (delta > interval) {
 		then = timeStamp - (delta % interval);
 
-		if (activeMesh !== -1 && meshes[activeMesh]) {
-			meshes[activeMesh].mesh.material.uniforms.uTime.value =
+		if (activeMesh !== -1 && state.meshes[activeMesh]) {
+			state.meshes[activeMesh].mesh.material.uniforms.uTime.value =
 				clock.getElapsedTime();
 		}
 
@@ -165,7 +166,7 @@ function latAnimate(timeStamp) {
 }
 function processFile(file) {
 	HeartModule().then((cpp) => {
-		if (meshes.some((item) => item.filename === file.name)) {
+		if (state.meshes.some((item) => item.filename === file.name)) {
 			console.log("Mesh already uploaded");
 			return;
 		}
@@ -184,7 +185,7 @@ function processFile(file) {
 			}
 			fileElement.innerHTML = "Last upload: " + file.name;
 
-			/// -- test meshes fixes -- ///
+			/// -- test state.meshes fixes -- ///
 
 			if (file.name === "2-LA.mesh") {
 				mesh.triangleFix(8703, 4559, 4538);
@@ -226,10 +227,10 @@ function processFile(file) {
 
 			geometry.setAttribute(
 				"value",
-				new THREE.BufferAttribute(valueSets[activeQuality], 1),
+				new THREE.BufferAttribute(valueSets[state.activeQuality], 1),
 			);
 
-			const [absMin, min] = get2Min(valueSets[activeQuality]);
+			const [absMin, min] = get2Min(valueSets[state.activeQuality]);
 			const material = new THREE.ShaderMaterial({
 				uniforms: {
 					uOnlyTwo: {
@@ -242,7 +243,7 @@ function processFile(file) {
 						value: min,
 					},
 					uMax: {
-						value: getMax(valueSets[activeQuality]),
+						value: getMax(valueSets[state.activeQuality]),
 					},
 				},
 				vertexShader: vShader,
@@ -252,7 +253,7 @@ function processFile(file) {
 
 			const heart = new THREE.Mesh(geometry, material);
 
-			meshes.forEach((meshData) => {
+			state.meshes.forEach((meshData) => {
 				meshData.mesh.visible = false;
 			});
 			scene.add(heart);
@@ -267,7 +268,7 @@ function processFile(file) {
 			controls.target.set(center.x, center.y, center.z);
 			controls.update();
 
-			meshes.push({
+			state.meshes.push({
 				mesh: heart,
 				filename: file.name,
 				valueSets: valueSets,
@@ -275,19 +276,19 @@ function processFile(file) {
 				radius: radius,
 			});
 
-			activeMesh = meshes.length - 1;
+			activeMesh = state.meshes.length - 1;
 
 			let meshValue = 0;
 			document.getElementById("loaded-meshes").innerHTML = "";
-			for (const m of meshes) {
+			for (const m of state.meshes) {
 				let corners = "";
 				let checked = "";
-				if (activeMesh === 0 && meshes.length - 1 === 0) {
+				if (activeMesh === 0 && state.meshes.length - 1 === 0) {
 					corners = " class='mesh-top mesh-bottom' ";
 					checked = "checked";
 				} else if (meshValue === 0) {
 					corners = " class='mesh-top' ";
-				} else if (activeMesh === meshes.length - 1) {
+				} else if (activeMesh === state.meshes.length - 1) {
 					corners = " class='mesh-bottom' ";
 					checked = "checked";
 				}
@@ -308,8 +309,8 @@ function processFile(file) {
 			}
 
 			console.log(
-				"Mesh loaded successfully. Meshes loaded:",
-				meshes.length,
+				"Mesh loaded successfully. state.meshes loaded:",
+				state.meshes.length,
 			);
 		};
 		reader.readAsText(file);
@@ -320,7 +321,7 @@ function onViewportResize() {
 	camera.aspect = viewport.clientWidth / viewport.clientHeight;
 	camera.updateProjectionMatrix();
 	renderer.setSize(viewport.clientWidth, viewport.clientHeight);
-	if (!timeMode) {
+	if (!state.timeMode) {
 		renderer.render(scene, camera);
 	}
 }
@@ -333,12 +334,12 @@ function onMouseMove(e) {
 }
 
 function vertexPicker() {
-	if (activeMesh === -1 || !meshes[activeMesh]) {
+	if (activeMesh === -1 || !state.meshes[activeMesh]) {
 		document.getElementById("vertex-info").innerHTML = "no mesh loaded";
 		return;
 	}
 	raycaster.setFromCamera(mouse, camera);
-	const intersects = raycaster.intersectObject(meshes[activeMesh].mesh);
+	const intersects = raycaster.intersectObject(state.meshes[activeMesh].mesh);
 
 	if (intersects.length > 0) {
 		const firstHit = intersects[0];
@@ -358,7 +359,7 @@ function vertexPicker() {
 		const bary = new THREE.Vector3();
 		THREE.Triangle.getBarycoord(firstHit.point, v0, v1, v2, bary);
 
-		const active = meshes[activeMesh].valueSets;
+		const active = state.meshes[activeMesh].valueSets;
 
 		const unipolar =
 			active.unipolar[face.a] * bary.x +
@@ -409,9 +410,9 @@ function vertexPicker() {
 }
 
 function setData(meshIndex, dataSet) {
-	if (meshes[meshIndex] && !timeMode) {
-		const mesh = meshes[meshIndex].mesh;
-		const valueSets = meshes[meshIndex].valueSets;
+	if (state.meshes[meshIndex] && !state.timeMode) {
+		const mesh = state.meshes[meshIndex].mesh;
+		const valueSets = state.meshes[meshIndex].valueSets;
 		const [absMin, min] = get2Min(valueSets[dataSet]);
 
 		mesh.material.uniforms.uOnlyTwo.value = absMin - min == 0 ? 1.0 : 0.0;
@@ -427,32 +428,32 @@ function setData(meshIndex, dataSet) {
 
 		renderer.render(scene, camera);
 	} else {
-		const meshData = meshes[activeMesh];
+		const meshData = state.meshes[activeMesh];
 		const currentMesh = meshData.mesh;
 		const valueSets = meshData.valueSets;
-		timeMode = false;
+		state.timeMode = false;
 
-		const [absMin, min] = get2Min(valueSets[activeQuality]);
+		const [absMin, min] = get2Min(valueSets[state.activeQuality]);
 
 		currentMesh.material = new THREE.ShaderMaterial({
 			uniforms: {
 				uOnlyTwo: { value: absMin - min == 0 ? 1.0 : 0.0 },
 				uAbsMin: { value: absMin },
 				uMin: { value: min },
-				uMax: { value: getMax(valueSets[activeQuality]) },
+				uMax: { value: getMax(valueSets[state.activeQuality]) },
 			},
 			vertexShader: vShader,
 			fragmentShader: fShader,
 			side: THREE.DoubleSide,
 		});
 
-		setData(activeMesh, activeQuality);
+		setData(activeMesh, state.activeQuality);
 	}
 }
 
 function cameraReset() {
-	const center = meshes[activeMesh].center;
-	const radius = meshes[activeMesh].radius;
+	const center = state.meshes[activeMesh].center;
+	const radius = state.meshes[activeMesh].radius;
 	camera.position.set(center.x, center.y, center.z + radius * 2.5);
 	controls.target.set(center.x, center.y, center.z);
 	controls.update();
@@ -469,9 +470,9 @@ document.addEventListener("keydown", (k) => {
 });
 
 document.getElementById("dynamic-lat").addEventListener("click", () => {
-	if (activeMesh === -1 || !meshes[activeMesh]) return;
+	if (activeMesh === -1 || !state.meshes[activeMesh]) return;
 
-	const meshData = meshes[activeMesh];
+	const meshData = state.meshes[activeMesh];
 	const currentMesh = meshData.mesh;
 	const valueSets = meshData.valueSets;
 	const lat = valueSets["lat"];
@@ -480,8 +481,8 @@ document.getElementById("dynamic-lat").addEventListener("click", () => {
 		currentMesh.material.dispose();
 	}
 
-	if (!timeMode) {
-		timeMode = true;
+	if (!state.timeMode) {
+		state.timeMode = true;
 
 		clock.start();
 		then = 0;
@@ -510,23 +511,23 @@ document.getElementById("dynamic-lat").addEventListener("click", () => {
 			side: THREE.DoubleSide,
 		});
 	} else {
-		timeMode = false;
+		state.timeMode = false;
 
-		const [absMin, min] = get2Min(valueSets[activeQuality]);
+		const [absMin, min] = get2Min(valueSets[state.activeQuality]);
 
 		currentMesh.material = new THREE.ShaderMaterial({
 			uniforms: {
 				uOnlyTwo: { value: absMin - min == 0 ? 1.0 : 0.0 },
 				uAbsMin: { value: absMin },
 				uMin: { value: min },
-				uMax: { value: getMax(valueSets[activeQuality]) },
+				uMax: { value: getMax(valueSets[state.activeQuality]) },
 			},
 			vertexShader: vShader,
 			fragmentShader: fShader,
 			side: THREE.DoubleSide,
 		});
 
-		setData(activeMesh, activeQuality);
+		setData(activeMesh, state.activeQuality);
 	}
 });
 
@@ -534,8 +535,8 @@ document
 	.querySelector(".qualities-container")
 	.addEventListener("change", function (e) {
 		if (e.target.name === "quality") {
-			activeQuality = e.target.value;
-			setData(activeMesh, activeQuality);
+			state.activeQuality = e.target.value;
+			setData(activeMesh, state.activeQuality);
 		}
 	});
 
@@ -544,10 +545,10 @@ document
 	.addEventListener("change", function (e) {
 		if (e.target.name === "loaded-mesh") {
 			activeMesh = e.target.value;
-			if (!timeMode) {
-				setData(activeMesh, activeQuality);
+			if (!state.timeMode) {
+				setData(activeMesh, state.activeQuality);
 			} else {
-				const meshData = meshes[activeMesh];
+				const meshData = state.meshes[activeMesh];
 				const currentMesh = meshData.mesh;
 				const valueSets = meshData.valueSets;
 				const lat = valueSets["lat"];
@@ -578,22 +579,23 @@ document
 					side: THREE.DoubleSide,
 				});
 			}
-			for (let i = 0; i < meshes.length; i++) {
+			for (let i = 0; i < state.meshes.length; i++) {
 				if (i != activeMesh) {
-					meshes[i].mesh.visible = false;
+					state.meshes[i].mesh.visible = false;
 				} else {
-					meshes[i].mesh.visible = true;
+					state.meshes[i].mesh.visible = true;
 				}
 			}
 			camera.position.set(
-				meshes[activeMesh].center.x,
-				meshes[activeMesh].center.y,
-				meshes[activeMesh].center.z + meshes[activeMesh].radius * 2.5,
+				state.meshes[activeMesh].center.x,
+				state.meshes[activeMesh].center.y,
+				state.meshes[activeMesh].center.z +
+					state.meshes[activeMesh].radius * 2.5,
 			);
 			controls.target.set(
-				meshes[activeMesh].center.x,
-				meshes[activeMesh].center.y,
-				meshes[activeMesh].center.z,
+				state.meshes[activeMesh].center.x,
+				state.meshes[activeMesh].center.y,
+				state.meshes[activeMesh].center.z,
 			);
 			controls.update();
 		}
