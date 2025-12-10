@@ -82,7 +82,7 @@ state.setActiveQuality(
 		.value,
 );
 
-setupFileHandlers({ state, scene, camera, controls, viewport });
+setupFileHandlers({ state, scene, camera, controls, viewport, renderer });
 
 let then = 0;
 const fps = 120;

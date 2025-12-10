@@ -1,9 +1,9 @@
 import * as THREE from "three";
-import { getMax, get2Min } from "../utils/math-utils.js";
 import { vShader, fShader, dyn_vShader, dyn_fShader } from "../main.js";
+import { updateActiveMaterial } from "../visualization/material-switch.js";
 
 export function setupFileHandlers(dependencies) {
-	const { state, scene, camera, controls, viewport } = dependencies;
+	const { state, scene, camera, controls, viewport, renderer } = dependencies;
 
 	function processFile(file) {
 		const fileElement = document.getElementById("filename");
@@ -67,41 +67,9 @@ export function setupFileHandlers(dependencies) {
 				geometry.setIndex(new THREE.BufferAttribute(triangles, 1));
 				geometry.computeVertexNormals();
 
-				geometry.setAttribute(
-					"value",
-					new THREE.BufferAttribute(
-						valueSets[state.activeQuality],
-						1,
-					),
-				);
-
-				const [absMin, min] = get2Min(valueSets[state.activeQuality]);
-				const material = new THREE.ShaderMaterial({
-					uniforms: {
-						uOnlyTwo: {
-							value: absMin - min == 0 ? 1.0 : 0.0,
-						},
-						uAbsMin: {
-							value: absMin,
-						},
-						uMin: {
-							value: min,
-						},
-						uMax: {
-							value: getMax(valueSets[state.activeQuality]),
-						},
-					},
-					vertexShader: vShader,
-					fragmentShader: fShader,
-					side: THREE.DoubleSide,
-				});
+				const material = new THREE.MeshBasicMaterial();
 
 				const heart = new THREE.Mesh(geometry, material);
-
-				state.meshes.forEach((meshData) => {
-					meshData.mesh.visible = false;
-				});
-				scene.add(heart);
 
 				const box = new THREE.Box3().setFromObject(heart);
 				const boundingSphere = new THREE.Sphere();
@@ -126,6 +94,17 @@ export function setupFileHandlers(dependencies) {
 				});
 
 				state.setActiveMesh(state.meshes.length - 1);
+
+				updateActiveMaterial(state);
+
+				state.meshes.forEach((meshData) => {
+					meshData.mesh.visible = false;
+				});
+				scene.add(heart);
+
+				heart.visible = true;
+
+				renderer.render(scene, camera);
 
 				let meshValue = 0;
 				document.getElementById("loaded-meshes").innerHTML = "";

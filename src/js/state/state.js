@@ -15,6 +15,10 @@ class State {
 	setActiveQuality(quality) {
 		this.activeQuality = quality;
 	}
+
+	toggleTimeMode() {
+		state.timeMode = !state.timeMode;
+	}
 }
 
 const state = new State();
