@@ -1,52 +1,29 @@
+// css
+import "@css/styles.css";
+
+// shaders
+import vertexShader from "@glsl/static-vertex.glsl";
+import fragmentShader from "@glsl/static-fragment.glsl";
+import dynamicVertexShader from "@glsl/dynamic-animation-vertex.glsl";
+import dynamicFragmentShader from "@glsl/dynamic-animation-fragment.glsl";
+
+// three
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-import { getMax, get2Min } from "./utils/math-utils.js";
-import { initLights, createScene } from "./visualization/scene.js";
-import { createRenderer } from "./visualization/renderer.js";
-import state from "./state/state.js";
-import { setupFileHandlers } from "./interaction/file-handler.js";
-import { vertexPicker } from "./interaction/vertex-picker.js";
+
+// my stuff
+import { getMax, get2Min } from "@js/utils/math-utils.js";
+import { initLights, createScene } from "@js/visualization/scene.js";
+import { createRenderer } from "@js/visualization/renderer.js";
+import state from "@js/state/state.js";
+import { setupFileHandlers } from "@js/interaction/file-handler.js";
+import { vertexPicker } from "@js/interaction/vertex-picker.js";
 
 /////// load shaders ///////
-export let vShader = null;
-export let fShader = null;
-export let dyn_vShader = null;
-export let dyn_fShader = null;
-
-try {
-	document.getElementById("viewport").innerHTML = "Loading shaders...";
-	console.log("Loading shaders...");
-	[vShader, fShader, dyn_vShader, dyn_fShader] = await Promise.all([
-		fetch("../glsl/static-vertex.glsl").then((r) => {
-			if (!r.ok) throw new Error("Shader static-vertex.glsl not found");
-			return r.text();
-		}),
-		fetch("../glsl/static-fragment.glsl").then((r) => {
-			if (!r.ok) throw new Error("Shader static-fragment.glsl not found");
-			return r.text();
-		}),
-		fetch("../glsl/dynamic-animation-vertex.glsl").then((r) => {
-			if (!r.ok)
-				throw new Error(
-					"Shader dynamic-animation-vertex.glsl not found",
-				);
-			return r.text();
-		}),
-		fetch("../glsl/dynamic-animation-fragment.glsl").then((r) => {
-			if (!r.ok)
-				throw new Error(
-					"Shader dynamic-animation-fragment.glsl not found",
-				);
-			return r.text();
-		}),
-	]);
-	console.log("Shaders loaded successfully");
-	document.getElementById("viewport").innerHTML = "";
-} catch (err) {
-	console.error("Error encountered while loading shaders: ", err);
-	document.getElementById("viewport").innerHTML =
-		"Error encountered while loading shaders: " + err;
-}
+export let vShader = vertexShader;
+export let fShader = fragmentShader;
+export let dyn_vShader = dynamicVertexShader;
+export let dyn_fShader = dynamicFragmentShader;
 
 /////// three.js ///////
 

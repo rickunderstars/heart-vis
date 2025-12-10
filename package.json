@@ -1,0 +1,13 @@
+{
+	"devDependencies": {
+		"vite": "^7.2.7",
+		"vite-plugin-glsl": "^1.5.5"
+	},
+	"scripts": {
+		"dev": "vite",
+		"build": "vite build"
+	},
+	"dependencies": {
+		"three": "^0.181.2"
+	}
+}
