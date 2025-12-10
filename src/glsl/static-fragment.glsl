@@ -32,7 +32,7 @@ void main() {
 
 	vec3 color = TurboColormap(vNormalized);
 
-	vec3 finalColor = mix(color, nullColor, vIsNull);
+	vec3 finalColor = mix(color, nullColor, vIsNull); // vec3(1.0, 0.0, 0.0);
 
 	gl_FragColor = vec4(finalColor, 1.0);
 

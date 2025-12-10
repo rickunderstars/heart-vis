@@ -1,18 +1,26 @@
-export const state = {
-	meshes: [],
-	activeMesh: -1,
-	activeQuality: "unipolar",
-	timeMode: false,
-};
+class State {
+	meshes = [];
+	activeMesh = -1;
+	activeQuality = "unipolar";
+	timeMode = false;
 
-export function getActiveMesh() {
-	return state.meshes[state.activeMesh] ?? null;
+	getActiveMesh() {
+		return this.meshes[this.activeMesh] ?? null;
+	}
+
+	setActiveMesh(index) {
+		this.activeMesh = index;
+	}
+
+	setActiveQuality(quality) {
+		this.activeQuality = quality;
+	}
+
+	toggleTimeMode() {
+		state.timeMode = !state.timeMode;
+	}
 }
 
-export function setActiveMesh(index) {
-	state.activeMesh = index;
-}
+const state = new State();
 
-export function setActiveQuality(quality) {
-	state.activeQuality = quality;
-}
+export default state;

@@ -6,7 +6,6 @@ build/*
 
 .vite/
 node_modules/
-package-lock.json
 .cache/
 compile_commands.json
 .emscripten_cache/
