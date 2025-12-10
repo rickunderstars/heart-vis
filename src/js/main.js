@@ -1,19 +1,10 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { getMax, get2Min } from "./utils/math-utils.js";
-import { initLights, initScene } from "./core/scene.js";
-import { createRenderer } from "./core/renderer.js";
-import {
-	state,
-	getActiveMesh,
-	setActiveMesh,
-	setActiveQuality,
-} from "./state/state.js";
-import { processFile } from "./loaders/mesh-processing.js";
-import {
-	setupBrowseFile,
-	setupDragAndDrop,
-} from "./interaction/file-handler.js";
+import { initLights, createScene } from "./visualization/scene.js";
+import { createRenderer } from "./visualization/renderer.js";
+import state from "./state/state.js";
+import { setupFileHandlers } from "./interaction/file-handler.js";
 import { vertexPicker } from "./interaction/vertex-picker.js";
 
 /////// load shaders ///////
@@ -59,7 +50,7 @@ try {
 
 /////// three.js ///////
 
-export const scene = initScene();
+export const scene = createScene();
 initLights(scene);
 const viewport = document.getElementById("viewport");
 export const camera = new THREE.PerspectiveCamera(
@@ -103,19 +94,18 @@ const qualities = [
 	"groupid",
 ];
 
-setActiveMesh(-1);
+state.setActiveMesh(-1);
 
 if (state.timeMode) {
 	dynamicAnimate();
 }
 
-setActiveQuality(
+state.setActiveQuality(
 	document.querySelector('.qualities-container input[name="quality"]:checked')
 		.value,
 );
 
-setupBrowseFile(processFile);
-setupDragAndDrop(processFile, viewport);
+setupFileHandlers({ state, scene, camera, controls, viewport });
 
 let then = 0;
 const fps = 120;
@@ -135,8 +125,8 @@ function dynamicAnimate(timeStamp) {
 	if (delta > interval) {
 		then = timeStamp - (delta % interval);
 
-		if (state.activeMesh !== -1 && getActiveMesh()) {
-			getActiveMesh().mesh.material.uniforms.uTime.value =
+		if (state.activeMesh !== -1 && state.getActiveMesh()) {
+			state.getActiveMesh().mesh.material.uniforms.uTime.value =
 				clock.getElapsedTime();
 		}
 
@@ -157,7 +147,7 @@ function onMouseMove(e) {
 	const rect = renderer.domElement.getBoundingClientRect();
 	mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
 	mouse.y = -(((e.clientY - rect.top) / rect.height) * 2 - 1);
-	vertexPicker(state, mouse, camera);
+	vertexPicker({ state, mouse, camera });
 }
 
 function setData(meshIndex, dataSet) {
@@ -179,7 +169,7 @@ function setData(meshIndex, dataSet) {
 
 		renderer.render(scene, camera);
 	} else {
-		const meshData = getActiveMesh();
+		const meshData = state.getActiveMesh();
 		const currentMesh = meshData.mesh;
 		const valueSets = meshData.valueSets;
 		state.timeMode = false;
@@ -203,8 +193,8 @@ function setData(meshIndex, dataSet) {
 }
 
 function cameraReset() {
-	const center = getActiveMesh().center;
-	const radius = getActiveMesh().radius;
+	const center = state.getActiveMesh().center;
+	const radius = state.getActiveMesh().radius;
 	camera.position.set(center.x, center.y, center.z + radius * 2.5);
 	controls.target.set(center.x, center.y, center.z);
 	controls.update();
@@ -221,9 +211,9 @@ document.addEventListener("keydown", (k) => {
 });
 
 document.getElementById("dynamic-animation").addEventListener("click", () => {
-	if (state.activeMesh === -1 || !getActiveMesh()) return;
+	if (state.activeMesh === -1 || !state.getActiveMesh()) return;
 
-	const meshData = getActiveMesh();
+	const meshData = state.getActiveMesh();
 	const currentMesh = meshData.mesh;
 	const valueSets = meshData.valueSets;
 	const lat = valueSets[state.activeQuality];
@@ -286,7 +276,7 @@ document
 	.querySelector(".qualities-container")
 	.addEventListener("change", function (e) {
 		if (e.target.name === "quality") {
-			setActiveQuality(e.target.value);
+			state.setActiveQuality(e.target.value);
 			setData(state.activeMesh, state.activeQuality);
 		}
 	});
@@ -295,11 +285,11 @@ document
 	.querySelector(".meshes-container")
 	.addEventListener("change", function (e) {
 		if (e.target.name === "loaded-mesh") {
-			setActiveMesh(e.target.value);
+			state.setActiveMesh(e.target.value);
 			if (!state.timeMode) {
 				setData(state.activeMesh, state.activeQuality);
 			} else {
-				const meshData = getActiveMesh();
+				const meshData = state.getActiveMesh();
 				const currentMesh = meshData.mesh;
 				const valueSets = meshData.valueSets;
 				const lat = valueSets[state.activeQuality];
@@ -337,7 +327,7 @@ document
 					state.meshes[i].mesh.visible = true;
 				}
 			}
-			const activeMesh = getActiveMesh();
+			const activeMesh = state.getActiveMesh();
 
 			camera.position.set(
 				activeMesh.center.x,
