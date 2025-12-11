@@ -1,29 +1,21 @@
 // css
 import "@css/styles.css";
 
-// shaders
-import vertexShader from "@glsl/static-vertex.glsl";
-import fragmentShader from "@glsl/static-fragment.glsl";
-import dynamicVertexShader from "@glsl/dynamic-animation-vertex.glsl";
-import dynamicFragmentShader from "@glsl/dynamic-animation-fragment.glsl";
-
 // three
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 
 // my stuff
-import { getMax, get2Min } from "@js/utils/math-utils.js";
 import { initLights, createScene } from "@js/visualization/scene.js";
 import { createRenderer } from "@js/visualization/renderer.js";
 import state from "@js/state/state.js";
-import { setupFileHandlers } from "@js/interaction/file-handler.js";
+import { setupFileHandlers } from "@js/interaction/file-handlers.js";
 import { vertexPicker } from "@js/interaction/vertex-picker.js";
-
-/////// load shaders ///////
-export let vShader = vertexShader;
-export let fShader = fragmentShader;
-export let dyn_vShader = dynamicVertexShader;
-export let dyn_fShader = dynamicFragmentShader;
+import { updateActiveMaterial } from "./visualization/material-update";
+import {
+	loadShaders,
+	reloadShaderMaterial,
+} from "./visualization/shader-update";
 
 /////// three.js ///////
 
@@ -50,6 +42,8 @@ controls.addEventListener("change", () => {
 
 if (!state.timeMode) {
 	renderer.render(scene, camera);
+} else {
+	dynamicAnimate();
 }
 
 window.addEventListener("resize", onViewportResize);
@@ -59,48 +53,45 @@ window.addEventListener("mousemove", onMouseMove, false);
 const clock = new THREE.Clock();
 
 /////// model upload ///////
+let shaders = await loadShaders();
 
 state.meshes = [];
-const qualities = [
-	"unipolar",
-	"bipolar",
-	"lat",
-	"eml",
-	"exteml",
-	"scar",
-	"groupid",
-];
 
 state.setActiveMesh(-1);
-
-if (state.timeMode) {
-	dynamicAnimate();
-}
 
 state.setActiveQuality(
 	document.querySelector('.qualities-container input[name="quality"]:checked')
 		.value,
 );
 
-setupFileHandlers({ state, scene, camera, controls, viewport, renderer });
+setupFileHandlers({
+	state,
+	shaders,
+	scene,
+	camera,
+	controls,
+	viewport,
+	renderer,
+});
 
-let then = 0;
+let lastTime = 0;
 const fps = 120;
 const interval = 1000 / fps;
 
 function dynamicAnimate(timeStamp) {
 	if (!state.timeMode) {
+		renderer.render(scene, camera);
 		return;
 	}
 
 	requestAnimationFrame(dynamicAnimate);
 
-	if (!then) then = timeStamp;
+	if (!lastTime) lastTime = timeStamp;
 
-	const delta = timeStamp - then;
+	const delta = timeStamp - lastTime;
 
 	if (delta > interval) {
-		then = timeStamp - (delta % interval);
+		lastTime = timeStamp - (delta % interval);
 
 		if (state.activeMesh !== -1 && state.getActiveMesh()) {
 			state.getActiveMesh().mesh.material.uniforms.uTime.value =
@@ -127,48 +118,6 @@ function onMouseMove(e) {
 	vertexPicker({ state, mouse, camera });
 }
 
-function setData(meshIndex, dataSet) {
-	if (state.meshes[meshIndex] && !state.timeMode) {
-		const mesh = state.meshes[meshIndex].mesh;
-		const valueSets = state.meshes[meshIndex].valueSets;
-		const [absMin, min] = get2Min(valueSets[dataSet]);
-
-		mesh.material.uniforms.uOnlyTwo.value = absMin - min == 0 ? 1.0 : 0.0;
-		mesh.material.uniforms.uAbsMin.value = absMin;
-		mesh.material.uniforms.uMin.value = min;
-		mesh.material.uniforms.uMax.value = getMax(valueSets[dataSet]);
-
-		mesh.geometry.deleteAttribute("value");
-		mesh.geometry.setAttribute(
-			"value",
-			new THREE.BufferAttribute(valueSets[dataSet], 1),
-		);
-
-		renderer.render(scene, camera);
-	} else {
-		const meshData = state.getActiveMesh();
-		const currentMesh = meshData.mesh;
-		const valueSets = meshData.valueSets;
-		state.timeMode = false;
-
-		const [absMin, min] = get2Min(valueSets[state.activeQuality]);
-
-		currentMesh.material = new THREE.ShaderMaterial({
-			uniforms: {
-				uOnlyTwo: { value: absMin - min == 0 ? 1.0 : 0.0 },
-				uAbsMin: { value: absMin },
-				uMin: { value: min },
-				uMax: { value: getMax(valueSets[state.activeQuality]) },
-			},
-			vertexShader: vShader,
-			fragmentShader: fShader,
-			side: THREE.DoubleSide,
-		});
-
-		setData(state.activeMesh, state.activeQuality);
-	}
-}
-
 function cameraReset() {
 	const center = state.getActiveMesh().center;
 	const radius = state.getActiveMesh().radius;
@@ -187,65 +136,24 @@ document.addEventListener("keydown", (k) => {
 	}
 });
 
+document.addEventListener("keydown", (k) => {
+	if (k.key === "s") {
+		reloadShaderMaterial(state);
+	}
+});
+
 document.getElementById("dynamic-animation").addEventListener("click", () => {
 	if (state.activeMesh === -1 || !state.getActiveMesh()) return;
 
-	const meshData = state.getActiveMesh();
-	const currentMesh = meshData.mesh;
-	const valueSets = meshData.valueSets;
-	const lat = valueSets[state.activeQuality];
-
-	if (currentMesh.material) {
-		currentMesh.material.dispose();
-	}
-
 	if (!state.timeMode) {
-		state.timeMode = true;
-
+		state.toggleTimeMode();
+		updateActiveMaterial({ state, shaders });
 		clock.start();
-		then = 0;
-
-		then = 0;
-
+		lastTime = 0;
 		dynamicAnimate();
-
-		currentMesh.geometry.deleteAttribute("value");
-		currentMesh.geometry.setAttribute(
-			"value",
-			new THREE.BufferAttribute(lat, 1),
-		);
-
-		const [absMin, min] = get2Min(lat);
-
-		currentMesh.material = new THREE.ShaderMaterial({
-			uniforms: {
-				uAbsMin: { value: absMin },
-				uMin: { value: min },
-				uMax: { value: getMax(lat) },
-				uTime: { value: 0 },
-			},
-			vertexShader: dyn_vShader,
-			fragmentShader: dyn_fShader,
-			side: THREE.DoubleSide,
-		});
 	} else {
-		state.timeMode = false;
-
-		const [absMin, min] = get2Min(valueSets[state.activeQuality]);
-
-		currentMesh.material = new THREE.ShaderMaterial({
-			uniforms: {
-				uOnlyTwo: { value: absMin - min == 0 ? 1.0 : 0.0 },
-				uAbsMin: { value: absMin },
-				uMin: { value: min },
-				uMax: { value: getMax(valueSets[state.activeQuality]) },
-			},
-			vertexShader: vShader,
-			fragmentShader: fShader,
-			side: THREE.DoubleSide,
-		});
-
-		setData(state.activeMesh, state.activeQuality);
+		state.toggleTimeMode();
+		updateActiveMaterial({ state, shaders });
 	}
 });
 
@@ -254,7 +162,8 @@ document
 	.addEventListener("change", function (e) {
 		if (e.target.name === "quality") {
 			state.setActiveQuality(e.target.value);
-			setData(state.activeMesh, state.activeQuality);
+			updateActiveMaterial({ state, shaders });
+			renderer.render(scene, camera);
 		}
 	});
 
@@ -263,40 +172,8 @@ document
 	.addEventListener("change", function (e) {
 		if (e.target.name === "loaded-mesh") {
 			state.setActiveMesh(e.target.value);
-			if (!state.timeMode) {
-				setData(state.activeMesh, state.activeQuality);
-			} else {
-				const meshData = state.getActiveMesh();
-				const currentMesh = meshData.mesh;
-				const valueSets = meshData.valueSets;
-				const lat = valueSets[state.activeQuality];
-				clock.start();
-				then = 0;
+			updateActiveMaterial({ state, shaders });
 
-				then = 0;
-
-				dynamicAnimate();
-
-				currentMesh.geometry.deleteAttribute("value");
-				currentMesh.geometry.setAttribute(
-					"value",
-					new THREE.BufferAttribute(lat, 1),
-				);
-
-				const [absMin, min] = get2Min(lat);
-
-				currentMesh.material = new THREE.ShaderMaterial({
-					uniforms: {
-						uAbsMin: { value: absMin },
-						uMin: { value: min },
-						uMax: { value: getMax(lat) },
-						uTime: { value: 0 },
-					},
-					vertexShader: dyn_vShader,
-					fragmentShader: dyn_fShader,
-					side: THREE.DoubleSide,
-				});
-			}
 			for (let i = 0; i < state.meshes.length; i++) {
 				if (i != state.activeMesh) {
 					state.meshes[i].mesh.visible = false;
