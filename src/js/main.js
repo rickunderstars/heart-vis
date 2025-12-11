@@ -18,6 +18,7 @@ import { createRenderer } from "@js/visualization/renderer.js";
 import state from "@js/state/state.js";
 import { setupFileHandlers } from "@js/interaction/file-handler.js";
 import { vertexPicker } from "@js/interaction/vertex-picker.js";
+import { updateActiveMaterial } from "./visualization/material-switch";
 
 /////// load shaders ///////
 export let vShader = vertexShader;
@@ -50,6 +51,8 @@ controls.addEventListener("change", () => {
 
 if (!state.timeMode) {
 	renderer.render(scene, camera);
+} else {
+	dynamicAnimate();
 }
 
 window.addEventListener("resize", onViewportResize);
@@ -73,10 +76,6 @@ const qualities = [
 
 state.setActiveMesh(-1);
 
-if (state.timeMode) {
-	dynamicAnimate();
-}
-
 state.setActiveQuality(
 	document.querySelector('.qualities-container input[name="quality"]:checked')
 		.value,
@@ -84,23 +83,24 @@ state.setActiveQuality(
 
 setupFileHandlers({ state, scene, camera, controls, viewport, renderer });
 
-let then = 0;
+let lastTime = 0;
 const fps = 120;
 const interval = 1000 / fps;
 
 function dynamicAnimate(timeStamp) {
 	if (!state.timeMode) {
+		renderer.render(scene, camera);
 		return;
 	}
 
 	requestAnimationFrame(dynamicAnimate);
 
-	if (!then) then = timeStamp;
+	if (!lastTime) lastTime = timeStamp;
 
-	const delta = timeStamp - then;
+	const delta = timeStamp - lastTime;
 
 	if (delta > interval) {
-		then = timeStamp - (delta % interval);
+		lastTime = timeStamp - (delta % interval);
 
 		if (state.activeMesh !== -1 && state.getActiveMesh()) {
 			state.getActiveMesh().mesh.material.uniforms.uTime.value =
@@ -190,62 +190,15 @@ document.addEventListener("keydown", (k) => {
 document.getElementById("dynamic-animation").addEventListener("click", () => {
 	if (state.activeMesh === -1 || !state.getActiveMesh()) return;
 
-	const meshData = state.getActiveMesh();
-	const currentMesh = meshData.mesh;
-	const valueSets = meshData.valueSets;
-	const lat = valueSets[state.activeQuality];
-
-	if (currentMesh.material) {
-		currentMesh.material.dispose();
-	}
-
 	if (!state.timeMode) {
-		state.timeMode = true;
-
+		state.toggleTimeMode();
+		updateActiveMaterial(state);
 		clock.start();
-		then = 0;
-
-		then = 0;
-
+		lastTime = 0;
 		dynamicAnimate();
-
-		currentMesh.geometry.deleteAttribute("value");
-		currentMesh.geometry.setAttribute(
-			"value",
-			new THREE.BufferAttribute(lat, 1),
-		);
-
-		const [absMin, min] = get2Min(lat);
-
-		currentMesh.material = new THREE.ShaderMaterial({
-			uniforms: {
-				uAbsMin: { value: absMin },
-				uMin: { value: min },
-				uMax: { value: getMax(lat) },
-				uTime: { value: 0 },
-			},
-			vertexShader: dyn_vShader,
-			fragmentShader: dyn_fShader,
-			side: THREE.DoubleSide,
-		});
 	} else {
-		state.timeMode = false;
-
-		const [absMin, min] = get2Min(valueSets[state.activeQuality]);
-
-		currentMesh.material = new THREE.ShaderMaterial({
-			uniforms: {
-				uOnlyTwo: { value: absMin - min == 0 ? 1.0 : 0.0 },
-				uAbsMin: { value: absMin },
-				uMin: { value: min },
-				uMax: { value: getMax(valueSets[state.activeQuality]) },
-			},
-			vertexShader: vShader,
-			fragmentShader: fShader,
-			side: THREE.DoubleSide,
-		});
-
-		setData(state.activeMesh, state.activeQuality);
+		state.toggleTimeMode();
+		updateActiveMaterial(state);
 	}
 });
 
@@ -254,7 +207,8 @@ document
 	.addEventListener("change", function (e) {
 		if (e.target.name === "quality") {
 			state.setActiveQuality(e.target.value);
-			setData(state.activeMesh, state.activeQuality);
+			updateActiveMaterial(state);
+			renderer.render(scene, camera);
 		}
 	});
 
@@ -263,40 +217,8 @@ document
 	.addEventListener("change", function (e) {
 		if (e.target.name === "loaded-mesh") {
 			state.setActiveMesh(e.target.value);
-			if (!state.timeMode) {
-				setData(state.activeMesh, state.activeQuality);
-			} else {
-				const meshData = state.getActiveMesh();
-				const currentMesh = meshData.mesh;
-				const valueSets = meshData.valueSets;
-				const lat = valueSets[state.activeQuality];
-				clock.start();
-				then = 0;
+			updateActiveMaterial(state);
 
-				then = 0;
-
-				dynamicAnimate();
-
-				currentMesh.geometry.deleteAttribute("value");
-				currentMesh.geometry.setAttribute(
-					"value",
-					new THREE.BufferAttribute(lat, 1),
-				);
-
-				const [absMin, min] = get2Min(lat);
-
-				currentMesh.material = new THREE.ShaderMaterial({
-					uniforms: {
-						uAbsMin: { value: absMin },
-						uMin: { value: min },
-						uMax: { value: getMax(lat) },
-						uTime: { value: 0 },
-					},
-					vertexShader: dyn_vShader,
-					fragmentShader: dyn_fShader,
-					side: THREE.DoubleSide,
-				});
-			}
 			for (let i = 0; i < state.meshes.length; i++) {
 				if (i != state.activeMesh) {
 					state.meshes[i].mesh.visible = false;
