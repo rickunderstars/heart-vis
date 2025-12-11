@@ -1,30 +1,21 @@
 // css
 import "@css/styles.css";
 
-// shaders
-import vertexShader from "@glsl/static-vertex.glsl";
-import fragmentShader from "@glsl/static-fragment.glsl";
-import dynamicVertexShader from "@glsl/dynamic-animation-vertex.glsl";
-import dynamicFragmentShader from "@glsl/dynamic-animation-fragment.glsl";
-
 // three
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 
 // my stuff
-import { getMax, get2Min } from "@js/utils/math-utils.js";
 import { initLights, createScene } from "@js/visualization/scene.js";
 import { createRenderer } from "@js/visualization/renderer.js";
 import state from "@js/state/state.js";
-import { setupFileHandlers } from "@js/interaction/file-handler.js";
+import { setupFileHandlers } from "@js/interaction/file-handlers.js";
 import { vertexPicker } from "@js/interaction/vertex-picker.js";
-import { updateActiveMaterial } from "./visualization/material-switch";
-
-/////// load shaders ///////
-export let vShader = vertexShader;
-export let fShader = fragmentShader;
-export let dyn_vShader = dynamicVertexShader;
-export let dyn_fShader = dynamicFragmentShader;
+import { updateActiveMaterial } from "./visualization/material-update";
+import {
+	loadShaders,
+	reloadShaderMaterial,
+} from "./visualization/shader-update";
 
 /////// three.js ///////
 
@@ -62,17 +53,9 @@ window.addEventListener("mousemove", onMouseMove, false);
 const clock = new THREE.Clock();
 
 /////// model upload ///////
+let shaders = await loadShaders();
 
 state.meshes = [];
-const qualities = [
-	"unipolar",
-	"bipolar",
-	"lat",
-	"eml",
-	"exteml",
-	"scar",
-	"groupid",
-];
 
 state.setActiveMesh(-1);
 
@@ -81,7 +64,15 @@ state.setActiveQuality(
 		.value,
 );
 
-setupFileHandlers({ state, scene, camera, controls, viewport, renderer });
+setupFileHandlers({
+	state,
+	shaders,
+	scene,
+	camera,
+	controls,
+	viewport,
+	renderer,
+});
 
 let lastTime = 0;
 const fps = 120;
@@ -127,48 +118,6 @@ function onMouseMove(e) {
 	vertexPicker({ state, mouse, camera });
 }
 
-function setData(meshIndex, dataSet) {
-	if (state.meshes[meshIndex] && !state.timeMode) {
-		const mesh = state.meshes[meshIndex].mesh;
-		const valueSets = state.meshes[meshIndex].valueSets;
-		const [absMin, min] = get2Min(valueSets[dataSet]);
-
-		mesh.material.uniforms.uOnlyTwo.value = absMin - min == 0 ? 1.0 : 0.0;
-		mesh.material.uniforms.uAbsMin.value = absMin;
-		mesh.material.uniforms.uMin.value = min;
-		mesh.material.uniforms.uMax.value = getMax(valueSets[dataSet]);
-
-		mesh.geometry.deleteAttribute("value");
-		mesh.geometry.setAttribute(
-			"value",
-			new THREE.BufferAttribute(valueSets[dataSet], 1),
-		);
-
-		renderer.render(scene, camera);
-	} else {
-		const meshData = state.getActiveMesh();
-		const currentMesh = meshData.mesh;
-		const valueSets = meshData.valueSets;
-		state.timeMode = false;
-
-		const [absMin, min] = get2Min(valueSets[state.activeQuality]);
-
-		currentMesh.material = new THREE.ShaderMaterial({
-			uniforms: {
-				uOnlyTwo: { value: absMin - min == 0 ? 1.0 : 0.0 },
-				uAbsMin: { value: absMin },
-				uMin: { value: min },
-				uMax: { value: getMax(valueSets[state.activeQuality]) },
-			},
-			vertexShader: vShader,
-			fragmentShader: fShader,
-			side: THREE.DoubleSide,
-		});
-
-		setData(state.activeMesh, state.activeQuality);
-	}
-}
-
 function cameraReset() {
 	const center = state.getActiveMesh().center;
 	const radius = state.getActiveMesh().radius;
@@ -187,18 +136,24 @@ document.addEventListener("keydown", (k) => {
 	}
 });
 
+document.addEventListener("keydown", (k) => {
+	if (k.key === "s") {
+		reloadShaderMaterial(state);
+	}
+});
+
 document.getElementById("dynamic-animation").addEventListener("click", () => {
 	if (state.activeMesh === -1 || !state.getActiveMesh()) return;
 
 	if (!state.timeMode) {
 		state.toggleTimeMode();
-		updateActiveMaterial(state);
+		updateActiveMaterial({ state, shaders });
 		clock.start();
 		lastTime = 0;
 		dynamicAnimate();
 	} else {
 		state.toggleTimeMode();
-		updateActiveMaterial(state);
+		updateActiveMaterial({ state, shaders });
 	}
 });
 
@@ -207,7 +162,7 @@ document
 	.addEventListener("change", function (e) {
 		if (e.target.name === "quality") {
 			state.setActiveQuality(e.target.value);
-			updateActiveMaterial(state);
+			updateActiveMaterial({ state, shaders });
 			renderer.render(scene, camera);
 		}
 	});
@@ -217,7 +172,7 @@ document
 	.addEventListener("change", function (e) {
 		if (e.target.name === "loaded-mesh") {
 			state.setActiveMesh(e.target.value);
-			updateActiveMaterial(state);
+			updateActiveMaterial({ state, shaders });
 
 			for (let i = 0; i < state.meshes.length; i++) {
 				if (i != state.activeMesh) {

@@ -1,9 +1,9 @@
 import * as THREE from "three";
-import { vShader, fShader, dyn_vShader, dyn_fShader } from "../main.js";
-import { updateActiveMaterial } from "../visualization/material-switch.js";
+import { updateActiveMaterial } from "../visualization/material-update.js";
 
 export function setupFileHandlers(dependencies) {
-	const { state, scene, camera, controls, viewport, renderer } = dependencies;
+	const { state, shaders, scene, camera, controls, viewport, renderer } =
+		dependencies;
 
 	function processFile(file) {
 		const fileElement = document.getElementById("filename");
@@ -95,7 +95,7 @@ export function setupFileHandlers(dependencies) {
 
 				state.setActiveMesh(state.meshes.length - 1);
 
-				updateActiveMaterial(state);
+				updateActiveMaterial({ state, shaders });
 
 				state.meshes.forEach((meshData) => {
 					meshData.mesh.visible = false;
@@ -140,7 +140,7 @@ export function setupFileHandlers(dependencies) {
 				}
 
 				console.log(
-					"Mesh loaded successfully. state.meshes loaded:",
+					"Mesh loaded successfully. Meshes loaded:",
 					state.meshes.length,
 				);
 			};
@@ -156,6 +156,14 @@ export function setupFileHandlers(dependencies) {
 				processFile(file);
 			}
 		});
+
+	document.addEventListener("keydown", (e) => {
+		if (e.key === "u") {
+			e.preventDefault();
+			const upload = document.getElementById("raw-mesh");
+			upload.click();
+		}
+	});
 
 	["dragenter", "dragover", "dragleave", "drop"].forEach((eventName) => {
 		viewport.addEventListener(eventName, (e) => {

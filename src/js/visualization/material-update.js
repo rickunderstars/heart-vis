@@ -1,8 +1,11 @@
 import * as THREE from "three";
 import { getMax, get2Min } from "../utils/math-utils.js";
-import { vShader, fShader, dyn_vShader, dyn_fShader } from "@js/main.js";
 
-export function updateActiveMaterial(state) {
+export function updateActiveMaterial(dependencies) {
+	const { state, shaders } = dependencies;
+
+	const { vShader, fShader, dynVShader, dynFShader } = shaders;
+
 	const activeMesh = state.getActiveMesh();
 	const quality = state.activeQuality;
 	const [absMin, min] = get2Min(activeMesh.valueSets[quality]);
@@ -32,8 +35,8 @@ export function updateActiveMaterial(state) {
 				uMax: { value: max },
 				uTime: { value: 0 },
 			},
-			vertexShader: dyn_vShader,
-			fragmentShader: dyn_fShader,
+			vertexShader: dynVShader,
+			fragmentShader: dynFShader,
 			side: THREE.DoubleSide,
 		});
 	}
