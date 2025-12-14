@@ -75,13 +75,13 @@ body {
 	background-color: #6656b3;
 }
 
-.btn-lat {
+.btn-animation {
 	background-color: lightgreen;
 	width: 10vh;
 	box-shadow: 0.3vh 0.3vh 1vh rgba(0, 0, 0, 0.3);
 }
 
-.btn-lat:hover {
+.btn-animation:hover {
 	background-color: greenyellow;
 }
 
@@ -93,7 +93,7 @@ body {
 .qualities-container label,
 .meshes-container label,
 .btn-camera,
-.btn-lat {
+.btn-animation {
 	display: inline-block;
 	text-align: center;
 	border-radius: 1vh;
@@ -159,10 +159,11 @@ body {
 
 .gauge-line {
 	position: absolute;
-	left: 0;
-	width: 100%;
-	height: 0.2vh;
+	left: -4%;
+	width: 108%;
+	height: 0.3vh;
 	background-color: black;
+	border-radius: 0.5vh;
 	transition: bottom 0.1s ease-out;
 }
 

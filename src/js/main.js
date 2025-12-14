@@ -233,7 +233,7 @@ function setGaugeLine(value, state) {
 		return;
 	}
 
-	const clampedValue = (value - min) / (max - min);
+	const position = (value - min) / (max - min) - 0.15 / 42; // - gauge-line heght / gradient height
 
-	line.style.bottom = `${clampedValue * 100}%`;
+	line.style.bottom = `${position * 100}%`;
 }
