@@ -16,13 +16,14 @@ import {
 	loadShaders,
 	reloadShaderMaterial,
 } from "./visualization/shader-update";
+import { getMax, get2Min, turboColormap } from "./utils/math-utils";
 
 /////// three.js ///////
 
-export const scene = createScene();
+const scene = createScene();
 initLights(scene);
 const viewport = document.getElementById("viewport");
-export const camera = new THREE.PerspectiveCamera(
+const camera = new THREE.PerspectiveCamera(
 	50,
 	viewport.clientWidth / viewport.clientHeight,
 );
@@ -115,7 +116,8 @@ function onMouseMove(e) {
 	const rect = renderer.domElement.getBoundingClientRect();
 	mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
 	mouse.y = -(((e.clientY - rect.top) / rect.height) * 2 - 1);
-	vertexPicker({ state, mouse, camera });
+	const value = vertexPicker({ state, mouse, camera });
+	setGaugeLine(value, state);
 }
 
 function cameraReset() {
@@ -196,3 +198,42 @@ document
 			controls.update();
 		}
 	});
+
+colorizeGradient();
+
+function colorizeGradient() {
+	const gradient = document.getElementById("gradient-bar");
+	const ctx = gradient.getContext("2d");
+	const height = gradient.height;
+
+	for (let y = 0; y < height; y++) {
+		const t = 1 - y / height;
+		const [r, g, b] = turboColormap(t);
+		ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+		ctx.fillRect(0, y, gradient.width, 1);
+	}
+}
+
+function setGaugeLine(value, state) {
+	if (!state.getActiveMesh()) {
+		return;
+	}
+	const line = document.getElementById("gauge-line");
+
+	const [, min] = get2Min(
+		state.getActiveMesh().valueSets[state.activeQuality],
+	);
+	const max = getMax(state.getActiveMesh().valueSets[state.activeQuality]);
+
+	if (value > max) {
+		line.style.bottom = `100%`;
+		return;
+	} else if (value < min) {
+		line.style.bottom = `0%`;
+		return;
+	}
+
+	const position = (value - min) / (max - min) - 0.15 / 42; // - gauge-line heght / gradient height
+
+	line.style.bottom = `${position * 100}%`;
+}

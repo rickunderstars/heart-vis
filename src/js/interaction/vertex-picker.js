@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { formatNumber } from "../utils/math-utils";
 
 export function vertexPicker(dependencies) {
 	const { state, mouse, camera } = dependencies;
@@ -59,20 +60,37 @@ export function vertexPicker(dependencies) {
 
 		document.getElementById("vertex-info").innerHTML =
 			"<div class='vertex-info'>Unipolar: " +
-			unipolar.toFixed(3) +
+			formatNumber(unipolar) +
 			"</br>Bipolar: " +
-			bipolar.toFixed(3) +
+			formatNumber(bipolar) +
 			"</br>LAT: " +
-			lat.toFixed(3) +
+			formatNumber(lat) +
 			"</br>EML: " +
-			eml +
+			formatNumber(eml) +
 			"</br>ExtEML: " +
-			exteml +
+			formatNumber(exteml) +
 			"</br>SCAR: " +
-			scar +
+			formatNumber(scar) +
 			"</br>groupID: " +
-			groupid +
+			formatNumber(groupid) +
 			"</div>";
+
+		switch (state.activeQuality) {
+			case "unipolar":
+				return unipolar;
+			case "bipolar":
+				return bipolar;
+			case "lat":
+				return lat;
+			case "eml":
+				return eml;
+			case "exteml":
+				return exteml;
+			case "scar":
+				return scar;
+			case "groupid":
+				return groupid;
+		}
 	} else {
 		document.getElementById("vertex-info").innerHTML = "";
 	}
