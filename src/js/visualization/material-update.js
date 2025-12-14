@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { getMax, get2Min } from "../utils/math-utils.js";
+import { getMax, get2Min, formatNumber } from "../utils/math-utils.js";
 
 export function updateActiveMaterial(dependencies) {
 	const { state, shaders } = dependencies;
@@ -40,4 +40,7 @@ export function updateActiveMaterial(dependencies) {
 			side: THREE.DoubleSide,
 		});
 	}
+
+	document.getElementById("min-value").innerText = formatNumber(min);
+	document.getElementById("max-value").innerText = formatNumber(max);
 }
