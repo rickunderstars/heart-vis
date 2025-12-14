@@ -7,6 +7,7 @@ export function createScene() {
 }
 
 export function initLights(scene) {
+	/*
 	const light1 = new THREE.DirectionalLight(0xffffff, 1);
 	const light2 = new THREE.DirectionalLight(0xffffff, 1);
 	const light3 = new THREE.DirectionalLight(0xffffff, 1);
@@ -18,4 +19,5 @@ export function initLights(scene) {
 
 	scene.add(light1, light2, light3, light4);
 	scene.add(new THREE.AmbientLight(0xffffff, 3));
+	*/
 }

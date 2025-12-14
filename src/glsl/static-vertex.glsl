@@ -5,7 +5,7 @@ uniform float uMin;
 uniform float uMax;
 uniform float uOnlyTwo;
 
-varying float vNormalized;
+varying float val;
 varying float vIsNull;
 
 float normalizeValue(float value, float minVal, float maxVal) {
@@ -14,8 +14,7 @@ float normalizeValue(float value, float minVal, float maxVal) {
 
 void main() {
 
-	float n = normalizeValue(value, uMin, uMax);
-	vNormalized = clamp(n, 0.0, 1.0);
+	val = normalizeValue(value, uMin, uMax);
 
 	float epsilon = 0.0001;
 	vIsNull = step(value, uMin + epsilon);

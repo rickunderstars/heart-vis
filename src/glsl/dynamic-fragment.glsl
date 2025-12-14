@@ -1,5 +1,6 @@
 
 uniform float uTime;
+uniform float uAmbientLightIntensity;
 
 const float TimeSpeed = 0.05;
 const int NumWaves = 10;
@@ -21,7 +22,8 @@ void main() {
 	vec3 nullColor = vec3(0.45, 0.45, 0.45); // grey
 	vec3 color = gradientWave(phase, vec3(0.2, 0.2, 0.2), vec3(0.3, 1.0, 1.0));
 
-	vec3 finalColor = mix(color, nullColor, vIsNull);
+	vec3 finalColor =
+		mix(color, nullColor, vIsNull) * vec3(uAmbientLightIntensity);
 	gl_FragColor = vec4(finalColor, 1.0);
 
 	/*

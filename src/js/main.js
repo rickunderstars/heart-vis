@@ -237,3 +237,10 @@ function setGaugeLine(value, state) {
 
 	line.style.bottom = `${position * 100}%`;
 }
+
+const slider = document.getElementById("light-slider");
+slider.oninput = function () {
+	const intensity = this.value / 100;
+	state.setAmbientLightIntensity(intensity);
+	renderer.render(scene, camera);
+};

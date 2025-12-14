@@ -3,6 +3,7 @@ class State {
 	activeMesh = -1;
 	activeQuality = "unipolar";
 	timeMode = false;
+	ambientLightIntensity = 1;
 
 	getActiveMesh() {
 		return this.meshes[this.activeMesh] ?? null;
@@ -18,6 +19,16 @@ class State {
 
 	toggleTimeMode() {
 		state.timeMode = !state.timeMode;
+	}
+
+	setAmbientLightIntensity(intensity) {
+		if (intensity > 1) {
+			intensity = 1;
+		} else if (intensity < 0) {
+			intensity = 0;
+		}
+		this.getActiveMesh().mesh.material.uniforms.uAmbientLightIntensity.value =
+			intensity;
 	}
 }
 

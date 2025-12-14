@@ -15,8 +15,6 @@ void main() {
 
 	val = normalizeValue(value, uMin, uMax);
 
-	// val = fract(val + 0.5);
-
 	float epsilon = 0.0001;
 	vIsNull = step(value, uMin + epsilon);
 
