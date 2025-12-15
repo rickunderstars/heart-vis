@@ -120,6 +120,7 @@ body {
 	background: black;
 	outline: none;
 	opacity: 0.7;
+	box-shadow: 0.3vh 0.3vh 1vh rgba(0, 0, 0, 0.3);
 }
 
 .slider-knob::-moz-range-thumb {
@@ -128,6 +129,7 @@ body {
 	background: cyan;
 	cursor: pointer;
 	border-radius: 50%;
+	box-shadow: 0.3vh 0.3vh 1vh rgba(0, 0, 0, 0.3);
 }
 
 .vertex-info,
