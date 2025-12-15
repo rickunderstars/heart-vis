@@ -1,8 +1,8 @@
+uniform float uAmbientLightIntensity;
+
 varying float val;
 varying float vIsNull;
 varying vec3 vNormal;
-
-uniform float uAmbientLightIntensity;
 
 vec3 TurboColormap(in float x) {
 	const vec4 kRedVec4 =

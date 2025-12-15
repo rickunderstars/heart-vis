@@ -27,6 +27,7 @@ class State {
 		} else if (intensity < 0) {
 			intensity = 0;
 		}
+		this.ambientLightIntensity = intensity;
 		this.getActiveMesh().mesh.material.uniforms.uAmbientLightIntensity.value =
 			intensity;
 	}
