@@ -10,13 +10,10 @@ import { initLights, createScene } from "@js/visualization/scene.js";
 import { createRenderer } from "@js/visualization/renderer.js";
 import state from "@js/state/state.js";
 import { setupFileHandlers } from "@js/interaction/file-handlers.js";
-import { vertexPicker } from "@js/interaction/vertex-picker.js";
-import { updateActiveMaterial } from "./visualization/material-update";
-import {
-	loadShaders,
-	reloadShaderMaterial,
-} from "./visualization/shader-update";
-import { getMax, get2Min, turboColormap } from "./utils/math-utils";
+import { updateActiveMaterial } from "@js/visualization/material-update";
+import { loadShaders } from "@js/visualization/shader-update";
+import { setupEventHandlers } from "@js/interaction/event-handlers";
+import { colorizeGradient } from "./visualization/color-gauge";
 
 /////// three.js ///////
 
@@ -47,10 +44,6 @@ if (!state.timeMode) {
 	dynamicAnimate();
 }
 
-window.addEventListener("resize", onViewportResize);
-
-window.addEventListener("mousemove", onMouseMove, false);
-
 const clock = new THREE.Clock();
 
 /////// model upload ///////
@@ -74,6 +67,10 @@ setupFileHandlers({
 	viewport,
 	renderer,
 });
+
+setupEventHandlers({ camera, controls, renderer, mouse, state });
+
+colorizeGradient();
 
 let lastTime = 0;
 const fps = 120;
@@ -102,47 +99,6 @@ function dynamicAnimate(timeStamp) {
 		renderer.render(scene, camera);
 	}
 }
-
-function onViewportResize() {
-	camera.aspect = viewport.clientWidth / viewport.clientHeight;
-	camera.updateProjectionMatrix();
-	renderer.setSize(viewport.clientWidth, viewport.clientHeight);
-	if (!state.timeMode) {
-		renderer.render(scene, camera);
-	}
-}
-
-function onMouseMove(e) {
-	const rect = renderer.domElement.getBoundingClientRect();
-	mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-	mouse.y = -(((e.clientY - rect.top) / rect.height) * 2 - 1);
-	const value = vertexPicker({ state, mouse, camera });
-	setGaugeLine(value, state);
-}
-
-function cameraReset() {
-	const center = state.getActiveMesh().center;
-	const radius = state.getActiveMesh().radius;
-	camera.position.set(center.x, center.y, center.z + radius * 2.5);
-	controls.target.set(center.x, center.y, center.z);
-	controls.update();
-}
-
-document.getElementById("camera-reset").addEventListener("click", () => {
-	cameraReset();
-});
-
-document.addEventListener("keydown", (k) => {
-	if (k.key === "r") {
-		cameraReset();
-	}
-});
-
-document.addEventListener("keydown", (k) => {
-	if (k.key === "s") {
-		reloadShaderMaterial(state);
-	}
-});
 
 document.getElementById("dynamic-animation").addEventListener("click", () => {
 	if (state.activeMesh === -1 || !state.getActiveMesh()) return;
@@ -198,45 +154,6 @@ document
 			controls.update();
 		}
 	});
-
-colorizeGradient();
-
-function colorizeGradient() {
-	const gradient = document.getElementById("gradient-bar");
-	const ctx = gradient.getContext("2d");
-	const height = gradient.height;
-
-	for (let y = 0; y < height; y++) {
-		const t = 1 - y / height;
-		const [r, g, b] = turboColormap(t);
-		ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
-		ctx.fillRect(0, y, gradient.width, 1);
-	}
-}
-
-function setGaugeLine(value, state) {
-	if (!state.getActiveMesh()) {
-		return;
-	}
-	const line = document.getElementById("gauge-line");
-
-	const [, min] = get2Min(
-		state.getActiveMesh().valueSets[state.activeQuality],
-	);
-	const max = getMax(state.getActiveMesh().valueSets[state.activeQuality]);
-
-	if (value > max) {
-		line.style.bottom = `100%`;
-		return;
-	} else if (value < min) {
-		line.style.bottom = `0%`;
-		return;
-	}
-
-	const position = (value - min) / (max - min) - 0.15 / 42; // - gauge-line heght / gradient height
-
-	line.style.bottom = `${position * 100}%`;
-}
 
 const slider = document.getElementById("light-slider");
 slider.oninput = function () {

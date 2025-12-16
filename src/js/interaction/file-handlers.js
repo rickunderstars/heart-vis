@@ -158,7 +158,7 @@ export function setupFileHandlers(dependencies) {
 		});
 
 	document.addEventListener("keydown", (e) => {
-		if (e.key === "u") {
+		if (e.key.toLowerCase() === "u") {
 			e.preventDefault();
 			const upload = document.getElementById("raw-mesh");
 			upload.click();
