@@ -34,8 +34,8 @@ void main() {
 	float light3Diffuse = max(dot(vNormal, light3Dir), 0.0);
 	float light4Diffuse = max(dot(vNormal, light4Dir), 0.0);
 
-	vec3 lambert = light1Diffuse * vec3(1.2) + light2Diffuse * vec3(1.2) +
-				   light3Diffuse * vec3(0.8) + light4Diffuse * vec3(0.8);
+	vec3 lambert = light1Diffuse * vec3(1.3) + light2Diffuse * vec3(1.3) +
+				   light3Diffuse * vec3(0.7) + light4Diffuse * vec3(0.7);
 	lambert = lambert / vec3(4.0);
 
 	vec3 nullColor = vec3(0.5, 0.5, 0.5);
