@@ -2,7 +2,6 @@ import { updateActiveMaterial } from "./material-update";
 
 export async function loadShaders() {
 	const timestamp = Date.now();
-	console.log("loading shaders...");
 
 	const loadShader = async (path) => {
 		const response = await fetch(`${path}?t=${timestamp}`);
@@ -16,11 +15,12 @@ export async function loadShaders() {
 		loadShader("/glsl/dynamic-fragment.glsl"),
 	]);
 
-	console.log("shaders loaded!!");
 	return { vShader, fShader, dynVShader, dynFShader };
 }
+
 export async function reloadShaderMaterial(state) {
 	const shaders = await loadShaders();
 
 	updateActiveMaterial({ state, shaders });
+	return;
 }
