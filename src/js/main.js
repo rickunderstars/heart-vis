@@ -13,7 +13,7 @@ import { setupFileHandlers } from "@js/interaction/file-handlers.js";
 import { updateActiveMaterial } from "@js/visualization/material-update";
 import { loadShaders } from "@js/visualization/shader-update";
 import { setupEventHandlers } from "@js/interaction/event-handlers";
-import { colorizeGradient } from "./visualization/color-gauge";
+import { colorizeGradient } from "@js/visualization/color-gauge";
 
 /////// three.js ///////
 

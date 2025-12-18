@@ -8,12 +8,12 @@ export function setupEventHandlers(dependencies) {
 		dependencies;
 
 	document.getElementById("camera-reset").addEventListener("click", () => {
-		cameraReset(camera, controls);
+		cameraReset(state, camera, controls);
 	});
 
 	document.addEventListener("keydown", (k) => {
 		if (k.key.toLowerCase() === "r") {
-			cameraReset(camera, controls);
+			cameraReset(state, camera, controls);
 		}
 	});
 
@@ -82,7 +82,7 @@ export function setupEventHandlers(dependencies) {
 		});
 }
 
-function cameraReset(camera, controls) {
+function cameraReset(state, camera, controls) {
 	const center = state.getActiveMesh().center;
 	const radius = state.getActiveMesh().radius;
 	camera.position.set(center.x, center.y, center.z + radius * 2.5);
