@@ -68,7 +68,7 @@ setupFileHandlers({
 	renderer,
 });
 
-setupEventHandlers({ camera, controls, renderer, mouse, state });
+setupEventHandlers({ camera, controls, renderer, scene, mouse, state });
 
 colorizeGradient();
 
@@ -154,10 +154,3 @@ document
 			controls.update();
 		}
 	});
-
-const slider = document.getElementById("light-slider");
-slider.oninput = function () {
-	const intensity = this.value / 100;
-	state.setAmbientLightIntensity(intensity);
-	renderer.render(scene, camera);
-};

@@ -3,7 +3,7 @@ import { vertexPicker } from "@js/interaction/vertex-picker.js";
 import { setGaugeLine } from "../visualization/color-gauge";
 
 export function setupEventHandlers(dependencies) {
-	const { camera, controls, renderer, mouse, state } = dependencies;
+	const { camera, controls, renderer, scene, mouse, state } = dependencies;
 
 	document.getElementById("camera-reset").addEventListener("click", () => {
 		cameraReset(camera, controls);
@@ -20,6 +20,12 @@ export function setupEventHandlers(dependencies) {
 			reloadShaderMaterial(state);
 		}
 	});
+
+	document.getElementById("light-slider").oninput = function () {
+		const intensity = this.value / 100;
+		state.setAmbientLightIntensity(intensity);
+		renderer.render(scene, camera);
+	};
 
 	window.addEventListener("resize", () => {
 		onViewportResize(camera, renderer);
