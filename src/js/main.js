@@ -68,7 +68,15 @@ setupFileHandlers({
 	renderer,
 });
 
-setupEventHandlers({ camera, controls, renderer, scene, mouse, state });
+setupEventHandlers({
+	camera,
+	controls,
+	renderer,
+	scene,
+	mouse,
+	state,
+	shaders,
+});
 
 colorizeGradient();
 
@@ -114,43 +122,3 @@ document.getElementById("dynamic-animation").addEventListener("click", () => {
 		updateActiveMaterial({ state, shaders });
 	}
 });
-
-document
-	.querySelector(".qualities-container")
-	.addEventListener("change", function (e) {
-		if (e.target.name === "quality") {
-			state.setActiveQuality(e.target.value);
-			updateActiveMaterial({ state, shaders });
-			renderer.render(scene, camera);
-		}
-	});
-
-document
-	.querySelector(".meshes-container")
-	.addEventListener("change", function (e) {
-		if (e.target.name === "loaded-mesh") {
-			state.setActiveMesh(e.target.value);
-			updateActiveMaterial({ state, shaders });
-
-			for (let i = 0; i < state.meshes.length; i++) {
-				if (i != state.activeMesh) {
-					state.meshes[i].mesh.visible = false;
-				} else {
-					state.meshes[i].mesh.visible = true;
-				}
-			}
-			const activeMesh = state.getActiveMesh();
-
-			camera.position.set(
-				activeMesh.center.x,
-				activeMesh.center.y,
-				activeMesh.center.z + activeMesh.radius * 2.5,
-			);
-			controls.target.set(
-				activeMesh.center.x,
-				activeMesh.center.y,
-				activeMesh.center.z,
-			);
-			controls.update();
-		}
-	});
