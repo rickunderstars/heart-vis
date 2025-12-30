@@ -1,7 +1,17 @@
 .obsidian/workspace.json
 .obsidian/workspaces.json
+build/*
+!build/heart.out.js
+!build/heart.out.wasm
+
+.vite/
+node_modules/
+.cache/
+compile_commands.json
+.emscripten_cache/
 
 *.bak
 *~
 *.swp
 *.tmp
+*.out
