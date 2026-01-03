@@ -28,4 +28,5 @@ export default defineConfig({
 		host: true,
 		hmr: false,
 	},
+	publicDir: "../public",
 });

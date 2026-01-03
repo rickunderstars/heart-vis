@@ -9,10 +9,10 @@ export async function loadShaders() {
 	};
 
 	const [vShader, fShader, dynVShader, dynFShader] = await Promise.all([
-		loadShader("/glsl/static-vertex.glsl"),
-		loadShader("/glsl/static-fragment.glsl"),
-		loadShader("/glsl/dynamic-vertex.glsl"),
-		loadShader("/glsl/dynamic-fragment.glsl"),
+		loadShader("/heart-vis/glsl/static-vertex.glsl"),
+		loadShader("/heart-vis/glsl/static-fragment.glsl"),
+		loadShader("/heart-vis/glsl/dynamic-vertex.glsl"),
+		loadShader("/heart-vis/glsl/dynamic-fragment.glsl"),
 	]);
 
 	return { vShader, fShader, dynVShader, dynFShader };
