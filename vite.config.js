@@ -7,6 +7,7 @@ const __dirname = fileURLToPath(new URL(".", import.meta.url));
 
 export default defineConfig({
 	root: "src",
+	base: "/heart-vis/",
 	plugins: [glsl()],
 	resolve: {
 		alias: {
@@ -16,6 +17,10 @@ export default defineConfig({
 			"@assets": resolve(__dirname, "src/assets"),
 			"@": resolve(__dirname, "src"),
 		},
+	},
+	build: {
+		outDir: "../dist",
+		emptyOutDir: true,
 	},
 	server: {
 		port: 3000,
