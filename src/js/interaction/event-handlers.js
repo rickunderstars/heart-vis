@@ -1,7 +1,8 @@
 import { reloadShaderMaterial } from "@js/visualization/shader-update";
 import { vertexPicker } from "@js/interaction/vertex-picker.js";
 import { setGaugeLine } from "@js/visualization/color-gauge";
-import { updateActiveMaterial } from "../visualization/material-update";
+import { updateActiveMaterial } from "@js/visualization/material-update";
+import { addTestMesh } from "@js/test-meshes/load-test-meshes";
 
 export function setupEventHandlers(dependencies) {
 	const { camera, controls, renderer, scene, mouse, state, shaders } =
@@ -80,6 +81,10 @@ export function setupEventHandlers(dependencies) {
 				controls.update();
 			}
 		});
+
+	document.getElementById("add-test-meshes").addEventListener("click", () => {
+		addTestMesh({ state, shaders, scene, camera, controls, renderer });
+	});
 }
 
 function cameraReset(state, camera, controls) {

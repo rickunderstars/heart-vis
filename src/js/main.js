@@ -6,7 +6,7 @@ import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 
 // my stuff
-import { initLights, createScene } from "@js/visualization/scene.js";
+import { createScene } from "@js/visualization/scene.js";
 import { createRenderer } from "@js/visualization/renderer.js";
 import state from "@js/state/state.js";
 import { setupFileHandlers } from "@js/interaction/file-handlers.js";
@@ -18,7 +18,6 @@ import { colorizeGradient } from "@js/visualization/color-gauge";
 /////// three.js ///////
 
 const scene = createScene();
-initLights(scene);
 const viewport = document.getElementById("viewport");
 const camera = new THREE.PerspectiveCamera(
 	50,
