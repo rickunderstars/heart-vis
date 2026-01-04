@@ -26,36 +26,34 @@ export function processFile(dependencies) {
 			}
 			fileElement.innerHTML = "Last upload: " + file.name;
 
-			addMesh(
+			const filename = file.name;
+			addMesh({
 				state,
 				mesh,
-				file.name,
+				filename,
 				shaders,
 				scene,
 				camera,
 				controls,
 				renderer,
-			);
-
-			console.log(
-				"Mesh loaded successfully. Meshes loaded:",
-				state.meshes.length,
-			);
+			});
 		};
 		reader.readAsText(file);
 	});
 }
 
-function addMesh(
-	state,
-	mesh,
-	filename,
-	shaders,
-	scene,
-	camera,
-	controls,
-	renderer,
-) {
+export function addMesh(dependencies) {
+	const {
+		state,
+		mesh,
+		filename,
+		shaders,
+		scene,
+		camera,
+		controls,
+		renderer,
+	} = dependencies;
+
 	HeartModule().then(() => {
 		const vertices = mesh.Float32ArrayOfVertices();
 		const triangles = mesh.Uint32ArrayOfTriangles();
@@ -114,6 +112,11 @@ function addMesh(
 		renderer.render(scene, camera);
 
 		updateMeshesList(state);
+
+		console.log(
+			"Mesh loaded successfully. Meshes loaded:",
+			state.meshes.length,
+		);
 	});
 }
 
