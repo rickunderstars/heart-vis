@@ -26,63 +26,16 @@ export function processFile(dependencies) {
 			}
 			fileElement.innerHTML = "Last upload: " + file.name;
 
-			const vertices = mesh.Float32ArrayOfVertices();
-			const triangles = mesh.Uint32ArrayOfTriangles();
-
-			const valueSets = {
-				unipolar: mesh.Float32ArrayOfUnipolar(),
-				bipolar: mesh.Float32ArrayOfBipolar(),
-				lat: mesh.Float32ArrayOfLAT(),
-				groupid: mesh.Float32ArrayOfGroupID(),
-				eml: mesh.Float32ArrayOfEML(),
-				exteml: mesh.Float32ArrayOfExtEML(),
-				scar: mesh.Float32ArrayOfSCAR(),
-			};
-
-			const geometry = new THREE.BufferGeometry();
-			geometry.setAttribute(
-				"position",
-				new THREE.BufferAttribute(vertices, 3),
+			addMesh(
+				state,
+				mesh,
+				file.name,
+				shaders,
+				scene,
+				camera,
+				controls,
+				renderer,
 			);
-			geometry.setIndex(new THREE.BufferAttribute(triangles, 1));
-			geometry.computeVertexNormals();
-
-			const material = new THREE.MeshBasicMaterial();
-
-			const heart = new THREE.Mesh(geometry, material);
-
-			const box = new THREE.Box3().setFromObject(heart);
-			const boundingSphere = new THREE.Sphere();
-			box.getBoundingSphere(boundingSphere);
-			const center = boundingSphere.center;
-			const radius = boundingSphere.radius;
-
-			camera.position.set(center.x, center.y, center.z + radius * 2.5);
-			controls.target.set(center.x, center.y, center.z);
-			controls.update();
-
-			state.meshes.push({
-				mesh: heart,
-				filename: file.name,
-				valueSets: valueSets,
-				center: center,
-				radius: radius,
-			});
-
-			state.setActiveMesh(state.meshes.length - 1);
-
-			updateActiveMaterial({ state, shaders });
-
-			state.meshes.forEach((meshData) => {
-				meshData.mesh.visible = false;
-			});
-			scene.add(heart);
-
-			heart.visible = true;
-
-			renderer.render(scene, camera);
-
-			updateMeshesList(state);
 
 			console.log(
 				"Mesh loaded successfully. Meshes loaded:",
@@ -90,6 +43,77 @@ export function processFile(dependencies) {
 			);
 		};
 		reader.readAsText(file);
+	});
+}
+
+function addMesh(
+	state,
+	mesh,
+	filename,
+	shaders,
+	scene,
+	camera,
+	controls,
+	renderer,
+) {
+	HeartModule().then(() => {
+		const vertices = mesh.Float32ArrayOfVertices();
+		const triangles = mesh.Uint32ArrayOfTriangles();
+
+		const valueSets = {
+			unipolar: mesh.Float32ArrayOfUnipolar(),
+			bipolar: mesh.Float32ArrayOfBipolar(),
+			lat: mesh.Float32ArrayOfLAT(),
+			groupid: mesh.Float32ArrayOfGroupID(),
+			eml: mesh.Float32ArrayOfEML(),
+			exteml: mesh.Float32ArrayOfExtEML(),
+			scar: mesh.Float32ArrayOfSCAR(),
+		};
+
+		const geometry = new THREE.BufferGeometry();
+		geometry.setAttribute(
+			"position",
+			new THREE.BufferAttribute(vertices, 3),
+		);
+		geometry.setIndex(new THREE.BufferAttribute(triangles, 1));
+		geometry.computeVertexNormals();
+
+		const material = new THREE.MeshBasicMaterial();
+
+		const heart = new THREE.Mesh(geometry, material);
+
+		const box = new THREE.Box3().setFromObject(heart);
+		const boundingSphere = new THREE.Sphere();
+		box.getBoundingSphere(boundingSphere);
+		const center = boundingSphere.center;
+		const radius = boundingSphere.radius;
+
+		camera.position.set(center.x, center.y, center.z + radius * 2.5);
+		controls.target.set(center.x, center.y, center.z);
+		controls.update();
+
+		state.meshes.push({
+			mesh: heart,
+			filename: filename,
+			valueSets: valueSets,
+			center: center,
+			radius: radius,
+		});
+
+		state.setActiveMesh(state.meshes.length - 1);
+
+		updateActiveMaterial({ state, shaders });
+
+		state.meshes.forEach((meshData) => {
+			meshData.mesh.visible = false;
+		});
+		scene.add(heart);
+
+		heart.visible = true;
+
+		renderer.render(scene, camera);
+
+		updateMeshesList(state);
 	});
 }
 
