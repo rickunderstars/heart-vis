@@ -43,7 +43,7 @@ export function setupEventHandlers(dependencies) {
 	});
 
 	document
-		.querySelector(".qualities-container")
+		.querySelector('[data-js="qualities-list"]')
 		.addEventListener("change", function (e) {
 			if (e.target.name === "quality") {
 				state.setActiveQuality(e.target.value);
@@ -53,7 +53,7 @@ export function setupEventHandlers(dependencies) {
 		});
 
 	document
-		.querySelector(".meshes-container")
+		.querySelector('[data-js="meshes-list"]')
 		.addEventListener("change", function (e) {
 			if (e.target.name === "loaded-mesh") {
 				state.setActiveMesh(e.target.value);
