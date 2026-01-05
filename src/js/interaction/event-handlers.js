@@ -35,7 +35,7 @@ export function setupEventHandlers(dependencies) {
 	};
 
 	window.addEventListener("resize", () => {
-		onViewportResize(camera, renderer);
+		onViewportResize(camera, renderer, state);
 	});
 
 	window.addEventListener("mousemove", (e) => {
@@ -95,7 +95,7 @@ function cameraReset(state, camera, controls) {
 	controls.update();
 }
 
-function onViewportResize(camera, renderer) {
+function onViewportResize(camera, renderer, state) {
 	camera.aspect = viewport.clientWidth / viewport.clientHeight;
 	camera.updateProjectionMatrix();
 	renderer.setSize(viewport.clientWidth, viewport.clientHeight);
