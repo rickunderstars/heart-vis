@@ -1,0 +1,12 @@
+CompileFlags:
+  CompilationDatabase: build
+  Add:
+    - --target=wasm32-unknown-emscripten
+    - -D__EMSCRIPTEN__
+  Remove:
+    - -m32
+    - -m64
+Diagnostics:
+  UnusedIncludes: None
+  MissingIncludes: None
+  Suppress: "*"
